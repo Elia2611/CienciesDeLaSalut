@@ -1,0 +1,45 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[margin=2.5cm]{geometry}
+
+\title{Statistics in Health Sciences - Assignment 1}
+\author{My name}
+\date{\today}
+
+\begin{document}
+
+
+
+\maketitle
+
+\section{Introduction}
+The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited pape.
+
+
+\section{Analysis}
+
+\subsection{Description of missingness}
+
+Provide the same missingness description than in the original analysis. Specifically, reproduce the following text that is shown in the original paper:
+
+\begin{quotation}
+``The subset used here included \textcolor{red}{342} participants and \textcolor{red}{85} variables. The range of missing data in the different variables went from \textcolor{red}{0\%} to \textcolor{red}{47.7\%}, with \textcolor{red}{68.2\%} of the variables having less than 5\% of the data missing. Only \textcolor{red}{13.7\%} of the participants had complete data on all \textcolor{red}{85} variables. Overall, \textcolor{red}{5.9\%} of the information was missing; that is, \textcolor{red}{5.9\%} of the total of \textcolor{red}{29,070} cells (\textcolor{red}{$85 \times 342 = 29,070$}) had missing data.''
+\end{quotation}
+
+Instructions:
+
+\begin{itemize}
+    \item Note that, since you are working with a subset of the original data set, red numbers above are not expected to be the same than in your results.
+    
+    \item In your \textbf{\texttt{Rnw}} document, the text above must be able to automatically update all red numbers in the case of changing the values of \textbf{\texttt{copd}}. I.e., if data change, then all red numbers must also automatically update accordingly in your \textbf{\texttt{pdf}} when compiling your \textbf{\texttt{Rnw}}. As a hint, you can follow this procedure:
+    
+    \begin{enumerate}
+        \item For each red number, create an \textsf{R} object, which will depend on data and gives the desired quantity (i.e., if data change, the value in the object changes accordingly),
+        \item To force rounding a quantity to a given decimal precision, you can use \texttt{sprintf()} (as seen in Exercise 0). Do not use \texttt{round()},
+        \item To get the thousands comma separator as in ``29,070'', you can use \texttt{prettyNum()},
+        \item Once you have an \textsf{R} object for each red number formatted as desired, use \texttt{\textbackslash Sexpr\{\}} to insert each of them inline in \LaTeX{} (as seen in Exercise 0).
+    \end{enumerate}
+\end{itemize}
+
+
+\end{document}
