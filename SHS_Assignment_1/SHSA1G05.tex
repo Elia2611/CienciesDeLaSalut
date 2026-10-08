@@ -50,17 +50,32 @@
 
 \usepackage{alltt}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=2.5cm]{geometry}
-
-\title{Statistics in Health Sciences - Assignment 1}
-\author{My name}
-\date{\today}
+\usepackage{amsmath}                       % for mathematical features 
+\usepackage[left=2.5cm,top=3cm,bottom=3cm,right=2.5cm]{geometry}   % text margins
+\usepackage{booktabs}                      % for booktabs in print(xtable)).
+\usepackage{authblk}                       % for footnote style author/affiliation
+\usepackage{amssymb}
+\usepackage{amsthm}
+% LaTeX package for captions customization:
+\usepackage[margin=10pt,font=small,labelfont=bf,format=hang]{caption}
+\usepackage{hyperref}                      % Hyperlinks and \url{}
+\hypersetup{
+    colorlinks=true, % Enable colored text for links instead of drawing boxes
+    linkcolor=blue,  % Color for internal document links (e.g., sections, equations, figures, tables)
+    citecolor=blue,  % Color for bibliographic citation links (e.g., \cite{})
+    urlcolor=blue    % Color for external web URLs (e.g., \url{})
+}
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
 \begin{document}
+\title{Statistics in Health Sciences - Assignment 1}
+\author{G05: Judit Félelz Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
+\date{28th October 2026}
 
 
 
 \maketitle
+
+\newpage
 
 \section{Introduction}
 The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited pape.
@@ -91,5 +106,30 @@ Instructions:
     \end{enumerate}
 \end{itemize}
 
+
+
+
+
+
+
+
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hldef{n_obs} \hlkwb{<-} \hlkwd{nrow}\hldef{(copd)}
+\hldef{> }\hldef{n_vars} \hlkwb{<-} \hlkwd{ncol}\hldef{(copd)}
+\hldef{> }\hldef{nans} \hlkwb{<-} \hlnum{100}\hlopt{*}\hlkwd{colMeans}\hldef{(}\hlkwd{is.na}\hldef{(copd))}
+\hldef{> }\hldef{min_nan} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlkwd{min}\hldef{(nans))} \hlcom{# MIRAR}
+\hldef{> }\hldef{max_nan} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlkwd{max}\hldef{(nans))}
+\hldef{> }\hldef{less_5} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlnum{100}\hlopt{*}\hlkwd{length}\hldef{(nans[nans}\hlopt{<}\hlnum{5}\hldef{])}\hlopt{/}\hldef{n_vars)}
+\hldef{> }\hldef{comp_cases} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlnum{100}\hlopt{*}\hlkwd{mean}\hldef{(}\hlkwd{complete.cases}\hldef{(copd)))}
+\hldef{> }\hldef{miss_total} \hlkwb{<-}  \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlnum{100}\hlopt{*}\hlkwd{mean}\hldef{(}\hlkwd{is.na}\hldef{(copd)))}
+\hldef{> }\hldef{total_cells} \hlkwb{=} \hlkwd{prettyNum}\hldef{(n_obs}\hlopt{*}\hldef{n_vars,} \hlkwc{big.mark} \hldef{=} \hlsng{","}\hldef{,} \hlkwc{decimal.mark} \hldef{=} \hlsng{"."}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+“The subset used here included 342 participants and 45 variables. The range of missing data in the different variables went from 0\% to 32\%, with 69\% of the variables having less than 5\% of the data missing. Only 33\% of the participants had complete data on all 45 variables. Overall, 5.4\% of the information was missing; that is, 5.4\% of the total of 15,390 cells (45 × 342 = 15,390) had missing data.”
 
 \end{document}

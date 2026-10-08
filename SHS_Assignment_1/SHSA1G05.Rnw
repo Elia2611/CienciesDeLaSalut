@@ -1,16 +1,32 @@
 \documentclass[a4paper,10pt]{article}
 \usepackage[utf8]{inputenc}
-\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}                       % for mathematical features 
+\usepackage[left=2.5cm,top=3cm,bottom=3cm,right=2.5cm]{geometry}   % text margins
+\usepackage{booktabs}                      % for booktabs in print(xtable)).
+\usepackage{authblk}                       % for footnote style author/affiliation
+\usepackage{amssymb}
+\usepackage{amsthm}
+% LaTeX package for captions customization:
+\usepackage[margin=10pt,font=small,labelfont=bf,format=hang]{caption}
+\usepackage{hyperref}                      % Hyperlinks and \url{}
+\hypersetup{
+    colorlinks=true, % Enable colored text for links instead of drawing boxes
+    linkcolor=blue,  % Color for internal document links (e.g., sections, equations, figures, tables)
+    citecolor=blue,  % Color for bibliographic citation links (e.g., \cite{})
+    urlcolor=blue    % Color for external web URLs (e.g., \url{})
+}
 
-\title{Statistics in Health Sciences - Assignment 1}
-\author{My name}
-\date{\today}
 
 \begin{document}
+\title{Statistics in Health Sciences - Assignment 1}
+\author{G05: Judit Félelz Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
+\date{28th October 2026}
 
 
 
 \maketitle
+
+\newpage
 
 \section{Introduction}
 The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited pape.
@@ -41,5 +57,48 @@ Instructions:
     \end{enumerate}
 \end{itemize}
 
+<<libraries, include=FALSE>>=
+### libraries related to knit:
+library(knitr)
+library(xtable)     # to create nice LaTeX tables
+@
+
+
+<<setting, include=FALSE, purl=FALSE>>=
+### output options (there are a lot..):
+options(width = 90, # max. width, in characters, of the R output. Default is 80.
+        scipen = 4)  # to avoid printing inline R output numbers in scientific
+# notation if they are lower than 10^4
+
+
+### set global chunk options. They apply to all chuncks except to those in which you set otherwise
+opts_chunk$set(echo = TRUE,         # show R input code
+               eval = TRUE,         # show R output
+               message = TRUE,       # set to FALSE to avoid nuisance messages (be careful!)         
+               warning = TRUE,       # set to FALSE to avoid nuisance messages (be careful!)         
+               size = "footnotesize", # set the R output and output font size 
+               cache = FALSE,        # useful for computationally costly chunks (be careful if set to TRUE!)
+               prompt = TRUE)
+@
+
+
+<<data, include=FALSE>>=
+### Loading data from "copd_redux.RData" file in the working directory:
+load("./copd_redux.RData")
+@
+
+<<missingness>>=
+n_obs <- nrow(copd)
+n_vars <- ncol(copd)
+nans <- 100*colMeans(is.na(copd))
+min_nan <- sprintf("%.2g", min(nans)) # MIRAR
+max_nan <- sprintf("%.2g", max(nans))
+less_5 <- sprintf("%.2g", 100*length(nans[nans<5])/n_vars) 
+comp_cases <- sprintf("%.2g", 100*mean(complete.cases(copd)))
+miss_total <-  sprintf("%.2g", 100*mean(is.na(copd)))
+total_cells = prettyNum(n_obs*n_vars, big.mark = ",", decimal.mark = ".")
+@
+
+“The subset used here included \Sexpr{n_obs} participants and \Sexpr{n_vars} variables. The range of missing data in the different variables went from \Sexpr{min_nan}\% to \Sexpr{max_nan}\%, with \Sexpr{less_5}\% of the variables having less than 5\% of the data missing. Only \Sexpr{comp_cases}\% of the participants had complete data on all \Sexpr{n_vars} variables. Overall, \Sexpr{miss_total}\% of the information was missing; that is, \Sexpr{miss_total}\% of the total of \Sexpr{total_cells} cells (\Sexpr{n_vars} × \Sexpr{n_obs} = \Sexpr{total_cells}) had missing data.”
 
 \end{document}
