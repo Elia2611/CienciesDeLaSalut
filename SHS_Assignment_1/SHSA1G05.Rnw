@@ -144,7 +144,30 @@ imp <- mice(data = copd,
             maxit = 20,
             printFlag = FALSE,
             seed = 666)
-imp$imp
+# imp$imp (output llarg)
+head(imp$imp)
 @
+
+
+\subsection{Integration of multiple imputation in cluster analysis}
+
+Reproduce the original analysis in the paper using the miclust package to integrate multiple
+imputation in the cluster analysis. Apply the proposed framework using the same setting
+than in the original analysis. To do that, follow these steps:
+
+\begin{enumerate}
+  \item Read the help of the \texttt{getdata()} function in the \texttt{miclust} package. Then, accordingly, 
+  create a \textit{list} of \textit{data.frames} and pass it to the \texttt{getdata()} function. Give a detailed
+  explanation of the data processing you did to get that \textit{list}. Show your code.
+  
+  \item Use the \texttt{miclust()} function to perform the integration of missing data in cluster
+  analysis using the same settings as in the original analysis. Show your code and
+  explain how and why you set all arguments in the \texttt{miclust()} function.
+
+\end{enumerate}
+
+
+
+
 
 \end{document}
