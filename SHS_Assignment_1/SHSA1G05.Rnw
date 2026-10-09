@@ -142,8 +142,9 @@ imp <- mice(data = copd,
             method = meth, 
             predictorMatrix = pred,
             maxit = 20,
-            printFlag = TRUE,
+            printFlag = FALSE,
             seed = 666)
+imp$imp
 @
 
 \end{document}

@@ -253,52 +253,989 @@ We can see that the mice package suggest imputing initialy with de mean for cont
 \hldef{+ }            \hlkwc{method} \hldef{= meth,}
 \hldef{+ }            \hlkwc{predictorMatrix} \hldef{= pred,}
 \hldef{+ }            \hlkwc{maxit} \hldef{=} \hlnum{20}\hldef{,}
-\hldef{+ }            \hlkwc{printFlag} \hldef{=} \hlnum{TRUE}\hldef{,}
+\hldef{+ }            \hlkwc{printFlag} \hldef{=} \hlnum{FALSE}\hldef{,}
 \hldef{+ }            \hlkwc{seed} \hldef{=} \hlnum{666}\hldef{)}
+\hldef{> }
+\hldef{> }\hldef{imp}\hlopt{$}\hldef{imp}
 \end{alltt}
 \begin{verbatim}
+## $id
+## [1] 1 2
+## <0 rows> (o 0- extensión row.names)
 ## 
-##  iter imp variable
-##   1   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   1   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   2   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   2   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   3   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   3   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   4   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   4   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   5   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   5   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   6   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   6   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   7   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   7   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   8   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   8   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   9   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   9   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   10   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   10   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   11   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   11   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   12   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   12   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   13   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   13   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   14   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   14   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   15   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   15   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   16   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   16   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   17   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   17   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   18   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   18   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   19   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   19   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   20   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
-##   20   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+## $index_barthel2v1
+##       1   2
+## 31  100 100
+## 64  100 100
+## 187 100 100
+## 198  80 100
+## 240  90 100
+## 241 100 100
+## 242 100 100
+## 245 100 100
+## 302  90 100
+## 
+## $quo_calcpostv1
+## [1] 1 2
+## <0 rows> (o 0- extensión row.names)
+## 
+## $rv_prepv1
+##             1         2
+## 31  190.00200 156.37891
+## 73  175.15790 140.45828
+## 84  179.54126 166.25749
+## 85  174.01822 154.18134
+## 87  147.11288 142.57919
+## 91  266.79022 199.57353
+## 96  194.25191 152.39517
+## 99  134.39871 114.54136
+## 105 175.47922 154.18134
+## 109 304.11612 304.11612
+## 110 130.83453 123.91756
+## 115 153.99147 173.26074
+## 117 233.97670 218.04686
+## 121 130.73349 152.96429
+## 123 228.64987  94.60959
+## 130 114.64743 156.37891
+## 139 156.37891 144.07747
+## 146 168.70444 128.22917
+## 159  87.62526 201.72061
+## 172 114.49117 168.70444
+## 180 119.85428 135.60764
+## 188 137.62262 115.28805
+## 189 123.91756 115.28805
+## 208 233.97670 128.13847
+## 218 147.11288 152.96429
+## 277 148.80103 212.59613
+## 301 110.02028 177.64473
+## 
+## $incp_fevv1
+##             1          2
+## 62   4.999995 32.0610771
+## 82   7.526881 17.7914085
+## 87  11.023622 21.5189819
+## 91  -1.408460 -0.4854364
+## 126  9.223304 -3.9682503
+## 144  6.766911  1.6393427
+## 153 11.023622  3.0769293
+## 160  0.000000  5.9171538
+## 161  2.127658  4.3103509
+## 170 -4.186053 -8.0952368
+## 179 20.430107 11.0236216
+## 186 -4.186053  6.7669106
+## 311 -3.968250  4.5454569
+## 332  4.237294  4.3902516
+## 
+## $fevp_postv1
+## [1] 1 2
+## <0 rows> (o 0- extensión row.names)
+## 
+## $rv_tlcv1
+##            1        2
+## 31  54.76575 50.40129
+## 73  43.56725 50.40129
+## 84  71.79082 64.67818
+## 85  56.49350 56.31769
+## 87  56.16083 46.26866
+## 91  71.79082 72.55872
+## 96  69.04762 72.95850
+## 99  55.23521 62.98450
+## 105 67.72152 64.48781
+## 109 72.83621 75.81699
+## 110 39.49580 39.85185
+## 115 52.24625 63.09720
+## 117 72.79793 63.47223
+## 121 62.16617 61.83007
+## 123 62.39814 40.65245
+## 130 56.31769 58.24468
+## 139 45.96651 53.05515
+## 146 55.53359 49.01640
+## 159 43.56725 62.77602
+## 172 60.17965 64.69428
+## 180 45.03043 64.28571
+## 188 50.07215 46.30872
+## 189 49.11937 35.66553
+## 208 63.55263 41.05264
+## 218 53.71747 51.84275
+## 277 59.30599 54.39560
+## 301 45.68289 40.78550
+## 
+## $ctnf_s_mv1
+##           1       2
+## 31  0.04500 3.71560
+## 54  3.82460 0.04500
+## 91  0.32391 3.52540
+## 98  0.04500 0.04500
+## 187 0.04500 0.56940
+## 188 0.04500 3.82460
+## 198 0.34994 0.04500
+## 215 2.28680 0.35454
+## 233 0.04500 0.04500
+## 234 1.10120 1.55040
+## 238 0.04500 0.04500
+## 254 1.04920 3.71560
+## 
+## $vtdvdbid_ecov1
+##      1  2
+## 3   37 31
+## 5   27 31
+## 6   33 27
+## 7   34 29
+## 8   37 29
+## 9   34 35
+## 10  35 23
+## 11  35 40
+## 12  35 31
+## 14  31 33
+## 15  31 29
+## 19  33 32
+## 21  29 28
+## 22  29 31
+## 23  39 33
+## 25  33 34
+## 31  26 28
+## 38  32 27
+## 39  44 44
+## 51  31 28
+## 55  30 40
+## 56  31 29
+## 57  37 35
+## 59  30 26
+## 82  35 31
+## 84  27 27
+## 85  33 38
+## 91  28 31
+## 94  31 34
+## 96  34 31
+## 98  28 33
+## 104 26 34
+## 106 29 31
+## 114 37 32
+## 118 33 30
+## 134 40 37
+## 137 35 30
+## 140 38 27
+## 142 38 29
+## 145 32 34
+## 150 28 31
+## 154 32 30
+## 173 33 38
+## 178 28 29
+## 187 27 30
+## 188 35 35
+## 189 37 33
+## 190 40 35
+## 191 29 32
+## 192 33 34
+## 193 28 26
+## 194 31 31
+## 195 31 27
+## 196 44 31
+## 197 33 29
+## 198 23 32
+## 199 27 32
+## 200 31 31
+## 201 33 44
+## 202 27 38
+## 203 33 37
+## 204 27 37
+## 205 30 40
+## 206 40 31
+## 207 32 34
+## 208 40 40
+## 209 26 29
+## 210 32 33
+## 212 35 27
+## 213 29 37
+## 215 26 30
+## 217 35 31
+## 219 30 27
+## 220 37 32
+## 221 28 31
+## 222 28 31
+## 224 35 29
+## 229 32 32
+## 230 32 33
+## 232 28 27
+## 233 29 26
+## 234 29 28
+## 235 32 32
+## 236 34 31
+## 240 35 30
+## 241 32 23
+## 243 27 27
+## 244 30 35
+## 245 37 29
+## 246 31 32
+## 249 28 32
+## 251 28 33
+## 255 37 37
+## 271 31 35
+## 272 30 29
+## 278 32 29
+## 279 27 26
+## 280 27 32
+## 287 37 35
+## 288 35 33
+## 292 30 28
+## 303 33 34
+## 304 32 33
+## 305 27 29
+## 308 25 29
+## 313 35 32
+## 318 27 28
+## 335 27 27
+## 
+## $pp_ecov1
+##        1    2
+## 31  11.0 11.0
+## 38  11.0 11.0
+## 39  13.0 11.0
+## 48  10.0 13.0
+## 51   9.0 10.0
+## 53  11.0 11.0
+## 65   9.0  9.0
+## 82   8.0  9.0
+## 91  11.0  9.0
+## 114 11.0  9.0
+## 134 11.0  9.0
+## 137 11.0 11.0
+## 144 13.0 10.0
+## 145  9.0  9.0
+## 148  8.0  8.0
+## 150  9.0 10.0
+## 156  8.0  9.0
+## 173 10.0 11.0
+## 187 10.0 10.0
+## 188  9.0 10.0
+## 193  9.0  9.0
+## 198 10.0  9.0
+## 203 13.0 10.0
+## 205 11.0 11.0
+## 210  9.0 11.0
+## 212  9.0  8.0
+## 213  9.0 10.0
+## 215 10.0 10.0
+## 217 10.0  8.0
+## 219 11.0 12.0
+## 220 12.0 10.0
+## 221 11.0 10.0
+## 222 11.0 10.0
+## 224  9.0 10.0
+## 229 11.5  9.0
+## 230 10.0 11.0
+## 232 12.0 10.0
+## 233 10.0  9.0
+## 234 12.0 11.0
+## 235  9.0 10.0
+## 236 10.0  9.0
+## 240  9.0  9.0
+## 241  9.0  9.0
+## 243 13.0 11.5
+## 244 10.0 10.0
+## 277  9.0  8.0
+## 278 10.0  8.0
+## 288 11.0  9.0
+## 292 10.0 10.0
+## 301  9.0 10.0
+## 304 10.0 10.0
+## 320  9.0 11.0
+## 325 10.0 11.0
+## 335 11.0 10.0
+## 
+## $sin11_v1
+##     1 2
+## 31  1 1
+## 64  0 0
+## 187 0 0
+## 198 0 1
+## 
+## $vas2_v1
+##       1   2
+## 31  8.5 4.0
+## 64  5.0 5.0
+## 187 6.0 4.4
+## 198 7.0 4.0
+## 
+## $ic_prepv1
+##             1         2
+## 73   77.49661  78.91282
+## 84   54.70592  65.09283
+## 85   89.25582  68.98782
+## 87  104.88959  97.75817
+## 91   32.85936  42.27396
+## 99   42.70299  62.30412
+## 105  47.36942  35.50232
+## 109  29.84534  35.55212
+## 115  78.91282  71.43972
+## 121  35.50232  45.54313
+## 123  77.49661  87.21473
+## 130  57.39879  56.28346
+## 146  68.49036  79.16180
+## 159  91.69626  54.52460
+## 172  59.21489  42.70299
+## 180  42.70299  59.21489
+## 188  59.35907  69.05781
+## 189 103.98996 100.07884
+## 218  92.72242  79.99995
+## 
+## $iam_chv1
+##     1 2
+## 188 1 1
+## 198 0 1
+## 278 0 0
+## 
+## $sin15_v1
+##     1 2
+## 31  1 0
+## 64  0 0
+## 187 0 0
+## 198 0 1
+## 
+## $cil8_s_mv1
+##            1        2
+## 31   9.92210  4.92940
+## 54  11.41900 23.49700
+## 56   4.30155  2.60710
+## 91   1.54125  3.92915
+## 98   8.87310  3.58110
+## 187  4.64540  3.96030
+## 188 16.57900  6.50330
+## 198  4.50310  2.50265
+## 208  4.56365  5.86350
+## 215  3.27120  3.67125
+## 233  3.59100  2.90325
+## 234  4.56075  4.28700
+## 238  1.54125  3.70075
+## 254  5.72960  2.48030
+## 
+## $sin7_v1
+##     1 2
+## 31  1 0
+## 64  1 0
+## 187 0 0
+## 198 0 1
+## 
+## $sin8_v1
+##     1 2
+## 31  1 1
+## 64  1 1
+## 187 0 0
+## 198 0 1
+## 
+## $ch_v1
+##       1   2
+## 95  0.6 4.8
+## 109 1.1 2.6
+## 114 4.8 0.9
+## 118 1.1 0.9
+## 119 1.8 7.8
+## 120 0.7 0.5
+## 121 2.1 2.6
+## 124 4.1 2.6
+## 131 2.6 0.9
+## 197 0.2 0.3
+## 201 0.6 3.9
+## 249 0.9 0.7
+## 250 4.1 3.9
+## 259 1.2 0.6
+## 269 4.1 0.9
+## 278 1.7 0.5
+## 307 0.6 2.3
+## 342 0.7 0.9
+## 
+## $vc_prepv1
+##             1         2
+## 84   43.34512  45.59875
+## 85   73.80546  74.88763
+## 87   82.23821  98.87781
+## 91   48.84620  43.34512
+## 96   55.31234  36.51057
+## 99   65.28603  68.47959
+## 105  48.84620  46.14307
+## 109  46.05139  43.67628
+## 115  67.39462  65.40956
+## 121  53.32501  49.36518
+## 123  81.78346  98.87781
+## 130  67.87232  57.75216
+## 146  72.69066  73.65106
+## 159  85.63545  63.95637
+## 172  63.57674  58.62754
+## 180  68.74204  61.92160
+## 188 106.87608  79.62598
+## 189  97.70652 113.37632
+## 218  69.73008  73.73167
+## 
+## $dtdve_ecov1
+##      1  2
+## 31  60 54
+## 38  40 56
+## 39  48 40
+## 48  48 56
+## 51  56 46
+## 65  43 62
+## 82  64 57
+## 91  40 49
+## 114 51 43
+## 134 59 46
+## 137 57 40
+## 144 63 53
+## 145 58 54
+## 148 57 48
+## 150 48 47
+## 156 49 44
+## 173 48 51
+## 187 60 59
+## 188 46 53
+## 193 49 53
+## 198 58 41
+## 203 40 46
+## 205 54 55
+## 210 49 56
+## 212 42 66
+## 213 44 44
+## 215 47 60
+## 217 50 53
+## 219 56 59
+## 220 49 52
+## 221 53 49
+## 222 56 54
+## 224 48 56
+## 229 49 50
+## 230 38 50
+## 232 46 49
+## 233 40 45
+## 234 56 57
+## 235 53 45
+## 236 60 54
+## 240 63 48
+## 241 48 56
+## 243 60 50
+## 244 53 56
+## 278 47 54
+## 288 47 51
+## 292 49 56
+## 304 47 55
+## 335 40 58
+## 
+## $cccs1_v0
+##     1 2
+## 87  1 0
+## 89  0 0
+## 93  0 1
+## 245 0 0
+## 316 0 0
+## 
+## $kcals_set_v0
+##        1    2
+## 187 4062 1584
+## 
+## $impactsv1
+##             1         2
+## 31  41.349514 43.638657
+## 64  21.139862 12.276891
+## 187 15.506658  3.552047
+## 198  7.243366 30.767778
+## 
+## $monoA_v1
+##             1       2
+## 31  0.4602000 0.60800
+## 187 0.5856000 0.23898
+## 188 0.7777799 0.54270
+## 198 0.3801600 0.39558
+## 254 0.3696000 1.50420
+## 298 0.4453600 0.13656
+## 301 0.4750800 0.50160
+## 
+## $lvmass_ase_ecov1
+##            1        2
+## 31  253933.7 287863.4
+## 38  152816.5 287863.4
+## 39  233723.5 182432.4
+## 48  175436.1 302913.5
+## 51  175436.1 152351.5
+## 53  244200.1 181376.6
+## 65  145041.5 255109.3
+## 82  320314.8 187416.9
+## 91  137120.9 158213.7
+## 114 188667.4 131506.5
+## 134 255970.4 188667.4
+## 137 248715.4 156334.2
+## 144 348881.5 248715.4
+## 145 213297.1 199797.1
+## 148 233723.5 147231.3
+## 150 100833.2 187416.9
+## 156 163381.3 163381.3
+## 173 152351.5 239263.0
+## 187 287863.4 181307.5
+## 188 142107.9 205770.0
+## 193 180796.7 187492.6
+## 198 213297.1 131506.5
+## 203 244200.1 162954.5
+## 205 255109.3 191034.5
+## 210 158213.7 179362.3
+## 212  96759.7 255970.4
+## 213 137216.4 151954.6
+## 215 163854.7 240747.3
+## 217 211401.8 147184.7
+## 219 263817.8 348881.5
+## 220 213297.1 213281.3
+## 221 213297.1 169595.5
+## 222 240747.3 181307.5
+## 224 163381.3 227134.9
+## 229 279826.3 144622.2
+## 230 188667.4 232494.7
+## 232 199797.1 187416.9
+## 233 151954.6 158222.9
+## 234 263817.8 234014.8
+## 235 199898.6 163381.3
+## 236 248715.4 227134.9
+## 240 219990.5 175436.1
+## 241 182432.4 227134.9
+## 243 412904.7 199797.1
+## 244 244200.1 263817.8
+## 277 239263.0 202895.5
+## 278 211401.8 226804.6
+## 288 200124.1 152351.5
+## 292 147231.3 174419.4
+## 301 145041.5 234014.8
+## 304 169251.9 226804.6
+## 320 179532.9 240747.3
+## 325 227134.9 199898.6
+## 335 157608.0 247000.6
+## 
+## $vtit_catv1
+##     1 2
+## 2   0 0
+## 6   0 1
+## 7   1 0
+## 10  1 1
+## 19  1 0
+## 21  1 0
+## 22  1 1
+## 23  1 1
+## 25  1 0
+## 31  1 0
+## 38  0 1
+## 39  1 1
+## 51  1 1
+## 55  0 1
+## 56  0 1
+## 57  1 1
+## 76  1 0
+## 82  0 1
+## 87  0 1
+## 91  1 1
+## 96  0 1
+## 98  0 1
+## 101 1 0
+## 104 0 0
+## 114 1 0
+## 134 1 0
+## 137 1 1
+## 139 1 1
+## 145 0 0
+## 150 0 1
+## 154 1 0
+## 155 1 1
+## 157 1 0
+## 173 1 0
+## 178 0 1
+## 187 0 1
+## 188 0 0
+## 193 0 1
+## 198 0 0
+## 201 0 1
+## 203 1 0
+## 205 0 0
+## 207 1 1
+## 210 1 1
+## 212 1 0
+## 213 0 1
+## 215 1 1
+## 217 1 1
+## 219 0 1
+## 220 0 0
+## 221 0 1
+## 222 1 1
+## 224 0 1
+## 229 1 0
+## 230 0 1
+## 232 1 1
+## 233 1 0
+## 234 1 0
+## 235 1 1
+## 236 1 0
+## 240 0 1
+## 241 1 1
+## 242 0 0
+## 243 1 0
+## 244 1 1
+## 251 1 0
+## 255 1 1
+## 257 0 0
+## 259 0 0
+## 262 1 1
+## 263 1 0
+## 277 0 0
+## 278 0 0
+## 280 1 1
+## 292 0 1
+## 301 0 0
+## 302 1 1
+## 303 0 0
+## 304 1 0
+## 312 0 0
+## 313 0 1
+## 326 0 0
+## 327 1 1
+## 328 0 1
+## 329 0 0
+## 330 0 0
+## 335 1 1
+## 
+## $urg_ambv0
+## [1] 1 2
+## <0 rows> (o 0- extensión row.names)
+## 
+## $po2_v1
+##        1     2
+## 92  75.0  68.2
+## 95  71.2  65.3
+## 110 90.0  92.0
+## 114 57.3  81.1
+## 116 71.2  75.0
+## 117 66.9  57.3
+## 185 71.5  77.0
+## 197 78.6 118.0
+## 201 66.9  64.7
+## 278 66.0  93.0
+## 342 77.8  74.7
+## 
+## $ahpf_v1
+##       1   2
+## 9   3.3 2.2
+## 15  1.2 3.1
+## 18  1.0 1.1
+## 20  5.6 1.9
+## 26  2.8 1.7
+## 31  2.1 3.8
+## 41  2.6 4.5
+## 51  2.5 5.5
+## 57  3.6 2.5
+## 82  2.3 3.6
+## 104 2.5 0.7
+## 105 6.0 2.7
+## 115 1.2 2.1
+## 134 1.5 2.8
+## 135 5.6 2.3
+## 136 2.6 2.2
+## 139 1.0 3.1
+## 140 3.1 1.9
+## 141 0.8 2.2
+## 142 4.2 4.2
+## 143 4.0 1.8
+## 144 3.0 2.2
+## 145 2.2 2.8
+## 163 5.1 4.0
+## 172 3.2 2.2
+## 177 2.6 3.2
+## 178 3.6 3.4
+## 179 1.0 1.5
+## 180 2.2 2.9
+## 182 3.8 2.8
+## 185 2.8 2.3
+## 186 2.2 3.4
+## 187 3.0 3.2
+## 188 1.2 1.5
+## 193 2.6 2.6
+## 196 6.0 3.1
+## 205 2.8 1.1
+## 209 4.5 3.3
+## 212 5.5 1.8
+## 214 2.0 3.3
+## 215 0.8 2.2
+## 223 2.3 3.2
+## 240 1.0 2.4
+## 241 3.6 2.5
+## 247 4.5 3.5
+## 252 3.5 4.1
+## 258 5.3 2.5
+## 263 4.1 3.8
+## 269 2.9 2.6
+## 274 1.9 2.2
+## 278 2.8 4.0
+## 304 2.2 3.0
+## 309 1.2 1.4
+## 311 5.5 2.3
+## 312 2.6 2.8
+## 336 3.0 3.0
+## 
+## $pro_v1
+##        1    2
+## 31  7.85 6.70
+## 98  7.70 7.70
+## 187 6.90 7.50
+## 188 8.20 7.22
+## 189 7.30 7.20
+## 190 7.17 7.80
+## 191 6.52 7.50
+## 194 7.17 7.50
+## 198 6.84 6.70
+## 241 6.90 7.37
+## 245 7.72 9.10
+## 301 7.72 7.56
+## 
+## $basA_v1
+##           1       2
+## 31  0.01650 0.03600
+## 187 0.00810 0.05460
+## 188 0.05340 0.02800
+## 198 0.03396 0.12090
+## 254 0.04150 0.05680
+## 298 0.04080 0.06016
+## 301 0.03104 0.04528
+## 
+## $fc_pmv1
+##     1    2
+## 17  2  5.0
+## 18  4  1.0
+## 26  0  3.0
+## 29  5  4.0
+## 31  5  4.0
+## 35  5  7.0
+## 36  2  5.0
+## 46  0  1.0
+## 48  5  0.0
+## 63  0  2.0
+## 65  8  5.0
+## 67  1  0.0
+## 68  2  0.0
+## 69  5  0.0
+## 80  1  3.0
+## 87  5  4.0
+## 91  2  7.0
+## 92  0  1.0
+## 96  1  0.0
+## 115 9  5.0
+## 139 8  4.0
+## 178 8  2.0
+## 187 7  3.0
+## 188 8  0.0
+## 198 4  0.0
+## 203 5  0.0
+## 211 0  0.0
+## 212 0  1.0
+## 214 3  0.0
+## 215 0  0.0
+## 252 5  5.2
+## 278 0  0.0
+## 281 0  1.0
+## 282 3  5.0
+## 292 4  5.0
+## 301 8  3.0
+## 302 0  7.0
+## 304 4  2.0
+## 320 5 10.0
+## 
+## $tad_v1
+##      1   2
+## 95  77 111
+## 111 90  75
+## 188 70  63
+## 198 90  50
+## 278 70  80
+## 
+## $col_v1
+##         1     2
+## 3   133.6 186.0
+## 31  257.0 127.0
+## 169 203.0 285.0
+## 170 192.0 222.0
+## 171 194.0 244.0
+## 187 261.0 211.0
+## 188 124.0 127.2
+## 197 267.0 175.0
+## 198 168.0 241.0
+## 301 250.0 252.4
+## 
+## $sin5_v1
+##     1 2
+## 31  0 0
+## 64  1 1
+## 187 1 0
+## 198 0 0
+## 
+## $bc_v1
+##       1   2
+## 17  0.6 0.0
+## 18  0.0 0.0
+## 26  0.0 2.0
+## 29  1.0 0.0
+## 31  3.0 0.0
+## 35  0.0 6.0
+## 36  0.0 0.0
+## 46  0.0 0.0
+## 48  1.0 0.0
+## 63  0.0 1.0
+## 65  3.0 5.0
+## 67  0.0 0.0
+## 68  0.0 0.0
+## 69  1.0 1.0
+## 80  0.0 0.0
+## 87  6.0 5.0
+## 91  0.0 0.5
+## 92  0.0 0.0
+## 115 2.0 0.0
+## 139 0.0 0.0
+## 178 2.0 1.0
+## 187 6.0 3.0
+## 188 1.0 0.0
+## 198 6.0 0.0
+## 203 0.0 0.0
+## 211 0.0 1.0
+## 212 2.0 0.0
+## 214 3.0 0.0
+## 215 0.0 0.0
+## 252 4.0 5.0
+## 278 0.0 0.0
+## 281 5.0 0.0
+## 292 6.0 4.0
+## 301 0.0 0.5
+## 302 4.0 0.0
+## 304 1.0 0.0
+## 320 0.0 2.0
+## 
+## $fvcp_postv1
+## [1] 1 2
+## <0 rows> (o 0- extensión row.names)
+## 
+## $vas1_v1
+##       1   2
+## 31  9.0 2.7
+## 64  2.0 1.9
+## 187 5.7 0.3
+## 198 2.0 2.0
+## 
+## $sin6_v1
+##     1 2
+## 31  1 0
+## 64  1 0
+## 187 1 1
+## 198 0 1
+## 
+## $graudisn_v1
+##     1 2
+## 31  3 1
+## 64  2 0
+## 187 1 2
+## 198 4 2
+## 
+## $cpcr_mg_l_mediav1
+##          1      2
+## 31  0.0800 0.0800
+## 54  0.0800 0.3420
+## 56  3.1050 0.3420
+## 63  0.9580 1.5850
+## 85  0.5050 0.5375
+## 91  3.0050 1.6200
+## 98  1.7200 0.5725
+## 104 0.3420 0.1970
+## 187 0.9480 0.0800
+## 188 2.9650 0.4080
+## 198 0.2755 0.3910
+## 215 0.2765 0.9580
+## 233 0.3690 0.3515
+## 234 0.7865 1.0200
+## 238 0.5095 0.6538
+## 254 0.3035 1.3800
+## 303 0.0800 0.4180
+## 
+## $neutA_v1
+##           1       2
+## 31  5.18445 5.18445
+## 187 3.78190 3.38140
+## 188 9.51400 5.68974
+## 198 5.22416 6.58940
+## 254 3.09570 4.50850
+## 298 2.03943 3.38140
+## 301 3.00294 4.20480
+## 
+## $ahpl_v1
+##       1   2
+## 9   1.0 1.0
+## 10  3.3 1.8
+## 14  2.3 4.0
+## 15  1.2 2.6
+## 18  1.6 0.5
+## 20  5.0 2.5
+## 22  0.6 3.2
+## 26  0.5 0.8
+## 31  0.4 3.0
+## 51  5.0 5.0
+## 57  3.2 4.0
+## 68  1.2 1.2
+## 69  0.5 5.2
+## 72  2.5 2.1
+## 82  1.2 2.1
+## 86  3.0 4.0
+## 92  1.0 3.8
+## 104 4.0 1.9
+## 107 4.1 3.0
+## 108 3.4 2.1
+## 112 1.4 3.2
+## 113 4.0 1.8
+## 115 3.3 1.0
+## 134 2.0 3.2
+## 135 2.2 1.6
+## 136 2.3 2.2
+## 137 3.3 2.7
+## 139 1.0 2.3
+## 140 4.0 2.7
+## 141 1.3 4.1
+## 142 5.0 3.2
+## 143 3.0 2.0
+## 144 4.8 5.0
+## 145 0.6 0.8
+## 147 1.8 2.1
+## 164 2.0 5.2
+## 168 2.0 2.7
+## 175 2.5 4.0
+## 176 4.0 4.0
+## 179 0.4 2.0
+## 180 3.0 1.4
+## 185 4.0 2.7
+## 187 5.2 2.7
+## 188 0.5 2.2
+## 190 2.9 2.0
+## 191 2.7 5.5
+## 193 3.0 2.1
+## 196 1.8 5.2
+## 200 1.1 1.8
+## 205 0.6 2.5
+## 209 4.6 1.8
+## 212 4.0 2.2
+## 215 0.4 0.9
+## 217 2.0 1.8
+## 240 0.5 2.1
+## 241 6.0 4.0
+## 252 2.4 4.0
+## 263 4.6 3.6
+## 274 0.7 3.0
+## 278 1.0 3.3
+## 304 2.5 1.6
+## 309 2.5 2.7
+## 311 4.1 2.0
+## 312 1.9 2.0
+## 313 4.0 2.5
+## 336 3.3 2.5
+## 
+## $activityv1
+##            1        2
+## 31  80.53098 73.03780
+## 64  23.34794 17.13671
+## 187 47.68836 23.33140
+## 198 72.88892 54.53643
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
