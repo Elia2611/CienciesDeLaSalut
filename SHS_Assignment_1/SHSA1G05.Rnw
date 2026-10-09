@@ -29,7 +29,7 @@
 \newpage
 
 \section{Introduction}
-The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited pape.
+The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited paper.
 
 
 \section{Analysis}
@@ -61,6 +61,9 @@ Instructions:
 ### libraries related to knit:
 library(knitr)
 library(xtable)     # to create nice LaTeX tables
+library(mice)
+library(miclust)
+library(miceadds)
 @
 
 
@@ -77,7 +80,7 @@ opts_chunk$set(echo = TRUE,         # show R input code
                message = TRUE,       # set to FALSE to avoid nuisance messages (be careful!)         
                warning = TRUE,       # set to FALSE to avoid nuisance messages (be careful!)         
                size = "footnotesize", # set the R output and output font size 
-               cache = FALSE,        # useful for computationally costly chunks (be careful if set to TRUE!)
+               cache = TRUE,        # useful for computationally costly chunks (be careful if set to TRUE!)
                prompt = TRUE)
 @
 
@@ -88,17 +91,59 @@ load("./copd_redux.RData")
 @
 
 <<missingness>>=
-n_obs <- nrow(copd)
-n_vars <- ncol(copd)
-nans <- 100*colMeans(is.na(copd))
-min_nan <- sprintf("%.2g", min(nans)) # MIRAR
-max_nan <- sprintf("%.2g", max(nans))
+n_obs <- nrow(copd) # Number of participants
+n_vars <- ncol(copd) # Number of variables
+nans <- 100*colMeans(is.na(copd)) # Percentage of missing data by variable
+min_nan <- sprintf("%.2g", min(nans)) # MIRAR # Lower percentage
+max_nan <- sprintf("%.2g", max(nans)) # Upper percentage
+
+# Vairables with less than 5% of data missing (percentage)
 less_5 <- sprintf("%.2g", 100*length(nans[nans<5])/n_vars) 
+
+# Percentage of complete cases
 comp_cases <- sprintf("%.2g", 100*mean(complete.cases(copd)))
+
+# Percentage of missing data
 miss_total <-  sprintf("%.2g", 100*mean(is.na(copd)))
+
+# Total cells observed (variables*observations)
 total_cells = prettyNum(n_obs*n_vars, big.mark = ",", decimal.mark = ".")
 @
 
 “The subset used here included \Sexpr{n_obs} participants and \Sexpr{n_vars} variables. The range of missing data in the different variables went from \Sexpr{min_nan}\% to \Sexpr{max_nan}\%, with \Sexpr{less_5}\% of the variables having less than 5\% of the data missing. Only \Sexpr{comp_cases}\% of the participants had complete data on all \Sexpr{n_vars} variables. Overall, \Sexpr{miss_total}\% of the information was missing; that is, \Sexpr{miss_total}\% of the total of \Sexpr{total_cells} cells (\Sexpr{n_vars} × \Sexpr{n_obs} = \Sexpr{total_cells}) had missing data.”
+
+\subsection{Multiple imputation}
+
+Apply multiple imputation to copd data using 100 imputations. Explain in a reasoned manner how you decided to set the values of the arguments \texttt{method} and \texttt{predictorMatrix} when using the \texttt{mice()} function. Show your code.
+
+<<imputation_ini>>=
+# Display of default imputation methods for each variable
+ini <- mice(copd, maxit=0)
+ini
+@
+
+We can see that the mice package suggest imputing initialy with de mean for continuous variables and with a logistic regression for binary ones. Further research on the dataset has shown that the variables have no deterministic relation. So we do not change the imputation methods. We have a variable (\texttt{id}) that don't have any role in the imputation process, so we change \texttt{predictorMatrix} and \texttt{methods} acording to that.
+
+<<imputation_parameters>>=
+# Change in parameters
+meth <- ini$method
+pred <- ini$predictorMatrix
+
+meth["id"] <- "" # do not impute "id"
+pred["id", ] <- 0 # we don't want "id" to be imputed
+pred[, "id"] <- 0 # we don't want "id" to be predictor
+@
+
+<<imputation>>=
+# Imputation of 100 datasets
+M <- 2 # Number of imputations for each missing value
+imp <- mice(data = copd, 
+            m = M, 
+            method = meth, 
+            predictorMatrix = pred,
+            maxit = 20,
+            printFlag = TRUE,
+            seed = 666)
+@
 
 \end{document}

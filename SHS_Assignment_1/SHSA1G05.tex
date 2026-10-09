@@ -78,7 +78,7 @@
 \newpage
 
 \section{Introduction}
-The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited pape.
+The aim of this assignment is to apply the framework proposed by Basagaña et al. to the data set copd in the file copd redux.RData. Data copd is a subset of 45 variables of the original data analyzed in the cited paper.
 
 
 \section{Analysis}
@@ -117,19 +117,190 @@ Instructions:
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{> }\hldef{n_obs} \hlkwb{<-} \hlkwd{nrow}\hldef{(copd)}
-\hldef{> }\hldef{n_vars} \hlkwb{<-} \hlkwd{ncol}\hldef{(copd)}
-\hldef{> }\hldef{nans} \hlkwb{<-} \hlnum{100}\hlopt{*}\hlkwd{colMeans}\hldef{(}\hlkwd{is.na}\hldef{(copd))}
-\hldef{> }\hldef{min_nan} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlkwd{min}\hldef{(nans))} \hlcom{# MIRAR}
-\hldef{> }\hldef{max_nan} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlkwd{max}\hldef{(nans))}
+\hldef{> }\hldef{n_obs} \hlkwb{<-} \hlkwd{nrow}\hldef{(copd)} \hlcom{# Number of participants}
+\hldef{> }\hldef{n_vars} \hlkwb{<-} \hlkwd{ncol}\hldef{(copd)} \hlcom{# Number of variables}
+\hldef{> }\hldef{nans} \hlkwb{<-} \hlnum{100}\hlopt{*}\hlkwd{colMeans}\hldef{(}\hlkwd{is.na}\hldef{(copd))} \hlcom{# Percentage of missing data by variable}
+\hldef{> }\hldef{min_nan} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlkwd{min}\hldef{(nans))} \hlcom{# MIRAR # Lower percentage}
+\hldef{> }\hldef{max_nan} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlkwd{max}\hldef{(nans))} \hlcom{# Upper percentage}
+\hldef{> }
+\hldef{> }\hlcom{# Vairables with less than 5% of data missing (percentage)}
 \hldef{> }\hldef{less_5} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlnum{100}\hlopt{*}\hlkwd{length}\hldef{(nans[nans}\hlopt{<}\hlnum{5}\hldef{])}\hlopt{/}\hldef{n_vars)}
+\hldef{> }
+\hldef{> }\hlcom{# Percentage of complete cases}
 \hldef{> }\hldef{comp_cases} \hlkwb{<-} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlnum{100}\hlopt{*}\hlkwd{mean}\hldef{(}\hlkwd{complete.cases}\hldef{(copd)))}
+\hldef{> }
+\hldef{> }\hlcom{# Percentage of missing data}
 \hldef{> }\hldef{miss_total} \hlkwb{<-}  \hlkwd{sprintf}\hldef{(}\hlsng{"%.2g"}\hldef{,} \hlnum{100}\hlopt{*}\hlkwd{mean}\hldef{(}\hlkwd{is.na}\hldef{(copd)))}
+\hldef{> }
+\hldef{> }\hlcom{# Total cells observed (variables*observations)}
 \hldef{> }\hldef{total_cells} \hlkwb{=} \hlkwd{prettyNum}\hldef{(n_obs}\hlopt{*}\hldef{n_vars,} \hlkwc{big.mark} \hldef{=} \hlsng{","}\hldef{,} \hlkwc{decimal.mark} \hldef{=} \hlsng{"."}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
 “The subset used here included 342 participants and 45 variables. The range of missing data in the different variables went from 0\% to 32\%, with 69\% of the variables having less than 5\% of the data missing. Only 33\% of the participants had complete data on all 45 variables. Overall, 5.4\% of the information was missing; that is, 5.4\% of the total of 15,390 cells (45 × 342 = 15,390) had missing data.”
+
+\subsection{Multiple imputation}
+
+Apply multiple imputation to copd data using 100 imputations. Explain in a reasoned manner how you decided to set the values of the arguments \texttt{method} and \texttt{predictorMatrix} when using the \texttt{mice()} function. Show your code.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Display of default imputation methods for each variable}
+\hldef{> }\hldef{ini} \hlkwb{<-} \hlkwd{mice}\hldef{(copd,} \hlkwc{maxit}\hldef{=}\hlnum{0}\hldef{)}
+\hldef{> }\hldef{ini}
+\end{alltt}
+\begin{verbatim}
+## Class: mids
+## Number of multiple imputations:  5 
+## Imputation methods:
+##                id  index_barthel2v1    quo_calcpostv1         rv_prepv1        incp_fevv1 
+##                ""             "pmm"                ""             "pmm"             "pmm" 
+##       fevp_postv1          rv_tlcv1        ctnf_s_mv1    vtdvdbid_ecov1          pp_ecov1 
+##                ""             "pmm"             "pmm"             "pmm"             "pmm" 
+##          sin11_v1           vas2_v1         ic_prepv1          iam_chv1          sin15_v1 
+##          "logreg"             "pmm"             "pmm"          "logreg"          "logreg" 
+##        cil8_s_mv1           sin7_v1           sin8_v1             ch_v1         vc_prepv1 
+##             "pmm"          "logreg"          "logreg"             "pmm"             "pmm" 
+##       dtdve_ecov1          cccs1_v0      kcals_set_v0         impactsv1          monoA_v1 
+##             "pmm"          "logreg"             "pmm"             "pmm"             "pmm" 
+##  lvmass_ase_ecov1        vtit_catv1         urg_ambv0            po2_v1           ahpf_v1 
+##             "pmm"          "logreg"                ""             "pmm"             "pmm" 
+##            pro_v1           basA_v1           fc_pmv1            tad_v1            col_v1 
+##             "pmm"             "pmm"             "pmm"             "pmm"             "pmm" 
+##           sin5_v1             bc_v1       fvcp_postv1           vas1_v1           sin6_v1 
+##          "logreg"             "pmm"                ""             "pmm"          "logreg" 
+##       graudisn_v1 cpcr_mg_l_mediav1          neutA_v1           ahpl_v1        activityv1 
+##         "polyreg"             "pmm"             "pmm"             "pmm"             "pmm" 
+## PredictorMatrix:
+##                  id index_barthel2v1 quo_calcpostv1 rv_prepv1 incp_fevv1 fevp_postv1
+## id                0                1              1         1          1           1
+## index_barthel2v1  1                0              1         1          1           1
+## quo_calcpostv1    1                1              0         1          1           1
+## rv_prepv1         1                1              1         0          1           1
+## incp_fevv1        1                1              1         1          0           1
+## fevp_postv1       1                1              1         1          1           0
+##                  rv_tlcv1 ctnf_s_mv1 vtdvdbid_ecov1 pp_ecov1 sin11_v1 vas2_v1 ic_prepv1
+## id                      1          1              1        1        1       1         1
+## index_barthel2v1        1          1              1        1        1       1         1
+## quo_calcpostv1          1          1              1        1        1       1         1
+## rv_prepv1               1          1              1        1        1       1         1
+## incp_fevv1              1          1              1        1        1       1         1
+## fevp_postv1             1          1              1        1        1       1         1
+##                  iam_chv1 sin15_v1 cil8_s_mv1 sin7_v1 sin8_v1 ch_v1 vc_prepv1 dtdve_ecov1
+## id                      1        1          1       1       1     1         1           1
+## index_barthel2v1        1        1          1       1       1     1         1           1
+## quo_calcpostv1          1        1          1       1       1     1         1           1
+## rv_prepv1               1        1          1       1       1     1         1           1
+## incp_fevv1              1        1          1       1       1     1         1           1
+## fevp_postv1             1        1          1       1       1     1         1           1
+##                  cccs1_v0 kcals_set_v0 impactsv1 monoA_v1 lvmass_ase_ecov1 vtit_catv1
+## id                      1            1         1        1                1          1
+## index_barthel2v1        1            1         1        1                1          1
+## quo_calcpostv1          1            1         1        1                1          1
+## rv_prepv1               1            1         1        1                1          1
+## incp_fevv1              1            1         1        1                1          1
+## fevp_postv1             1            1         1        1                1          1
+##                  urg_ambv0 po2_v1 ahpf_v1 pro_v1 basA_v1 fc_pmv1 tad_v1 col_v1 sin5_v1
+## id                       1      1       1      1       1       1      1      1       1
+## index_barthel2v1         1      1       1      1       1       1      1      1       1
+## quo_calcpostv1           1      1       1      1       1       1      1      1       1
+## rv_prepv1                1      1       1      1       1       1      1      1       1
+## incp_fevv1               1      1       1      1       1       1      1      1       1
+## fevp_postv1              1      1       1      1       1       1      1      1       1
+##                  bc_v1 fvcp_postv1 vas1_v1 sin6_v1 graudisn_v1 cpcr_mg_l_mediav1 neutA_v1
+## id                   1           1       1       1           1                 1        1
+## index_barthel2v1     1           1       1       1           1                 1        1
+## quo_calcpostv1       1           1       1       1           1                 1        1
+## rv_prepv1            1           1       1       1           1                 1        1
+## incp_fevv1           1           1       1       1           1                 1        1
+## fevp_postv1          1           1       1       1           1                 1        1
+##                  ahpl_v1 activityv1
+## id                     1          1
+## index_barthel2v1       1          1
+## quo_calcpostv1         1          1
+## rv_prepv1              1          1
+## incp_fevv1             1          1
+## fevp_postv1            1          1
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
+
+We can see that the mice package suggest imputing initialy with de mean for continuous variables and with a logistic regression for binary ones. Further research on the dataset has shown that the variables have no deterministic relation. So we do not change the imputation methods. We have a variable (\texttt{id}) that don't have any role in the imputation process, so we change \texttt{predictorMatrix} and \texttt{methods} acording to that.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Change in parameters}
+\hldef{> }\hldef{meth} \hlkwb{<-} \hldef{ini}\hlopt{$}\hldef{method}
+\hldef{> }\hldef{pred} \hlkwb{<-} \hldef{ini}\hlopt{$}\hldef{predictorMatrix}
+\hldef{> }
+\hldef{> }\hldef{meth[}\hlsng{"id"}\hldef{]} \hlkwb{<-} \hlsng{""} \hlcom{# do not impute "id"}
+\hldef{> }\hldef{pred[}\hlsng{"id"}\hldef{, ]} \hlkwb{<-} \hlnum{0} \hlcom{# we don't want "id" to be imputed}
+\hldef{> }\hldef{pred[,} \hlsng{"id"}\hldef{]} \hlkwb{<-} \hlnum{0} \hlcom{# we don't want "id" to be predictor}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Imputation of 100 datasets}
+\hldef{> }\hldef{M} \hlkwb{<-} \hlnum{2} \hlcom{# Number of imputations for each missing value}
+\hldef{> }\hldef{imp} \hlkwb{<-} \hlkwd{mice}\hldef{(}\hlkwc{data} \hldef{= copd,}
+\hldef{+ }            \hlkwc{m} \hldef{= M,}
+\hldef{+ }            \hlkwc{method} \hldef{= meth,}
+\hldef{+ }            \hlkwc{predictorMatrix} \hldef{= pred,}
+\hldef{+ }            \hlkwc{maxit} \hldef{=} \hlnum{20}\hldef{,}
+\hldef{+ }            \hlkwc{printFlag} \hldef{=} \hlnum{TRUE}\hldef{,}
+\hldef{+ }            \hlkwc{seed} \hldef{=} \hlnum{666}\hldef{)}
+\end{alltt}
+\begin{verbatim}
+## 
+##  iter imp variable
+##   1   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   1   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   2   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   2   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   3   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   3   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   4   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   4   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   5   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   5   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   6   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   6   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   7   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   7   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   8   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   8   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   9   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   9   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   10   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   10   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   11   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   11   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   12   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   12   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   13   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   13   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   14   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   14   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   15   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   15   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   16   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   16   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   17   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   17   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   18   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   18   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   19   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   19   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   20   1  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+##   20   2  index_barthel2v1  rv_prepv1  incp_fevv1  rv_tlcv1  ctnf_s_mv1  vtdvdbid_ecov1  pp_ecov1  sin11_v1  vas2_v1  ic_prepv1  iam_chv1  sin15_v1  cil8_s_mv1  sin7_v1  sin8_v1  ch_v1  vc_prepv1  dtdve_ecov1  cccs1_v0  kcals_set_v0  impactsv1  monoA_v1  lvmass_ase_ecov1  vtit_catv1  po2_v1  ahpf_v1  pro_v1  basA_v1  fc_pmv1  tad_v1  col_v1  sin5_v1  bc_v1  vas1_v1  sin6_v1  graudisn_v1  cpcr_mg_l_mediav1  neutA_v1  ahpl_v1  activityv1
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 
 \end{document}
