@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.9.16)  14 OCT 2026 17:43
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.9.16)  14 OCT 2026 18:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -506,6 +506,8 @@ Overfull \hbox (157.04411pt too wide) in paragraph at lines 355--355
 bject, action="all" extracts all 100 imputed datasets.[][] 
  []
 
+LaTeX Font Info:    Font shape `OMS/cmtt/m/n' in size <8> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 364.
 [5] [6] (./SHSA1G05.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
@@ -515,11 +517,11 @@ Package rerunfilecheck Info: File `SHSA1G05.out' has not changed.
 (rerunfilecheck)             Checksum: 713D80390568092FCD9BE6B5686DBADB;879.
  ) 
 Here is how much of TeX's memory you used:
- 12245 strings out of 474222
- 190555 string characters out of 5748733
+ 12248 strings out of 474222
+ 190588 string characters out of 5748733
  1990975 words of memory out of 5000000
- 34325 multiletter control sequences out of 15000+600000
- 563374 words of font info for 57 fonts, out of 8000000 for 9000
+ 34327 multiletter control sequences out of 15000+600000
+ 563630 words of font info for 58 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,5n,79p,697b,618s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></us
@@ -531,13 +533,14 @@ t/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texmf-dist/fonts
 /type1/public/amsfonts/cm/cmr7.pfb></usr/share/texlive/texmf-dist/fonts/type1/p
 ublic/amsfonts/cm/cmss10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/
 amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/
-cmtt10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.
-pfb></usr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on SHSA1G05.pdf (6 pages, 164423 bytes).
+ts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mti10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.
+pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></u
+sr/share/texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
+Output written on SHSA1G05.pdf (6 pages, 173733 bytes).
 PDF statistics:
- 129 PDF objects out of 1000 (max. 8388607)
- 94 compressed objects within 1 object stream
+ 134 PDF objects out of 1000 (max. 8388607)
+ 97 compressed objects within 1 object stream
  18 named destinations out of 1000 (max. 500000)
  41 words of extra memory for PDF output out of 10000 (max. 10000000)
 

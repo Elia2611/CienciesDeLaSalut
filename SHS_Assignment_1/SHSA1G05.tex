@@ -354,22 +354,35 @@ than in the original analysis. To do that, follow these steps:
 \hldef{> }\hlcom{# prepare the data.frame object}
 \hldef{> }\hldef{imp_list} \hlkwb{<-} \hlkwd{complete}\hldef{(imp,} \hlkwc{action}\hldef{=}\hlsng{"all"}\hldef{)} \hlcom{# extracts the completed data from a mids object, action="all" extracts all 100 imputed datasets.}
 \hldef{> }
+\hldef{> }\hldef{copd_raw} \hlkwb{<-} \hldef{copd}
+\hldef{> }\hldef{copd_raw}\hlopt{$}\hldef{id} \hlkwb{<-} \hlkwa{NULL}
+\hldef{> }\hldef{num_cols} \hlkwb{<-} \hlkwd{sapply}\hldef{(copd_raw,} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{is.numeric}\hldef{(x)} \hlopt{||} \hlkwd{is.integer}\hldef{(x)} \hlopt{||} \hlkwd{is.logical}\hldef{(x))}
+\hldef{> }\hldef{copd_raw} \hlkwb{<-} \hldef{copd_raw[, num_cols]}
+\hldef{> }
+\hldef{> }\hlcom{# 2. Extraure i netejar la llista de datasets imputats de mice:}
+\hldef{> }\hldef{imp_list} \hlkwb{<-} \hlkwd{complete}\hldef{(imp,} \hlkwc{action} \hldef{=} \hlsng{"all"}\hldef{)}
+\hldef{> }\hldef{imp_list_clean} \hlkwb{<-} \hlkwd{lapply}\hldef{(imp_list,} \hlkwa{function}\hldef{(}\hlkwc{df}\hldef{) \{}
+\hldef{+ }  \hldef{df}\hlopt{$}\hldef{id} \hlkwb{<-} \hlkwa{NULL}
+\hldef{+ }  \hldef{df} \hlkwb{<-} \hldef{df[, num_cols]}
+\hldef{+ }  \hlkwd{return}\hldef{(df)}
+\hldef{+ }\hldef{\})}
+\hldef{> }\hldef{my_cluster_list} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlkwd{list}\hldef{(copd_raw), imp_list_clean)}
+\hldef{> }
 \hldef{> }\hlcom{# prepare the data for miclust}
-\hldef{> }\hldef{imp_midata} \hlkwb{<-} \hldef{miclust}\hlopt{::}\hlkwd{getdata}\hldef{(}\hlkwc{data} \hldef{= imp_list)}
-\end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `matrixStats::colMeans2()`:\\\#\# ! Argument 'x' must be of type logical, integer or numeric, not 'character'}}\begin{alltt}
+\hldef{> }\hldef{imp_midata} \hlkwb{<-} \hldef{miclust}\hlopt{::}\hlkwd{getdata}\hldef{(}\hlkwc{data} \hldef{= my_cluster_list)}
+\hldef{> }
 \hldef{> }\hlkwd{class}\hldef{(imp_midata)}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! objeto 'imp\_midata' no encontrado}}\begin{alltt}
+\begin{verbatim}
+## [1] "list"   "midata"
+\end{verbatim}
+\begin{alltt}
 \hldef{> }\hlkwd{length}\hldef{(imp_midata}\hlopt{$}\hldef{impdata)}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! objeto 'imp\_midata' no encontrado}}\end{kframe}
+\begin{verbatim}
+## [1] 2
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
   

@@ -167,8 +167,22 @@ than in the original analysis. To do that, follow these steps:
 # prepare the data.frame object
 imp_list <- complete(imp, action="all") # extracts the completed data from a mids object, action="all" extracts all 100 imputed datasets.
 
+copd_raw <- copd
+copd_raw$id <- NULL
+num_cols <- sapply(copd_raw, function(x) is.numeric(x) || is.integer(x) || is.logical(x))
+copd_raw <- copd_raw[, num_cols]
+
+# 2. Extraure i netejar la llista de datasets imputats de mice:
+imp_list <- complete(imp, action = "all")
+imp_list_clean <- lapply(imp_list, function(df) {
+  df$id <- NULL
+  df <- df[, num_cols]
+  return(df)
+})
+my_cluster_list <- c(list(copd_raw), imp_list_clean)
+
 # prepare the data for miclust
-imp_midata <- miclust::getdata(data = imp_list) 
+imp_midata <- miclust::getdata(data = my_cluster_list) 
 
 class(imp_midata)
 length(imp_midata$impdata)
