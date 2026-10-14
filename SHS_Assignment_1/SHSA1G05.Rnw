@@ -117,6 +117,7 @@ total_cells = prettyNum(n_obs*n_vars, big.mark = ",", decimal.mark = ".")
 Apply multiple imputation to copd data using 100 imputations. Explain in a reasoned manner how you decided to set the values of the arguments \texttt{method} and \texttt{predictorMatrix} when using the \texttt{mice()} function. Show your code.
 
 <<imputation_ini>>=
+
 # Display of default imputation methods for each variable
 ini <- mice(copd, maxit=0)
 ini
@@ -145,7 +146,7 @@ imp <- mice(data = copd,
             printFlag = FALSE,
             seed = 666)
 # imp$imp (output llarg)
-head(imp$imp)
+summary(imp)
 @
 
 
@@ -160,9 +161,36 @@ than in the original analysis. To do that, follow these steps:
   create a \textit{list} of \textit{data.frames} and pass it to the \texttt{getdata()} function. Give a detailed
   explanation of the data processing you did to get that \textit{list}. Show your code.
   
+<<data_prep>>=
+# ?miclust::getdata
+
+# prepare the data.frame object
+imp_list <- complete(imp, action="all") # extracts the completed data from a mids object, action="all" extracts all 100 imputed datasets.
+
+# prepare the data for miclust
+imp_midata <- miclust::getdata(data = imp_list) 
+
+class(imp_midata)
+length(imp_midata$impdata)
+@
+
+  
   \item Use the \texttt{miclust()} function to perform the integration of missing data in cluster
   analysis using the same settings as in the original analysis. Show your code and
   explain how and why you set all arguments in the \texttt{miclust()} function.
+
+<<cluster_analysis>>=
+miclust_1 <- miclust(data = imp_midata, 
+                     method = "kmeans", 
+                     search = "backward",
+                     ks = 2:5,
+                     usedimp = 1:2,
+                     seed = 666)
+
+summary(miclust_1)
+miclust_1$kfin # optimal k (number of clusters)
+@
+
 
 \end{enumerate}
 
