@@ -137,7 +137,7 @@ pred[, "id"] <- 0 # we don't want "id" to be predictor
 
 <<imputation>>=
 # Imputation of 100 datasets
-M <- 2 # Number of imputations for each missing value
+M <- 10 # Number of imputations for each missing value
 imp <- mice(data = copd, 
             m = M, 
             method = meth, 
@@ -146,7 +146,7 @@ imp <- mice(data = copd,
             printFlag = FALSE,
             seed = 666)
 # imp$imp (output llarg)
-summary(imp)
+#summary(imp)
 @
 
 
@@ -163,29 +163,31 @@ than in the original analysis. To do that, follow these steps:
   
 <<data_prep>>=
 # ?miclust::getdata
-
-# prepare the data.frame object
-imp_list <- complete(imp, action="all") # extracts the completed data from a mids object, action="all" extracts all 100 imputed datasets.
-
+# getdata() requires the data to be a list or data.frame where the first element is the raw data:
+  
+  #1- prepare raw data (all numeric and without id) 
 copd_raw <- copd
 copd_raw$id <- NULL
 num_cols <- sapply(copd_raw, function(x) is.numeric(x) || is.integer(x) || is.logical(x))
 copd_raw <- copd_raw[, num_cols]
 
-# 2. Extraure i netejar la llista de datasets imputats de mice:
-imp_list <- complete(imp, action = "all")
+  #2- prepare imputated data
+imp_list <- complete(imp, action = "all") # extracts the completed data from a mids object
 imp_list_clean <- lapply(imp_list, function(df) {
   df$id <- NULL
   df <- df[, num_cols]
   return(df)
 })
+
+  #3- create list where the first element is the raw data
 my_cluster_list <- c(list(copd_raw), imp_list_clean)
 
 # prepare the data for miclust
 imp_midata <- miclust::getdata(data = my_cluster_list) 
 
+# now we check
 class(imp_midata)
-length(imp_midata$impdata)
+length(imp_midata$impdata) 
 @
 
   
@@ -198,13 +200,19 @@ miclust_1 <- miclust(data = imp_midata,
                      method = "kmeans", 
                      search = "backward",
                      ks = 2:5,
-                     usedimp = 1:2,
+                     usedimp = 1:10,
                      seed = 666)
 
-summary(miclust_1)
+#summary(miclust_1)
 miclust_1$kfin # optimal k (number of clusters)
 @
 
+\color{green}{
+- Comentar perque no utilitzem l'id per fer kmeans \\
+- Comentar com preparem les dades per pasarles a getdata() (info executant ?mice::getdata())\\
+- Explicar perque fem search backward (està a l'article)\\
+- Trobar explicació de kmax=5 (vaig copiar la simulació de l'article)
+}
 
 \end{enumerate}
 

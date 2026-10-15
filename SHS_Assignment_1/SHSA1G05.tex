@@ -247,7 +247,7 @@ We can see that the mice package suggest imputing initialy with de mean for cont
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hldef{> }\hlcom{# Imputation of 100 datasets}
-\hldef{> }\hldef{M} \hlkwb{<-} \hlnum{2} \hlcom{# Number of imputations for each missing value}
+\hldef{> }\hldef{M} \hlkwb{<-} \hlnum{10} \hlcom{# Number of imputations for each missing value}
 \hldef{> }\hldef{imp} \hlkwb{<-} \hlkwd{mice}\hldef{(}\hlkwc{data} \hldef{= copd,}
 \hldef{+ }            \hlkwc{m} \hldef{= M,}
 \hldef{+ }            \hlkwc{method} \hldef{= meth,}
@@ -256,81 +256,8 @@ We can see that the mice package suggest imputing initialy with de mean for cont
 \hldef{+ }            \hlkwc{printFlag} \hldef{=} \hlnum{FALSE}\hldef{,}
 \hldef{+ }            \hlkwc{seed} \hldef{=} \hlnum{666}\hldef{)}
 \hldef{> }\hlcom{# imp$imp (output llarg)}
-\hldef{> }\hlkwd{summary}\hldef{(imp)}
+\hldef{> }\hlcom{#summary(imp)}
 \end{alltt}
-\begin{verbatim}
-## Class: mids
-## Number of multiple imputations:  2 
-## Imputation methods:
-##  index_barthel2v1    quo_calcpostv1         rv_prepv1        incp_fevv1       fevp_postv1 
-##             "pmm"                ""             "pmm"             "pmm"                "" 
-##          rv_tlcv1        ctnf_s_mv1    vtdvdbid_ecov1          pp_ecov1          sin11_v1 
-##             "pmm"             "pmm"             "pmm"             "pmm"          "logreg" 
-##           vas2_v1         ic_prepv1          iam_chv1          sin15_v1        cil8_s_mv1 
-##             "pmm"             "pmm"          "logreg"          "logreg"             "pmm" 
-##           sin7_v1           sin8_v1             ch_v1         vc_prepv1       dtdve_ecov1 
-##          "logreg"          "logreg"             "pmm"             "pmm"             "pmm" 
-##          cccs1_v0      kcals_set_v0         impactsv1          monoA_v1  lvmass_ase_ecov1 
-##          "logreg"             "pmm"             "pmm"             "pmm"             "pmm" 
-##        vtit_catv1         urg_ambv0            po2_v1           ahpf_v1            pro_v1 
-##          "logreg"                ""             "pmm"             "pmm"             "pmm" 
-##           basA_v1           fc_pmv1            tad_v1            col_v1           sin5_v1 
-##             "pmm"             "pmm"             "pmm"             "pmm"          "logreg" 
-##             bc_v1       fvcp_postv1           vas1_v1           sin6_v1       graudisn_v1 
-##             "pmm"                ""             "pmm"          "logreg"         "polyreg" 
-## cpcr_mg_l_mediav1          neutA_v1           ahpl_v1        activityv1 
-##             "pmm"             "pmm"             "pmm"             "pmm" 
-## PredictorMatrix:
-##                  index_barthel2v1 quo_calcpostv1 rv_prepv1 incp_fevv1 fevp_postv1
-## index_barthel2v1                0              1         1          1           1
-## quo_calcpostv1                  1              0         1          1           1
-## rv_prepv1                       1              1         0          1           1
-## incp_fevv1                      1              1         1          0           1
-## fevp_postv1                     1              1         1          1           0
-## rv_tlcv1                        1              1         1          1           1
-##                  rv_tlcv1 ctnf_s_mv1 vtdvdbid_ecov1 pp_ecov1 sin11_v1 vas2_v1 ic_prepv1
-## index_barthel2v1        1          1              1        1        1       1         1
-## quo_calcpostv1          1          1              1        1        1       1         1
-## rv_prepv1               1          1              1        1        1       1         1
-## incp_fevv1              1          1              1        1        1       1         1
-## fevp_postv1             1          1              1        1        1       1         1
-## rv_tlcv1                0          1              1        1        1       1         1
-##                  iam_chv1 sin15_v1 cil8_s_mv1 sin7_v1 sin8_v1 ch_v1 vc_prepv1 dtdve_ecov1
-## index_barthel2v1        1        1          1       1       1     1         1           1
-## quo_calcpostv1          1        1          1       1       1     1         1           1
-## rv_prepv1               1        1          1       1       1     1         1           1
-## incp_fevv1              1        1          1       1       1     1         1           1
-## fevp_postv1             1        1          1       1       1     1         1           1
-## rv_tlcv1                1        1          1       1       1     1         1           1
-##                  cccs1_v0 kcals_set_v0 impactsv1 monoA_v1 lvmass_ase_ecov1 vtit_catv1
-## index_barthel2v1        1            1         1        1                1          1
-## quo_calcpostv1          1            1         1        1                1          1
-## rv_prepv1               1            1         1        1                1          1
-## incp_fevv1              1            1         1        1                1          1
-## fevp_postv1             1            1         1        1                1          1
-## rv_tlcv1                1            1         1        1                1          1
-##                  urg_ambv0 po2_v1 ahpf_v1 pro_v1 basA_v1 fc_pmv1 tad_v1 col_v1 sin5_v1
-## index_barthel2v1         1      1       1      1       1       1      1      1       1
-## quo_calcpostv1           1      1       1      1       1       1      1      1       1
-## rv_prepv1                1      1       1      1       1       1      1      1       1
-## incp_fevv1               1      1       1      1       1       1      1      1       1
-## fevp_postv1              1      1       1      1       1       1      1      1       1
-## rv_tlcv1                 1      1       1      1       1       1      1      1       1
-##                  bc_v1 fvcp_postv1 vas1_v1 sin6_v1 graudisn_v1 cpcr_mg_l_mediav1 neutA_v1
-## index_barthel2v1     1           1       1       1           1                 1        1
-## quo_calcpostv1       1           1       1       1           1                 1        1
-## rv_prepv1            1           1       1       1           1                 1        1
-## incp_fevv1           1           1       1       1           1                 1        1
-## fevp_postv1          1           1       1       1           1                 1        1
-## rv_tlcv1             1           1       1       1           1                 1        1
-##                  ahpl_v1 activityv1
-## index_barthel2v1       1          1
-## quo_calcpostv1         1          1
-## rv_prepv1              1          1
-## incp_fevv1             1          1
-## fevp_postv1            1          1
-## rv_tlcv1               1          1
-\end{verbatim}
 \end{kframe}
 \end{knitrout}
 
@@ -350,27 +277,29 @@ than in the original analysis. To do that, follow these steps:
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hldef{> }\hlcom{# ?miclust::getdata}
-\hldef{> }
-\hldef{> }\hlcom{# prepare the data.frame object}
-\hldef{> }\hldef{imp_list} \hlkwb{<-} \hlkwd{complete}\hldef{(imp,} \hlkwc{action}\hldef{=}\hlsng{"all"}\hldef{)} \hlcom{# extracts the completed data from a mids object, action="all" extracts all 100 imputed datasets.}
-\hldef{> }
+\hldef{> }\hlcom{# getdata() requires the data to be a list or data.frame where the first element is the raw data:}
+\hldef{> }  
+\hldef{> }  \hlcom{#1- prepare raw data (all numeric and without id) }
 \hldef{> }\hldef{copd_raw} \hlkwb{<-} \hldef{copd}
 \hldef{> }\hldef{copd_raw}\hlopt{$}\hldef{id} \hlkwb{<-} \hlkwa{NULL}
 \hldef{> }\hldef{num_cols} \hlkwb{<-} \hlkwd{sapply}\hldef{(copd_raw,} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{)} \hlkwd{is.numeric}\hldef{(x)} \hlopt{||} \hlkwd{is.integer}\hldef{(x)} \hlopt{||} \hlkwd{is.logical}\hldef{(x))}
 \hldef{> }\hldef{copd_raw} \hlkwb{<-} \hldef{copd_raw[, num_cols]}
 \hldef{> }
-\hldef{> }\hlcom{# 2. Extraure i netejar la llista de datasets imputats de mice:}
-\hldef{> }\hldef{imp_list} \hlkwb{<-} \hlkwd{complete}\hldef{(imp,} \hlkwc{action} \hldef{=} \hlsng{"all"}\hldef{)}
+\hldef{> }  \hlcom{#2- prepare imputated data}
+\hldef{> }\hldef{imp_list} \hlkwb{<-} \hlkwd{complete}\hldef{(imp,} \hlkwc{action} \hldef{=} \hlsng{"all"}\hldef{)} \hlcom{# extracts the completed data from a mids object}
 \hldef{> }\hldef{imp_list_clean} \hlkwb{<-} \hlkwd{lapply}\hldef{(imp_list,} \hlkwa{function}\hldef{(}\hlkwc{df}\hldef{) \{}
 \hldef{+ }  \hldef{df}\hlopt{$}\hldef{id} \hlkwb{<-} \hlkwa{NULL}
 \hldef{+ }  \hldef{df} \hlkwb{<-} \hldef{df[, num_cols]}
 \hldef{+ }  \hlkwd{return}\hldef{(df)}
 \hldef{+ }\hldef{\})}
+\hldef{> }
+\hldef{> }  \hlcom{#3- create list where the first element is the raw data}
 \hldef{> }\hldef{my_cluster_list} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlkwd{list}\hldef{(copd_raw), imp_list_clean)}
 \hldef{> }
 \hldef{> }\hlcom{# prepare the data for miclust}
 \hldef{> }\hldef{imp_midata} \hlkwb{<-} \hldef{miclust}\hlopt{::}\hlkwd{getdata}\hldef{(}\hlkwc{data} \hldef{= my_cluster_list)}
 \hldef{> }
+\hldef{> }\hlcom{# now we check}
 \hldef{> }\hlkwd{class}\hldef{(imp_midata)}
 \end{alltt}
 \begin{verbatim}
@@ -380,7 +309,7 @@ than in the original analysis. To do that, follow these steps:
 \hldef{> }\hlkwd{length}\hldef{(imp_midata}\hlopt{$}\hldef{impdata)}
 \end{alltt}
 \begin{verbatim}
-## [1] 2
+## [1] 10
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -397,24 +326,29 @@ than in the original analysis. To do that, follow these steps:
 \hldef{+ }                     \hlkwc{method} \hldef{=} \hlsng{"kmeans"}\hldef{,}
 \hldef{+ }                     \hlkwc{search} \hldef{=} \hlsng{"backward"}\hldef{,}
 \hldef{+ }                     \hlkwc{ks} \hldef{=} \hlnum{2}\hlopt{:}\hlnum{5}\hldef{,}
-\hldef{+ }                     \hlkwc{usedimp} \hldef{=} \hlnum{1}\hlopt{:}\hlnum{2}\hldef{,}
+\hldef{+ }                     \hlkwc{usedimp} \hldef{=} \hlnum{1}\hlopt{:}\hlnum{10}\hldef{,}
 \hldef{+ }                     \hlkwc{seed} \hldef{=} \hlnum{666}\hldef{)}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error in `matrixStats::colMeans2()`:\\\#\# ! Argument 'x' must be of type logical, integer or numeric, not 'character'}}\begin{alltt}
-\hldef{> }\hlkwd{summary}\hldef{(miclust_1)}
-\end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! objeto 'miclust\_1' no encontrado}}\begin{alltt}
+\begin{verbatim}
+## . . . . imp  5 . . . . imp 10 
+##  Analysis done.
+\end{verbatim}
+\begin{alltt}
+\hldef{> }\hlcom{#summary(miclust_1)}
 \hldef{> }\hldef{miclust_1}\hlopt{$}\hldef{kfin} \hlcom{# optimal k (number of clusters)}
 \end{alltt}
-
-
-{\ttfamily\noindent\bfseries\color{errorcolor}{\#\# Error:\\\#\# ! objeto 'miclust\_1' no encontrado}}\end{kframe}
+\begin{verbatim}
+## [1] 2
+\end{verbatim}
+\end{kframe}
 \end{knitrout}
 
+\color{green}{
+- Comentar perque no utilitzem l'id per fer kmeans \\
+- Comentar com preparem les dades per pasarles a getdata() (info executant ?mice::getdata())\\
+- Explicar perque fem search backward (està a l'article)\\
+- Trobar explicació de kmax=5 (vaig copiar la simulació de l'article)
+}
 
 \end{enumerate}
 
