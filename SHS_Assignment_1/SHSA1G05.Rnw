@@ -137,7 +137,7 @@ pred[, "id"] <- 0 # we don't want "id" to be predictor
 
 <<imputation>>=
 # Imputation of 100 datasets
-M <- 10 # Number of imputations for each missing value
+M <- 100 # Number of imputations for each missing value
 imp <- mice(data = copd, 
             m = M, 
             method = meth, 
@@ -200,7 +200,7 @@ miclust_1 <- miclust(data = imp_midata,
                      method = "kmeans", 
                      search = "backward",
                      ks = 2:5,
-                     usedimp = 1:10,
+                     usedimp = 1:100,
                      seed = 666)
 
 #summary(miclust_1)

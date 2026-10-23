@@ -247,7 +247,7 @@ We can see that the mice package suggest imputing initialy with de mean for cont
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hldef{> }\hlcom{# Imputation of 100 datasets}
-\hldef{> }\hldef{M} \hlkwb{<-} \hlnum{10} \hlcom{# Number of imputations for each missing value}
+\hldef{> }\hldef{M} \hlkwb{<-} \hlnum{100} \hlcom{# Number of imputations for each missing value}
 \hldef{> }\hldef{imp} \hlkwb{<-} \hlkwd{mice}\hldef{(}\hlkwc{data} \hldef{= copd,}
 \hldef{+ }            \hlkwc{m} \hldef{= M,}
 \hldef{+ }            \hlkwc{method} \hldef{= meth,}
@@ -309,7 +309,7 @@ than in the original analysis. To do that, follow these steps:
 \hldef{> }\hlkwd{length}\hldef{(imp_midata}\hlopt{$}\hldef{impdata)}
 \end{alltt}
 \begin{verbatim}
-## [1] 10
+## [1] 100
 \end{verbatim}
 \end{kframe}
 \end{knitrout}
@@ -326,11 +326,16 @@ than in the original analysis. To do that, follow these steps:
 \hldef{+ }                     \hlkwc{method} \hldef{=} \hlsng{"kmeans"}\hldef{,}
 \hldef{+ }                     \hlkwc{search} \hldef{=} \hlsng{"backward"}\hldef{,}
 \hldef{+ }                     \hlkwc{ks} \hldef{=} \hlnum{2}\hlopt{:}\hlnum{5}\hldef{,}
-\hldef{+ }                     \hlkwc{usedimp} \hldef{=} \hlnum{1}\hlopt{:}\hlnum{10}\hldef{,}
+\hldef{+ }                     \hlkwc{usedimp} \hldef{=} \hlnum{1}\hlopt{:}\hlnum{100}\hldef{,}
 \hldef{+ }                     \hlkwc{seed} \hldef{=} \hlnum{666}\hldef{)}
 \end{alltt}
 \begin{verbatim}
-## . . . . imp  5 . . . . imp 10 
+## . . . . imp   5 . . . . imp  10 . . . . imp  15 . . . . imp  20 
+## . . . . imp  25 . . . . imp  30 . . . . imp  35 . . . . imp  40 
+## . . . . imp  45 . . . . imp  50 . . . . imp  55 . . . . imp  60 
+## . . . . imp  65 . . . . imp  70 . . . . imp  75 . . . . imp  80 
+## . . . . imp  85 . . . . imp  90 . . . . imp  95 . . . . imp 100 
+## 
 ##  Analysis done.
 \end{verbatim}
 \begin{alltt}
