@@ -9,6 +9,7 @@
 % LaTeX package for captions customization:
 \usepackage[margin=10pt,font=small,labelfont=bf,format=hang]{caption}
 \usepackage{hyperref}                      % Hyperlinks and \url{}
+\usepackage{float}
 \hypersetup{
     colorlinks=true, % Enable colored text for links instead of drawing boxes
     linkcolor=blue,  % Color for internal document links (e.g., sections, equations, figures, tables)
@@ -190,6 +191,7 @@ class(imp_midata)
 length(imp_midata$impdata) 
 @
 
+
   
   \item Use the \texttt{miclust()} function to perform the integration of missing data in cluster
   analysis using the same settings as in the original analysis. Show your code and
@@ -216,8 +218,117 @@ miclust_1$kfin # optimal k (number of clusters)
 
 \end{enumerate}
 
+\section{Results}
+
+Using \texttt{plot()} and \texttt{summary()} methods in the \texttt{miclust} 
+package, provide plots and tables for the results similar than those shown in 
+the original paper. Also, show a barplot for the percentage of times each 
+variable is selected among the imputed data sets, in decreasing order. Explain 
+how you set all arguments in all functions and methods you use. Show your code.
+
+<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap="\\label{fig:critcf}Boxplot of CritCF by number of clusters ($k$) over the 100 imputed data sets. Each box is based on 100 values; higher CritCF is preferred.">>=
+
+# Distribution of the CritCF criterion over the imputed data sets, one box per
+# explored number of clusters (ks = 2:5);
+plot(miclust_1, metric = "critcf", col.critcf = "darkmagenta")
+@
+
+<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variables that remained in the final set of variables in at least one of the ", length(miclust_1$usedimp), " imputed data sets after the backward selection algorithm for $k=", miclust_1$kfin, "$, by percentage of appearance. Horizontal lines show the first and third quartiles, median and mean of the number of selected variables.")>>=
+
+# Final number of clusters selected by miclust
+kfin <- miclust_1$kfin
+
+# Percentage of appearance of each variable (metric = "varsel") for k = kfin
+plot(miclust_1, k = kfin, metric = "varsel", col.varsel = "skyblue")
+@
+
+
+<<summaries>>=
+# Set quantilevars = 0.5 so the numbers of final variables equals the median 
+# number of variables selected across the imputed data sets.
+summary_k <- summary(miclust_1, quantilevars = 0.5)
+
+summary_kp1 <- summary(miclust_1, k = kfin + 1, quantilevars = 0.5)
+@
+
+<<table_alloc, results='asis'>>=
+# Distribution of the probability of assignment to each cluster, for k = kfin
+a1 <- as.matrix(summary_k$allocationprobabilities)
+
+# Same distribution, for k = kfin + 1
+a2 <- as.matrix(summary_kp1$allocationprobabilities) 
+
+# Numeric part, an empty row before each k block, followed by the rows of 
+# the corresponding summary
+vals <- rbind(rep(NA, 5), a1, rep(NA, 5), a2) 
+
+# Text part, one label per row.
+labels <- c(paste0("$k=", kfin, "$"),
+            paste0("Cluster ", seq_len(nrow(a1))),
+            paste0("$k=", kfin + 1, "$"),
+            paste0("Cluster ", seq_len(nrow(a2)))) 
+
+# Combine text part, first column, and numeric values into one data.frame
+tab_alloc <- data.frame(labels, vals) 
+
+
+# Create the xtable object. 'digits' has 7 elements: the 1st is for the 
+#automatic row names (not printed), the 2nd for the text labels (no decimals
+# apply), and the last 5 for the numeric columns (2 decimals each).
+# The caption and the label are defined here.
+alloc <- xtable(tab_alloc,
+                digits = c(0, 0, 2, 2, 2, 2, 2),
+                align = c("l", "l", "c", "c", "c", "c", "c"),
+                caption = paste0("Distribution of the frequency of assignment
+                          (proportion of the ", length(miclust_1$usedimp),
+                          " imputed data sets) to each cluster, for $k=", 
+                          kfin, "$ and $k=", kfin + 1, "$."),
+                label = "tab:alloc")
+
+# Column names, centered and in bold, the first one is left blank
+colnames(alloc) <- c("","\\multicolumn{1}{c}{\\bf Minimum}", 
+                         "\\multicolumn{1}{c}{\\bf First quartile}", 
+                         "\\multicolumn{1}{c}{\\bf Median}", 
+                         "\\multicolumn{1}{c}{\\bf Third quartile}", 
+                         "\\multicolumn{1}{c}{\\bf Maximum}") 
+
+# Print the table un LaTeX
+print(alloc,
+      table.placement = "ht",
+      size = "footnotesize",
+      include.rownames = FALSE, # Row names are not printed, labels are in column 1
+      include.colnames = TRUE,
+      floating = TRUE,
+      sanitize.text.function = force, 
+      booktabs = TRUE) 
+@
+
+<<table_description, results='asis'>>=
+@
 
 
 
+<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order.")>>=
+
+# Frequency of selection of each variable across the imputed data sets
+y   <- getvariablesfrequency(miclust_1)
+
+# Sort the variables by decreasing percentage of selection
+y_ord <- order(y$percfreq, decreasing = TRUE)
+perc <- y$percfreq[y_ord]
+name <- y$varnames[y_ord]
+
+# Bars drawn as thick vertical lines (type = "h", lwd = 20).
+plot(perc, type = "h", main = "", xlab = "", ylab = "Percentage of times selected", 
+     xlim = 0.5 + c(0, length(perc)), ylim = c(0, 100),
+     lwd = 20, col = "skyblue", xaxt = "n")
+
+# Variable names below each bar, las = 2 draws them vertically, and
+# cex.axis = 0.9 shrinks them slightly so that the long names fit
+axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.9)
+
+# This code is adapted from the miclust README, which can be accessed at
+# https://cran.r-project.org/web/packages/miclust/readme/README.html
+@
 
 \end{document}
