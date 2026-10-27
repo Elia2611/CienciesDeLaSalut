@@ -315,7 +315,9 @@ than in the original analysis. To do that, follow these steps:
 \end{kframe}
 \end{knitrout}
 
-
+The \texttt{getdata()} function needs a \texttt{data.frames} list where the first element contains the original data (with missing values) and the remaining ones correspond to multiple imputed datasets. That is why we created \texttt{my\_cluster\_list}, the list of data frames that we pass to \texttt{getdata()}. The imputed data sets were extracted from the \texttt{mids}
+object, and the same processing was applied to the original data and to each imputed data set, so that all of them have the same variables in the same order.
+Since k-means groups the subjects using Euclidean distances, we removed the variables that are neither numeric nor logical. We also removed the \texttt{id} variable, because it is just an identifier and does not contain any valuable clinical information. For the same reason, the \texttt{id} was not included as a predictor in the imputation.
   
   \item Use the \texttt{miclust()} function to perform the integration of missing data in cluster
   analysis using the same settings as in the original analysis. Show your code and
@@ -350,12 +352,12 @@ than in the original analysis. To do that, follow these steps:
 \end{kframe}
 \end{knitrout}
 
-\color{green}{
-- Comentar perque no utilitzem l'id per fer kmeans \\
-- Comentar com preparem les dades per pasarles a getdata() (info executant ?mice::getdata())\\
-- Explicar perque fem search backward (està a l'article)\\
-- Trobar explicació de kmax=5 (vaig copiar la simulació de l'article)
-}
+We need to perform a variable selection because adding variables can degrade the classification when the number of subjects is small compared to the numer of variables. As mentioned in the article, it is good practice that the number of subjects are at least 10 times the number of variables.
+In our case, the ratio is $342 / 44 < 10$, so a reduction of the number of variables is needed.
+
+As in the original analysis, we use the backward search with CritCF criterion. It starts with all the variables and, at each step, removes the variable that when excluded gives the highest CritCF. This criterion allows to rank partitions with different numbers of clusters and different numbers of variables.
+Finally, we define \texttt{k = 2:5} where the maximum value was fixed a priori, the same way as the article. Since the backward seach is repeated for each $k$ in each imputed data set, limiting the number of clusters reduces the computational cost and also keeps the resulting groups interpretable.
+
 
 \end{enumerate}
 
@@ -495,9 +497,138 @@ $k=2$ &  &  &  &  &  \\
 \end{table}
 
 
+\begin{kframe}
+\begin{alltt}
+\hldef{> }\hldef{vars} \hlkwb{<-} \hldef{summary_k}\hlopt{$}\hldef{selectedvariables} \hlcom{# El nom de les variables finals seleccionades, la primera columna de la taula}
+\hldef{> }\hldef{summary_cluster} \hlkwb{<-} \hldef{summary_k}\hlopt{$}\hldef{summarybycluster} \hlcom{# És la part del summary on es detallen les propietats dels clusters}
+\hldef{> }
+\hldef{> }\hlcom{# % of missing values of each variable (raw data)}
+\hldef{> }\hldef{miss} \hlkwb{<-} \hldef{summary_cluster}\hlopt{$}\hldef{`%miss.`} \hlcom{# agafem només la columna del % de valors perduts, la segona columna de la taula.}
+\hldef{> }
+\hldef{> }\hlcom{# Imputed data, mean of each variable by cluster (one column per cluster)}
+\hldef{> }\hldef{mean_imputed} \hlkwb{<-} \hlkwd{as.matrix}\hldef{(summary_cluster[,} \hlkwd{grep}\hldef{(}\hlsng{"^mean"}\hldef{,} \hlkwd{names}\hldef{(summary_cluster))])} \hlcom{# Matriu la qual és (numero de variables seleccionades) x (numero k final), s'agafa només les columnes que comencen per "mean" i fa una matriu amb cada columna, una per cada cluster. Aixo es la part de cluster d'imputed data}
+\hldef{> }
+\hldef{> }\hlcom{# Majority-vote cluster of each participant}
+\hldef{> }\hldef{cl} \hlkwb{<-} \hldef{summary_k}\hlopt{$}\hldef{cluster} \hlcom{# vector amb 342 números (en aquest cap 1 o 2, ja que són el numero de clusters finals que tenim), el cluster de cada participant. Per exemple si el particicpant 1 és del cluster 2, c1[1] = 1}
+\hldef{> }
+\hldef{> }\hldef{raw_means} \hlkwb{<-} \hlkwd{matrix}\hldef{(}\hlnum{NA}\hldef{,} \hlkwc{nrow} \hldef{=} \hlkwd{length}\hldef{(vars),} \hlkwc{ncol} \hldef{= kfin)} \hlcom{# Creem una matriu buida a on el numero de files siguin cada una de les variables seleccionades i el numero de columnes el numero de clusters que tinguem.}
+\hldef{> }
+\hldef{> }\hldef{F_raw} \hlkwb{<-} \hlkwd{vector}\hldef{(}\hlkwc{length} \hldef{=} \hlkwd{length}\hldef{(vars))} \hlcom{# Crem un vector buit per anar guardant els valors de F value.}
+\hldef{> }
+\hldef{> }\hlkwa{for} \hldef{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hldef{(vars)) \{}
+\hldef{+ }      \hldef{x} \hlkwb{<-} \hldef{copd_raw[[vars[i]]]} \hlcom{# Afagem tots els valors dels participants de les variables significatives i ho gardem en un vector x.}
+\hldef{+ }      \hldef{fit} \hlkwb{<-} \hlkwd{lm}\hldef{(x} \hlopt{~} \hlkwd{factor}\hldef{(cl))} \hlcom{# ajustem a un model lineal, explicar x a partir del cluster a partir d'un model lineal.}
+\hldef{+ }      \hldef{F_raw[i]} \hlkwb{<-} \hlkwd{anova}\hldef{(fit)}\hlopt{$}\hldef{`F value`[}\hlnum{1}\hldef{]} \hlcom{# anova() és un data.frame amb una columna F value, la qual la primera fila és el valor que busquem i l'altre és NA (F value dels residus) i com que no ens interessa només agfem el primer valor [1].}
+\hldef{+ }  \hlkwa{for} \hldef{(j} \hlkwa{in} \hlnum{1}\hlopt{:}\hldef{kfin)\{}
+\hldef{+ }    \hldef{raw_means[i,j]} \hlkwb{<-} \hlkwd{mean}\hldef{(x[cl} \hlopt{==} \hldef{j],} \hlkwc{na.rm} \hldef{=} \hlnum{TRUE}\hldef{)} \hlcom{# Posem la mitjana de cada cluster en cada una de les variables significatives.}
+\hldef{+ }  \hldef{\}}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# Ara fem el f value per la part imputada, la diferencia amb la part "crua" és que en lloc d'un sol conjunt de dades, hi ha en aquest cas 100 (una per cada imputació feta), cadascun amb els seus clusters. Es claulca una F per cada un i se'n fa la mitjana.}
+\hldef{> }
+\hldef{> }\hldef{vector_clusters} \hlkwb{<-} \hldef{summary_k}\hlopt{$}\hldef{clustervectors}
+\hldef{> }
+\hldef{> }\hldef{n_imp} \hlkwb{<-} \hlkwd{ncol}\hldef{(vector_clusters)}
+\hldef{> }
+\hldef{> }\hldef{F_imputed} \hlkwb{<-} \hlkwd{vector}\hldef{(}\hlkwc{length} \hldef{=} \hlkwd{length}\hldef{(vars))}
+\hldef{> }
+\hldef{> }\hlkwa{for} \hldef{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hldef{(vars))\{}
+\hldef{+ }  \hldef{f_n_imp} \hlkwb{<-} \hlkwd{vector}\hldef{(}\hlkwc{length} \hldef{= n_imp)}
+\hldef{+ }  \hlkwa{for} \hldef{(m} \hlkwa{in} \hlnum{1}\hlopt{:}\hldef{n_imp)\{}
+\hldef{+ }    \hldef{y} \hlkwb{<-} \hldef{imp_midata}\hlopt{$}\hldef{impdata[[m]][[vars[i]]]} \hlcom{# Valor de la imputació m en la variable i.}
+\hldef{+ }    \hldef{fit} \hlkwb{<-} \hlkwd{lm}\hldef{(y} \hlopt{~} \hlkwd{factor}\hldef{(vector_clusters[, m]))} \hlcom{# Agafem els valors de cluster que te cada individu en la imputació m. posem factor per assegurar-nos que R interperta els valors com etiquetes i no com a quantitats.}
+\hldef{+ }    \hldef{f_n_imp[m]} \hlkwb{<-} \hlkwd{anova}\hldef{(fit)}\hlopt{$}\hldef{`F value`[}\hlnum{1}\hldef{]}
+\hldef{+ }  \hldef{\}}
+\hldef{+ }  \hldef{F_imputed[i]} \hlkwb{<-} \hlkwd{mean}\hldef{(f_n_imp)}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# Cluster sizes, raw data (majority vote) and median over the imputed data sets}
+\hldef{> }\hldef{n_raw}     \hlkwb{<-} \hlkwd{as.vector}\hldef{(}\hlkwd{table}\hldef{(}\hlkwd{factor}\hldef{(cl,} \hlkwc{levels} \hldef{=} \hlkwd{seq_len}\hldef{(kfin))))} \hlcom{# Només hi ha un unic cluster, aixi que la mida és exacte.}
+\hldef{> }\hldef{n_imp_med} \hlkwb{<-} \hldef{summary_k}\hlopt{$}\hldef{clusterssize[,} \hlsng{"50%"}\hldef{]}  \hlcom{# En cada imputació alguns participants poden canviar de cluster, de manera que cada imputació dona mides dizerents, i per posar un sol numero a la capçalera com ho fa l'article agafem la mediana.}
+\hldef{> }
+\hldef{> }
+\hldef{> }\hlcom{# Variable labels with "_" escaped for LaTeX}
+\hldef{> }\hldef{labels} \hlkwb{<-} \hlkwd{gsub}\hldef{(}\hlsng{"_"}\hldef{,} \hlsng{"\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}_"}\hldef{, vars)}
+\hldef{> }
+\hldef{> }\hldef{tab_desc} \hlkwb{<-} \hlkwd{data.frame}\hldef{(labels, miss, raw_means, F_raw, mean_imputed, F_imputed)}
+\hldef{> }
+\hldef{> }\hldef{range_txt} \hlkwb{<-} \hlkwd{paste0}\hldef{(}\hlsng{"cluster "}\hldef{,} \hlkwd{seq_len}\hldef{(kfin),} \hlsng{": "}\hldef{,}
+\hldef{+ }                    \hldef{summary_k}\hlopt{$}\hldef{clusterssize[,} \hlsng{"min."}\hldef{],} \hlsng{"--"}\hldef{,}
+\hldef{+ }                    \hldef{summary_k}\hlopt{$}\hldef{clusterssize[,} \hlsng{"max."}\hldef{],} \hlkwc{collapse} \hldef{=} \hlsng{"; "}\hldef{)}
+\hldef{> }
+\hldef{> }\hldef{desc} \hlkwb{<-} \hlkwd{xtable}\hldef{(tab_desc,}
+\hldef{+ }               \hlkwc{digits} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{1}\hldef{,} \hlkwd{rep}\hldef{(}\hlnum{2}\hldef{, kfin),} \hlnum{2}\hldef{,} \hlkwd{rep}\hldef{(}\hlnum{2}\hldef{, kfin),} \hlnum{2}\hldef{),}
+\hldef{+ }               \hlkwc{align}  \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"l"}\hldef{,} \hlsng{"l"}\hldef{,} \hlkwd{rep}\hldef{(}\hlsng{"c"}\hldef{,} \hlnum{2} \hlopt{*} \hldef{kfin} \hlopt{+} \hlnum{3}\hldef{)),}
+\hldef{+ }               \hlkwc{caption} \hldef{=} \hlkwd{paste0}\hldef{(}\hlsng{"Mean values of the "}\hldef{,} \hlkwd{length}\hldef{(vars),}
+\hldef{+ }                                \hlsng{" selected variables by cluster ($k="}\hldef{, kfin,} \hlsng{"$). "}\hldef{,}
+\hldef{+ }                                \hlsng{"Raw data: majority-vote cluster assignment, "}\hldef{,}
+\hldef{+ }                                \hlsng{"missing values excluded. "}\hldef{,}
+\hldef{+ }                                \hlsng{"Imputed data: means over the "}\hldef{, n_imp,}
+\hldef{+ }                                \hlsng{" imputed data sets. "}\hldef{,}
+\hldef{+ }                                \hlsng{"$n$: number of participants per cluster (raw data: "}\hldef{,}
+\hldef{+ }                                \hlsng{"majority-vote assignment, imputed data: median over "}\hldef{,}
+\hldef{+ }                                \hlsng{"the imputed data sets, with minimum--maximum "}\hldef{,}
+\hldef{+ }                                \hldef{range_txt,} \hlsng{"). "}\hldef{,}
+\hldef{+ }                                \hlsng{"$F$: ratio of between cluster variance "}\hldef{,}
+\hldef{+ }                                \hlsng{"from a linear regression of each variable on cluster "}\hldef{,}
+\hldef{+ }                                \hlsng{"(imputed data: mean over the imputed data sets). "}\hldef{,}
+\hldef{+ }                                \hlsng{"\textbackslash{}\textbackslash{}% missing: percentage of participants with missing values."}\hldef{),}
+\hldef{+ }               \hlkwc{label} \hldef{=} \hlsng{"tab:desc"}\hldef{)}
+\hldef{> }
+\hldef{> }\hlcom{# Two-level header built from computed quantities (no hand-written n)}
+\hldef{> }\hldef{head_top} \hlkwb{<-} \hlkwd{paste0}\hldef{(}\hlsng{"& & \textbackslash{}\textbackslash{}multicolumn\{"}\hldef{, kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlsng{"\}\{c\}\{\textbackslash{}\textbackslash{}bf Raw data\} & "}\hldef{,}
+\hldef{+ }                   \hlsng{"\textbackslash{}\textbackslash{}multicolumn\{"}\hldef{, kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlsng{"\}\{c\}\{\textbackslash{}\textbackslash{}bf Imputed data\} \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}n"}\hldef{)}
+\hldef{> }\hldef{head_sub} \hlkwb{<-} \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf Variable & \textbackslash{}\textbackslash{}bf \textbackslash{}\textbackslash{}% missing & "}\hldef{,}
+\hldef{+ }                   \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf Cl.~"}\hldef{,} \hlnum{1}\hlopt{:}\hldef{kfin,} \hlsng{" ($n="}\hldef{, n_raw,} \hlsng{"$)"}\hldef{,} \hlkwc{collapse} \hldef{=} \hlsng{" & "}\hldef{),}
+\hldef{+ }                   \hlsng{" & \textbackslash{}\textbackslash{}bf $F$ & "}\hldef{,}
+\hldef{+ }                   \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf Cl.~"}\hldef{,} \hlnum{1}\hlopt{:}\hldef{kfin,} \hlsng{" ($n="}\hldef{, n_imp_med,} \hlsng{"$)"}\hldef{,} \hlkwc{collapse} \hldef{=} \hlsng{" & "}\hldef{),}
+\hldef{+ }                   \hlsng{" & \textbackslash{}\textbackslash{}bf $F$ \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}n"}\hldef{)}
+\hldef{> }
+\hldef{> }\hlkwd{print}\hldef{(desc,}
+\hldef{+ }      \hlkwc{table.placement} \hldef{=} \hlsng{"H"}\hldef{,}
+\hldef{+ }      \hlkwc{size} \hldef{=} \hlsng{"footnotesize"}\hldef{,}
+\hldef{+ }      \hlkwc{include.rownames} \hldef{=} \hlnum{FALSE}\hldef{,}
+\hldef{+ }      \hlkwc{include.colnames} \hldef{=} \hlnum{FALSE}\hldef{,}           \hlcom{# header is written by add.to.row}
+\hldef{+ }      \hlkwc{add.to.row} \hldef{=} \hlkwd{list}\hldef{(}\hlkwc{pos} \hldef{=} \hlkwd{list}\hldef{(}\hlnum{0}\hldef{),}
+\hldef{+ }                        \hlkwc{command} \hldef{=} \hlkwd{paste0}\hldef{(head_top,}
+\hldef{+ }                                         \hlsng{"\textbackslash{}\textbackslash{}cmidrule(lr)\{3-"}\hldef{, kfin} \hlopt{+} \hlnum{3}\hldef{,} \hlsng{"\} "}\hldef{,}
+\hldef{+ }                                         \hlsng{"\textbackslash{}\textbackslash{}cmidrule(lr)\{"}\hldef{, kfin} \hlopt{+} \hlnum{4}\hldef{,} \hlsng{"-"}\hldef{,} \hlnum{2} \hlopt{*} \hldef{kfin} \hlopt{+} \hlnum{4}\hldef{,} \hlsng{"\}\textbackslash{}n"}\hldef{,}
+\hldef{+ }                                         \hldef{head_sub,} \hlsng{"\textbackslash{}n"}\hldef{)),}
+\hldef{+ }      \hlkwc{floating} \hldef{=} \hlnum{TRUE}\hldef{,}
+\hldef{+ }      \hlkwc{sanitize.text.function} \hldef{= force,}
+\hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
+\end{alltt}
+\end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
+% Tue Oct 27 13:23:28 2026
+\begin{table}[H]
+\centering
+\begingroup\footnotesize
+\begin{tabular}{lccccccc}
+  \toprule
+  & & \multicolumn{3}{c}{\bf Raw data} & \multicolumn{3}{c}{\bf Imputed data} \\
+\cmidrule(lr){3-5} \cmidrule(lr){6-8}
+\bf Variable & \bf \% missing & \bf Cl.~1 ($n=184$) & \bf Cl.~2 ($n=158$) & \bf $F$ & \bf Cl.~1 ($n=184$) & \bf Cl.~2 ($n=158$) & \bf $F$ \\
 
-
-
+ \midrule
+activityv1 & 1.2 & 37.21 & 58.86 & 85.26 & 37.01 & 59.02 & 88.56 \\ 
+  fevp\_postv1 & 0.0 & 62.90 & 39.09 & 359.64 & 62.87 & 39.08 & 353.71 \\ 
+  fvcp\_postv1 & 0.0 & 79.74 & 63.48 & 112.55 & 80.08 & 63.66 & 115.07 \\ 
+  ic\_prepv1 & 5.6 & 73.50 & 52.05 & 187.30 & 73.31 & 51.93 & 205.82 \\ 
+  impactsv1 & 1.2 & 18.54 & 35.16 & 80.23 & 18.75 & 35.61 & 79.24 \\ 
+  po2\_v1 & 3.2 & 77.66 & 69.70 & 52.98 & 77.21 & 69.93 & 55.33 \\ 
+  quo\_calcpostv1 & 0.0 & 58.96 & 46.12 & 140.01 & 58.80 & 46.03 & 134.83 \\ 
+  rv\_prepv1 & 7.9 & 136.19 & 187.69 & 122.19 & 136.25 & 186.76 & 124.53 \\ 
+  rv\_tlcv1 & 7.9 & 50.26 & 63.59 & 266.57 & 50.43 & 63.59 & 280.59 \\ 
+  vas2\_v1 & 1.2 & 4.23 & 6.34 & 56.62 & 4.24 & 6.43 & 58.50 \\ 
+  vc\_prepv1 & 5.6 & 78.00 & 60.59 & 160.56 & 77.87 & 60.11 & 180.36 \\ 
+  index\_barthel2v1 & 2.6 & 99.89 & 98.32 & 14.83 & 99.93 & 98.31 & 15.99 \\ 
+  vas1\_v1 & 1.2 & 1.99 & 3.99 & 58.60 & 1.96 & 4.05 & 59.22 \\ 
+   \bottomrule
+\end{tabular}
+\endgroup
+\caption{Mean values of the 13 selected variables by cluster ($k=2$). Raw data: majority-vote cluster assignment, missing values excluded. Imputed data: means over the 100 imputed data sets. $n$: number of participants per cluster (raw data: majority-vote assignment, imputed data: median over the imputed data sets, with minimum--maximum cluster 1: 179--189; cluster 2: 153--163). $F$: ratio of between cluster variance from a linear regression of each variable on cluster (imputed data: mean over the imputed data sets). \% missing: percentage of participants with missing values.} 
+\label{tab:desc}
+\end{table}
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -534,5 +665,36 @@ $k=2$ &  &  &  &  &  \\
 \end{alltt}
 \end{kframe}
 \end{knitrout}
+
+\section{Report}
+
+Write a brief report (400 words maximum) describing the following issues, and
+citing tables and figures:
+
+\begin{itemize}
+    \item The final number of clusters and their sizes and uncertainty (cite your
+    figure(s) and table(s)).
+
+    \item The agreement when relabeling the clusters.
+
+    \item The final subset of clustering variables and uncertainty.
+
+    \item The probability of assignment to each cluster and uncertainty.
+\end{itemize}
+
+
+
+To find the number of clusters, we applied the backward search with the CritCF criterion to each of the 100 imputed data sets. Figure~\ref{fig:fig_critcf} shows that even the worst value for $k = 2$ is above the best value for $k = 3$, so $k = 2$ was the optimal number of clusters in all the imputed data sets. Therefore, there is practically no uncertainty in the choice of $k$.
+After the assignation, the clusters contain 184 and 158 subjects.
+
+To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is good, with a median Cohen's kappa of 0.97.
+
+For $k = 2$, 15 of 33 variables candidates were selected in at least one data set(Figure~\ref{fig:fig_varsel} and \ref{fig:fig_barplot}).
+The final number of selected variables is 13, with 11 of those that are in all the imputed data sets.
+There is a clear drop in frequency right after the last selected variable (from 90\% to 37\%). Also, we see that the selected variables would be the same if we kept those appearing in more than 50\% of the data sets. Therefore, the variable selection is very robust to the missing data.
+
+Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = 2$ and  $k = 3$.  For $k = 2$, the median probability is 1.00 and 1.00 in both clusters, so most subjects are always assigned to the same cluster.  For $k = 3$, the assignment is also very stable, and this is probably because the selected variables have few missing data, so the imputed data sets are very similar. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = 2$ is supported by the CritCF criterion.
+Table~\ref{tab:desc} shows that cluster 2 groups the subjects with more severe disease with worse lung function, more air trapping, lower arterial oxygen and worse scores in the questionnaires. We also see that results with raw and imputed data are very similar.
+
 
 \end{document}

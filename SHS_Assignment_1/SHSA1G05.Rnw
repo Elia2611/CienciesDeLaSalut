@@ -64,6 +64,7 @@ library(knitr)
 library(xtable)     # to create nice LaTeX tables
 library(mice)
 library(miclust)
+library(xtable)
 library(miceadds)
 @
 
@@ -191,7 +192,9 @@ class(imp_midata)
 length(imp_midata$impdata) 
 @
 
-
+The \texttt{getdata()} function needs a \texttt{data.frames} list where the first element contains the original data (with missing values) and the remaining ones correspond to multiple imputed datasets. That is why we created \texttt{my\_cluster\_list}, the list of data frames that we pass to \texttt{getdata()}. The imputed data sets were extracted from the \texttt{mids}
+object, and the same processing was applied to the original data and to each imputed data set, so that all of them have the same variables in the same order.
+Since k-means groups the subjects using Euclidean distances, we removed the variables that are neither numeric nor logical. We also removed the \texttt{id} variable, because it is just an identifier and does not contain any valuable clinical information. For the same reason, the \texttt{id} was not included as a predictor in the imputation.
   
   \item Use the \texttt{miclust()} function to perform the integration of missing data in cluster
   analysis using the same settings as in the original analysis. Show your code and
@@ -209,12 +212,12 @@ miclust_1 <- miclust(data = imp_midata,
 miclust_1$kfin # optimal k (number of clusters)
 @
 
-\color{green}{
-- Comentar perque no utilitzem l'id per fer kmeans \\
-- Comentar com preparem les dades per pasarles a getdata() (info executant ?mice::getdata())\\
-- Explicar perque fem search backward (està a l'article)\\
-- Trobar explicació de kmax=5 (vaig copiar la simulació de l'article)
-}
+We need to perform a variable selection because adding variables can degrade the classification when the number of subjects is small compared to the numer of variables. As mentioned in the article, it is good practice that the number of subjects are at least 10 times the number of variables.
+In our case, the ratio is $\Sexpr{n_obs} / \Sexpr{n_vars - 1} < 10$, so a reduction of the number of variables is needed.
+
+As in the original analysis, we use the backward search with CritCF criterion. It starts with all the variables and, at each step, removes the variable that when excluded gives the highest CritCF. This criterion allows to rank partitions with different numbers of clusters and different numbers of variables.
+Finally, we define \texttt{k = 2:5} where the maximum value was fixed a priori, the same way as the article. Since the backward seach is repeated for each $k$ in each imputed data set, limiting the number of clusters reduces the computational cost and also keeps the resulting groups interpretable.
+
 
 \end{enumerate}
 
@@ -304,10 +307,105 @@ print(alloc,
 @
 
 <<table_description, results='asis'>>=
+vars <- summary_k$selectedvariables # El nom de les variables finals seleccionades, la primera columna de la taula
+summary_cluster <- summary_k$summarybycluster # És la part del summary on es detallen les propietats dels clusters
+
+# % of missing values of each variable (raw data)
+miss <- summary_cluster$`%miss.` # agafem només la columna del % de valors perduts, la segona columna de la taula.
+
+# Imputed data, mean of each variable by cluster (one column per cluster)
+mean_imputed <- as.matrix(summary_cluster[, grep("^mean", names(summary_cluster))]) # Matriu la qual és (numero de variables seleccionades) x (numero k final), s'agafa només les columnes que comencen per "mean" i fa una matriu amb cada columna, una per cada cluster. Aixo es la part de cluster d'imputed data
+
+# Majority-vote cluster of each participant
+cl <- summary_k$cluster # vector amb 342 números (en aquest cap 1 o 2, ja que són el numero de clusters finals que tenim), el cluster de cada participant. Per exemple si el particicpant 1 és del cluster 2, c1[1] = 1
+
+raw_means <- matrix(NA, nrow = length(vars), ncol = kfin) # Creem una matriu buida a on el numero de files siguin cada una de les variables seleccionades i el numero de columnes el numero de clusters que tinguem.
+
+F_raw <- vector(length = length(vars)) # Crem un vector buit per anar guardant els valors de F value.
+
+for (i in 1:length(vars)) {
+      x <- copd_raw[[vars[i]]] # Afagem tots els valors dels participants de les variables significatives i ho gardem en un vector x.
+      fit <- lm(x ~ factor(cl)) # ajustem a un model lineal, explicar x a partir del cluster a partir d'un model lineal.
+      F_raw[i] <- anova(fit)$`F value`[1] # anova() és un data.frame amb una columna F value, la qual la primera fila és el valor que busquem i l'altre és NA (F value dels residus) i com que no ens interessa només agfem el primer valor [1].
+  for (j in 1:kfin){
+    raw_means[i,j] <- mean(x[cl == j], na.rm = TRUE) # Posem la mitjana de cada cluster en cada una de les variables significatives.
+  }
+}
+
+# Ara fem el f value per la part imputada, la diferencia amb la part "crua" és que en lloc d'un sol conjunt de dades, hi ha en aquest cas 100 (una per cada imputació feta), cadascun amb els seus clusters. Es claulca una F per cada un i se'n fa la mitjana.
+
+vector_clusters <- summary_k$clustervectors
+
+n_imp <- ncol(vector_clusters)
+
+F_imputed <- vector(length = length(vars))
+
+for (i in 1:length(vars)){
+  f_n_imp <- vector(length = n_imp)
+  for (m in 1:n_imp){
+    y <- imp_midata$impdata[[m]][[vars[i]]] # Valor de la imputació m en la variable i.
+    fit <- lm(y ~ factor(vector_clusters[, m])) # Agafem els valors de cluster que te cada individu en la imputació m. posem factor per assegurar-nos que R interperta els valors com etiquetes i no com a quantitats.
+    f_n_imp[m] <- anova(fit)$`F value`[1]
+  }
+  F_imputed[i] <- mean(f_n_imp)
+}
+
+# Cluster sizes, raw data (majority vote) and median over the imputed data sets
+n_raw     <- as.vector(table(factor(cl, levels = seq_len(kfin)))) # Només hi ha un unic cluster, aixi que la mida és exacte.
+n_imp_med <- summary_k$clusterssize[, "50%"]  # En cada imputació alguns participants poden canviar de cluster, de manera que cada imputació dona mides dizerents, i per posar un sol numero a la capçalera com ho fa l'article agafem la mediana.
+
+
+# Variable labels with "_" escaped for LaTeX
+labels <- gsub("_", "\\\\_", vars)
+
+tab_desc <- data.frame(labels, miss, raw_means, F_raw, mean_imputed, F_imputed)
+
+range_txt <- paste0("cluster ", seq_len(kfin), ": ",
+                    summary_k$clusterssize[, "min."], "--",
+                    summary_k$clusterssize[, "max."], collapse = "; ")
+
+desc <- xtable(tab_desc,
+               digits = c(0, 0, 1, rep(2, kfin), 2, rep(2, kfin), 2),
+               align  = c("l", "l", rep("c", 2 * kfin + 3)),
+               caption = paste0("Mean values of the ", length(vars),
+                                " selected variables by cluster ($k=", kfin, "$). ",
+                                "Raw data: majority-vote cluster assignment, ",
+                                "missing values excluded. ",
+                                "Imputed data: means over the ", n_imp,
+                                " imputed data sets. ",
+                                "$n$: number of participants per cluster (raw data: ",
+                                "majority-vote assignment, imputed data: median over ",
+                                "the imputed data sets, with minimum--maximum ",
+                                range_txt, "). ",
+                                "$F$: ratio of between cluster variance ",
+                                "from a linear regression of each variable on cluster ",
+                                "(imputed data: mean over the imputed data sets). ",
+                                "\\% missing: percentage of participants with missing values."),
+               label = "tab:desc")
+
+# Two-level header built from computed quantities (no hand-written n)
+head_top <- paste0("& & \\multicolumn{", kfin + 1, "}{c}{\\bf Raw data} & ",
+                   "\\multicolumn{", kfin + 1, "}{c}{\\bf Imputed data} \\\\\n")
+head_sub <- paste0("\\bf Variable & \\bf \\% missing & ",
+                   paste0("\\bf Cl.~", 1:kfin, " ($n=", n_raw, "$)", collapse = " & "),
+                   " & \\bf $F$ & ",
+                   paste0("\\bf Cl.~", 1:kfin, " ($n=", n_imp_med, "$)", collapse = " & "),
+                   " & \\bf $F$ \\\\\n")
+
+print(desc,
+      table.placement = "H",
+      size = "footnotesize",
+      include.rownames = FALSE,
+      include.colnames = FALSE,           # header is written by add.to.row
+      add.to.row = list(pos = list(0),
+                        command = paste0(head_top,
+                                         "\\cmidrule(lr){3-", kfin + 3, "} ",
+                                         "\\cmidrule(lr){", kfin + 4, "-", 2 * kfin + 4, "}\n",
+                                         head_sub, "\n")),
+      floating = TRUE,
+      sanitize.text.function = force,
+      booktabs = TRUE)
 @
-
-
-
 <<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order.")>>=
 
 # Frequency of selection of each variable across the imputed data sets
@@ -330,5 +428,49 @@ axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.9)
 # This code is adapted from the miclust README, which can be accessed at
 # https://cran.r-project.org/web/packages/miclust/readme/README.html
 @
+
+\section{Report}
+
+Write a brief report (400 words maximum) describing the following issues, and
+citing tables and figures:
+
+\begin{itemize}
+    \item The final number of clusters and their sizes and uncertainty (cite your
+    figure(s) and table(s)).
+
+    \item The agreement when relabeling the clusters.
+
+    \item The final subset of clustering variables and uncertainty.
+
+    \item The probability of assignment to each cluster and uncertainty.
+\end{itemize}
+
+<<report_values, include = FALSE>>=
+var_once <- sum(perc>0) #selected at least once
+var_cand <- ncol(copd_raw) #cadidate variables
+var_sel <- length(summary_k$selectedvariables) #final selected variables
+var_sel_all <- sum(perc == M) #selected variables in all data sets
+p_last <- sprintf("%.0f", perc[var_sel]) #least frequent selected variable
+p_next <- sprintf("%.0f", perc[var_sel + 1]) #next variable (not selected)
+med1 <- paste(sprintf("%.2f", a1[, 3]), collapse = " and ")
+min1 <- paste(sprintf("%.2f", a1[, 1]), collapse = " and ")
+n_final <- table(factor(summary_k$cluster, levels = 1:kfin))
+kappa_vals <- summary_k$kappas
+kappa_med  <- sprintf("%.2f", median(kappa_vals))
+
+@
+
+To find the number of clusters, we applied the backward search with the CritCF criterion to each of the \Sexpr{M} imputed data sets. Figure~\ref{fig:fig_critcf} shows that even the worst value for $k = \Sexpr{kfin}$ is above the best value for $k = \Sexpr{kfin + 1}$, so $k = \Sexpr{kfin}$ was the optimal number of clusters in all the imputed data sets. Therefore, there is practically no uncertainty in the choice of $k$.
+After the assignation, the clusters contain \Sexpr{n_final[1]} and \Sexpr{n_final[2]} subjects.
+
+To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is good, with a median Cohen's kappa of \Sexpr{kappa_med}.
+
+For $k = \Sexpr{kfin}$, \Sexpr{var_once} of \Sexpr{var_cand} variables candidates were selected in at least one data set(Figure~\ref{fig:fig_varsel} and \ref{fig:fig_barplot}).
+The final number of selected variables is \Sexpr{var_sel}, with \Sexpr{var_sel_all} of those that are in all the imputed data sets.
+There is a clear drop in frequency right after the last selected variable (from \Sexpr{p_last}\% to \Sexpr{p_next}\%). Also, we see that the selected variables would be the same if we kept those appearing in more than 50\% of the data sets. Therefore, the variable selection is very robust to the missing data.
+
+Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = \Sexpr{kfin}$ and  $k = \Sexpr{kfin + 1}$.  For $k = \Sexpr{kfin}$, the median probability is \Sexpr{med1} in both clusters, so most subjects are always assigned to the same cluster.  For $k = \Sexpr{kfin + 1}$, the assignment is also very stable, and this is probably because the selected variables have few missing data, so the imputed data sets are very similar. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = \Sexpr{kfin}$ is supported by the CritCF criterion.
+Table~\ref{tab:desc} shows that cluster 2 groups the subjects with more severe disease with worse lung function, more air trapping, lower arterial oxygen and worse scores in the questionnaires. We also see that results with raw and imputed data are very similar.
+
 
 \end{document}
