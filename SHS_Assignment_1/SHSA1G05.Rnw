@@ -64,7 +64,6 @@ library(knitr)
 library(xtable)     # to create nice LaTeX tables
 library(mice)
 library(miclust)
-library(xtable)
 library(miceadds)
 @
 
@@ -229,14 +228,14 @@ the original paper. Also, show a barplot for the percentage of times each
 variable is selected among the imputed data sets, in decreasing order. Explain 
 how you set all arguments in all functions and methods you use. Show your code.
 
-<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap="\\label{fig:critcf}Boxplot of CritCF by number of clusters ($k$) over the 100 imputed data sets. Each box is based on 100 values; higher CritCF is preferred.">>=
+<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), over the ", length(miclust_1$usedimp), " imputed data sets. Each box summarises ", length(miclust_1$usedimp), " values obtained with $k$-means and backward variable selection for $k=", min(miclust_1$ks), ",\\ldots,", max(miclust_1$ks), "$. The final number of clusters, $k=", miclust_1$kfin, "$, is the one selected in most imputed data sets.")>>=
 
 # Distribution of the CritCF criterion over the imputed data sets, one box per
 # explored number of clusters (ks = 2:5);
 plot(miclust_1, metric = "critcf", col.critcf = "darkmagenta")
 @
 
-<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variables that remained in the final set of variables in at least one of the ", length(miclust_1$usedimp), " imputed data sets after the backward selection algorithm for $k=", miclust_1$kfin, "$, by percentage of appearance. Horizontal lines show the first and third quartiles, median and mean of the number of selected variables.")>>=
+<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variable selection frequency for $k=", miclust_1$kfin, "$ clusters. Each horizontal line shows the percentage of the ", length(miclust_1$usedimp), " imputed data sets in which a variable remained in the final set after the backward selection algorithm, only variables selected in at least one data set are shown. The black horizontal lines summarise the number of variables selected per imputed data set: first and third quartiles (dotted), median (dashed) and mean (dash-dotted), positioned according to the ranked list of variables. Variable names are those of the \\texttt{copd} data set.")>>=
 
 # Final number of clusters selected by miclust
 kfin <- miclust_1$kfin
@@ -261,8 +260,8 @@ a1 <- as.matrix(summary_k$allocationprobabilities)
 # Same distribution, for k = kfin + 1
 a2 <- as.matrix(summary_kp1$allocationprobabilities) 
 
-# Numeric part, an empty row before each k block, followed by the rows of 
-# the corresponding summary
+# Numeric part, an empty row before each k block, followed by the rows of the 
+# corresponding summary
 vals <- rbind(rep(NA, 5), a1, rep(NA, 5), a2) 
 
 # Text part, one label per row.
@@ -275,17 +274,24 @@ labels <- c(paste0("$k=", kfin, "$"),
 tab_alloc <- data.frame(labels, vals) 
 
 
-# Create the xtable object. 'digits' has 7 elements: the 1st is for the 
-#automatic row names (not printed), the 2nd for the text labels (no decimals
-# apply), and the last 5 for the numeric columns (2 decimals each).
+# Create the xtable object. 'digits' has 7 elements: the 1st is for the automatic
+# row names (not printed), the 2nd for the text labels, and the last 5 for the 
+# numeric columns (2 decimals each).
 # The caption and the label are defined here.
 alloc <- xtable(tab_alloc,
                 digits = c(0, 0, 2, 2, 2, 2, 2),
                 align = c("l", "l", "c", "c", "c", "c", "c"),
-                caption = paste0("Distribution of the frequency of assignment
-                          (proportion of the ", length(miclust_1$usedimp),
-                          " imputed data sets) to each cluster, for $k=", 
-                          kfin, "$ and $k=", kfin + 1, "$."),
+                caption = paste0("Distribution of the frequency of assignment of ",
+                 "participants to each cluster over the ",
+                 length(miclust_1$usedimp), " imputed data sets, ",
+                 "for $k=", kfin, "$ (final number of clusters) ",
+                 "and $k=", kfin + 1, "$. For each participant, the frequency of ",
+                 "assignment to a cluster is the proportion of ",
+                 "imputed data sets in which he or she was assigned ",
+                 "to it. Each row gives the ",
+                 "minimum, quartiles and maximum of these ",
+                 "frequencies among the participants finally ",
+                 "assigned to that cluster by majority vote."),
                 label = "tab:alloc")
 
 # Column names, centered and in bold, the first one is left blank
@@ -295,7 +301,7 @@ colnames(alloc) <- c("","\\multicolumn{1}{c}{\\bf Minimum}",
                          "\\multicolumn{1}{c}{\\bf Third quartile}", 
                          "\\multicolumn{1}{c}{\\bf Maximum}") 
 
-# Print the table un LaTeX
+# Print the table in LaTeX
 print(alloc,
       table.placement = "ht",
       size = "footnotesize",
@@ -307,106 +313,130 @@ print(alloc,
 @
 
 <<table_description, results='asis'>>=
-vars <- summary_k$selectedvariables # El nom de les variables finals seleccionades, la primera columna de la taula
-summary_cluster <- summary_k$summarybycluster # És la part del summary on es detallen les propietats dels clusters
+# Final selected variables and the cluster summary.
+vars <- summary_k$selectedvariables
+summary_cluster <- summary_k$summarybycluster 
 
-# % of missing values of each variable (raw data)
-miss <- summary_cluster$`%miss.` # agafem només la columna del % de valors perduts, la segona columna de la taula.
+# % of missing values of each variable.
+miss <- summary_cluster$`%miss.` 
 
-# Imputed data, mean of each variable by cluster (one column per cluster)
-mean_imputed <- as.matrix(summary_cluster[, grep("^mean", names(summary_cluster))]) # Matriu la qual és (numero de variables seleccionades) x (numero k final), s'agafa només les columnes que comencen per "mean" i fa una matriu amb cada columna, una per cada cluster. Aixo es la part de cluster d'imputed data
+# Imputed data, mean of each variable by cluster.
+mean_imputed <- as.matrix(summary_cluster[, grep("^mean", names(summary_cluster))])
 
-# Majority-vote cluster of each participant
-cl <- summary_k$cluster # vector amb 342 números (en aquest cap 1 o 2, ja que són el numero de clusters finals que tenim), el cluster de cada participant. Per exemple si el particicpant 1 és del cluster 2, c1[1] = 1
+# Majority-vote cluster of each participant.
+cl <- summary_k$cluster 
 
-raw_means <- matrix(NA, nrow = length(vars), ncol = kfin) # Creem una matriu buida a on el numero de files siguin cada una de les variables seleccionades i el numero de columnes el numero de clusters que tinguem.
+# Empty matrix (variables x clusters) for the raw-data means, and empty vector 
+# for the raw-data F values.
+raw_means <- matrix(NA, nrow = length(vars), ncol = kfin)
+F_raw <- vector(length = length(vars)) 
 
-F_raw <- vector(length = length(vars)) # Crem un vector buit per anar guardant els valors de F value.
-
+# Raw data: compute the F-statistic and mean for each selected variable in 
+# each cluster.
 for (i in 1:length(vars)) {
-      x <- copd_raw[[vars[i]]] # Afagem tots els valors dels participants de les variables significatives i ho gardem en un vector x.
-      fit <- lm(x ~ factor(cl)) # ajustem a un model lineal, explicar x a partir del cluster a partir d'un model lineal.
-      F_raw[i] <- anova(fit)$`F value`[1] # anova() és un data.frame amb una columna F value, la qual la primera fila és el valor que busquem i l'altre és NA (F value dels residus) i com que no ens interessa només agfem el primer valor [1].
+      # Values of the selected variable i for all participants.
+      x <- copd_raw[[vars[i]]]
+      # Variable explained by cluster.
+      fit <- lm(x ~ factor(cl)) 
+      # Extract the F-statistic for the cluster effect from the first row of 
+      # the ANOVA table.
+      F_raw[i] <- anova(fit)$`F value`[1]
+  # Mean per cluster, excluding NAs to avoid getting NA values. 
   for (j in 1:kfin){
-    raw_means[i,j] <- mean(x[cl == j], na.rm = TRUE) # Posem la mitjana de cada cluster en cada una de les variables significatives.
+    raw_means[i,j] <- mean(x[cl == j], na.rm = TRUE)
   }
 }
 
-# Ara fem el f value per la part imputada, la diferencia amb la part "crua" és que en lloc d'un sol conjunt de dades, hi ha en aquest cas 100 (una per cada imputació feta), cadascun amb els seus clusters. Es claulca una F per cada un i se'n fa la mitjana.
-
+# Cluster assignments for each participant in each imputed data set 
+# (participants x imputed data sets), and the number of imputed data sets.
 vector_clusters <- summary_k$clustervectors
-
 n_imp <- ncol(vector_clusters)
 
+# Empty vector for the F values of the imputed data.
 F_imputed <- vector(length = length(vars))
 
+# Imputed data: same as for the raw data, but repeated in each imputed data set
+# using its own cluster assignment, the F values are then averaged.
 for (i in 1:length(vars)){
   f_n_imp <- vector(length = n_imp)
   for (m in 1:n_imp){
-    y <- imp_midata$impdata[[m]][[vars[i]]] # Valor de la imputació m en la variable i.
-    fit <- lm(y ~ factor(vector_clusters[, m])) # Agafem els valors de cluster que te cada individu en la imputació m. posem factor per assegurar-nos que R interperta els valors com etiquetes i no com a quantitats.
+    y <- imp_midata$impdata[[m]][[vars[i]]] 
+    fit <- lm(y ~ factor(vector_clusters[, m]))
     f_n_imp[m] <- anova(fit)$`F value`[1]
   }
   F_imputed[i] <- mean(f_n_imp)
 }
 
-# Cluster sizes, raw data (majority vote) and median over the imputed data sets
-n_raw     <- as.vector(table(factor(cl, levels = seq_len(kfin)))) # Només hi ha un unic cluster, aixi que la mida és exacte.
-n_imp_med <- summary_k$clusterssize[, "50%"]  # En cada imputació alguns participants poden canviar de cluster, de manera que cada imputació dona mides dizerents, i per posar un sol numero a la capçalera com ho fa l'article agafem la mediana.
+# Cluster sizes in the raw data and median cluster sizes across imputed data sets.
+n_raw     <- as.vector(table(factor(cl, levels = seq_len(kfin))))
+n_imp_med <- summary_k$clusterssize[, "size"]
 
-
-# Variable labels with "_" escaped for LaTeX
-labels <- gsub("_", "\\\\_", vars)
-
-tab_desc <- data.frame(labels, miss, raw_means, F_raw, mean_imputed, F_imputed)
-
+# Minimum and maximum cluster size overs the imputed data sets, for the caption.
 range_txt <- paste0("cluster ", seq_len(kfin), ": ",
                     summary_k$clusterssize[, "min."], "--",
                     summary_k$clusterssize[, "max."], collapse = "; ")
 
+# Escape underscores in variable names for LaTeX.
+labels <- gsub("_", "\\\\_", vars) 
+
+# Create the final data frame, with variable labels followed by the numerical 
+# results.
+tab_desc <- data.frame(labels, miss, raw_means, F_raw, mean_imputed, F_imputed)
+
+# Create the xtable object. The caption and the label are defined here.
 desc <- xtable(tab_desc,
                digits = c(0, 0, 1, rep(2, kfin), 2, rep(2, kfin), 2),
                align  = c("l", "l", rep("c", 2 * kfin + 3)),
-               caption = paste0("Mean values of the ", length(vars),
-                                " selected variables by cluster ($k=", kfin, "$). ",
-                                "Raw data: majority-vote cluster assignment, ",
-                                "missing values excluded. ",
-                                "Imputed data: means over the ", n_imp,
-                                " imputed data sets. ",
-                                "$n$: number of participants per cluster (raw data: ",
-                                "majority-vote assignment, imputed data: median over ",
-                                "the imputed data sets, with minimum--maximum ",
-                                range_txt, "). ",
-                                "$F$: ratio of between cluster variance ",
-                                "from a linear regression of each variable on cluster ",
-                                "(imputed data: mean over the imputed data sets). ",
-                                "\\% missing: percentage of participants with missing values."),
+               caption = paste0(
+                 "Mean values of the ", length(vars),
+                 " selected variables by cluster ($k=", kfin, "$). ",
+                 "Raw data: majority-vote cluster assignment, ",
+                 "missing values excluded. ",
+                 "Imputed data: means over the ", n_imp,
+                 " imputed data sets. ",
+                 "$n$: number of participants per cluster (raw data: ",
+                 "majority-vote assignment, imputed data: means over ",
+                 "the imputed data sets, with minimum--maximum ", 
+                 range_txt, "). ",
+                 "$F$: ratio of between cluster variance ",
+                 "from a linear regression of each variable on cluster ",
+                 "(imputed data: mean over the imputed data sets). ",
+                 "\\% missing: percentage of participants with missing values."),
                label = "tab:desc")
 
-# Two-level header built from computed quantities (no hand-written n)
-head_top <- paste0("& & \\multicolumn{", kfin + 1, "}{c}{\\bf Raw data} & ",
-                   "\\multicolumn{", kfin + 1, "}{c}{\\bf Imputed data} \\\\\n")
-head_sub <- paste0("\\bf Variable & \\bf \\% missing & ",
-                   paste0("\\bf Cl.~", 1:kfin, " ($n=", n_raw, "$)", collapse = " & "),
-                   " & \\bf $F$ & ",
-                   paste0("\\bf Cl.~", 1:kfin, " ($n=", n_imp_med, "$)", collapse = " & "),
-                   " & \\bf $F$ \\\\\n")
+# Two-level header, first row have Raw data and Imputed data, the second row have
+# variable, % missing, clusters with their sizes, and F values.
+head_top <- paste0(
+            "& & \\multicolumn{", kfin + 1, "}{c}{\\bf Raw data} & ",
+            "\\multicolumn{", kfin + 1, "}{c}{\\bf Imputed data} \\\\\n")
+head_sub <- paste0(
+            "\\bf Variable & \\bf \\% missing & ",
+            paste0("\\bf Cl.~", 1:kfin, " ($n=", n_raw, "$)", collapse = " & "),
+            " & \\bf $F$ & ",
+            paste0("\\bf Cl.~", 1:kfin, " ($n=", n_imp_med, "$)", collapse = " & "),
+            " & \\bf $F$ \\\\\n")
 
+# Create the cmidrule lines
+cmidrules <- paste0("\\cmidrule(lr){3-", kfin + 3, "} ",
+                    "\\cmidrule(lr){", kfin + 4, "-", 2 * kfin + 4, "}\n")
+
+# Store the entire add.to.row structure in a variable
+head_structure <- list(pos=list(0),
+                       command = paste0(head_top, cmidrules, head_sub))
+
+# Print the table as LaTeX code.
 print(desc,
       table.placement = "H",
       size = "footnotesize",
       include.rownames = FALSE,
       include.colnames = FALSE,           # header is written by add.to.row
-      add.to.row = list(pos = list(0),
-                        command = paste0(head_top,
-                                         "\\cmidrule(lr){3-", kfin + 3, "} ",
-                                         "\\cmidrule(lr){", kfin + 4, "-", 2 * kfin + 4, "}\n",
-                                         head_sub, "\n")),
+      add.to.row = head_structure,
       floating = TRUE,
       sanitize.text.function = force,
       booktabs = TRUE)
 @
-<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order.")>>=
+
+<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order. Only variables selected in at least one imputed data set are shown, bar height is the percentage of selection.")>>=
 
 # Frequency of selection of each variable across the imputed data sets
 y   <- getvariablesfrequency(miclust_1)
@@ -423,7 +453,7 @@ plot(perc, type = "h", main = "", xlab = "", ylab = "Percentage of times selecte
 
 # Variable names below each bar, las = 2 draws them vertically, and
 # cex.axis = 0.9 shrinks them slightly so that the long names fit
-axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.9)
+axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.45)
 
 # This code is adapted from the miclust README, which can be accessed at
 # https://cran.r-project.org/web/packages/miclust/readme/README.html
