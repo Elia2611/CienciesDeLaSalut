@@ -352,11 +352,17 @@ Since k-means groups the subjects using Euclidean distances, we removed the vari
 \end{kframe}
 \end{knitrout}
 
-We need to perform a variable selection because adding variables can degrade the classification when the number of subjects is small compared to the numer of variables. As mentioned in the article, it is good practice that the number of subjects are at least 10 times the number of variables.
-In our case, the ratio is $342 / 44 < 10$, so a reduction of the number of variables is needed.
+
+
+  
+  
+We need to perform a variable selection because adding variables can degrade the classification when the number of subjects is small compared to the number of variables. As mentioned in the article, it is good practice that the number of subjects is at least 10 times the number of variables. The candidate
+variables are the 33 numeric variables of \texttt{copd}, after removing \texttt{id} and the 11 non-numeric variables. In our case, the ratio is
+$342 / 33 = 10.4 \geq 10$, so a reduction is not strictly needed, but we apply it as in the original analysis.
 
 As in the original analysis, we use the backward search with CritCF criterion. It starts with all the variables and, at each step, removes the variable that when excluded gives the highest CritCF. This criterion allows to rank partitions with different numbers of clusters and different numbers of variables.
 Finally, we define \texttt{k = 2:5} where the maximum value was fixed a priori, the same way as the article. Since the backward seach is repeated for each $k$ in each imputed data set, limiting the number of clusters reduces the computational cost and also keeps the resulting groups interpretable.
+
 
 
 \end{enumerate}
@@ -740,33 +746,63 @@ Table~\ref{tab:desc} corresponds to Table~3 of the original paper and describes 
 
 \section{Report}
 
-Write a brief report (400 words maximum) describing the following issues, and
-citing tables and figures:
+Write a brief report (400 words maximum) describing the following issues, and citing tables and figures:
+  
+  \begin{itemize}
+\item The final number of clusters and their sizes and uncertainty (cite your figure(s) and table(s)).
 
-\begin{itemize}
-    \item The final number of clusters and their sizes and uncertainty (cite your
-    figure(s) and table(s)).
+\item The agreement when relabeling the clusters.
 
-    \item The agreement when relabeling the clusters.
+\item The final subset of clustering variables and uncertainty.
 
-    \item The final subset of clustering variables and uncertainty.
-
-    \item The probability of assignment to each cluster and uncertainty.
+\item The probability of assignment to each cluster and uncertainty.
 \end{itemize}
 
 
+  
 
-To find the number of clusters, we applied the backward search with the CritCF criterion to each of the 100 imputed data sets. Figure~\ref{fig:fig_critcf} shows that even the worst value for $k = 2$ is above the best value for $k = 3$, so $k = 2$ was the optimal number of clusters in all the imputed data sets. Therefore, there is practically no uncertainty in the choice of $k$.
-After the assignation, the clusters contain 184 and 158 subjects.
+  
+To find the number of clusters, we applied the backward search with the CritCF criterion to each of the 100 imputed data sets.
+Figure~\ref{fig:fig_critcf} shows that even the worst value of CritCF for $k=2$ is above the best value for any other $k$, so $k=2$ was optimal in all the imputed data sets and there is practically no uncertainty in the choice of $k$. After the assignation, the clusters contain 184 and 158 subjects.
 
-To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is good, with a median Cohen's kappa of 0.97.
+To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is almost perfect, with a median Cohen's kappa of 0.97.
 
-For $k = 2$, 15 of 33 variables candidates were selected in at least one data set(Figure~\ref{fig:fig_varsel} and \ref{fig:fig_barplot}).
-The final number of selected variables is 13, with 11 of those that are in all the imputed data sets.
-There is a clear drop in frequency right after the last selected variable (from 90\% to 37\%). Also, we see that the selected variables would be the same if we kept those appearing in more than 50\% of the data sets. Therefore, the variable selection is very robust to the missing data.
+For $k=2$, 15 of the 11 candidate variables were selected in at least one data set (Figures~\ref{fig:fig_varsel} and~\ref{fig:fig_barplot}). The final subset has 13 variables, 11 of which were selected in all the imputed data sets.
+There is a clear drop in frequency right after the last selected variable (from 90\% to 37\%), so the variable selection is robust to the missing data.
 
-Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = 2$ and  $k = 3$.  For $k = 2$, the median probability is 1.00 and 1.00 in both clusters, so most subjects are always assigned to the same cluster.  For $k = 3$, the assignment is also very stable, and this is probably because the selected variables have few missing data, so the imputed data sets are very similar. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = 2$ is supported by the CritCF criterion.
-Table~\ref{tab:desc} shows that cluster 2 groups the subjects with more severe disease with worse lung function, more air trapping, lower arterial oxygen and worse scores in the questionnaires. We also see that results with raw and imputed data are very similar.
+Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = 2$ and  $k = 3$. For $k = 2$, the median probability is 1.00 and 1.00 in both clusters, so most subjects are always assigned to the same cluster.   For $k=3$ the assignment is also very stable, probably because the selected variables have few missing values. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = 2$ is supported by the CritCF criterion.
+
+Table~\ref{tab:desc} shows that cluster 2 groups the subjects with more severe disease, with worse lung function, more air trapping, lower arterial oxygen and worse scores in the questionnaires. We also see that results with raw and imputed data are very similar.
 
 
+
+\section{Use of artificial intelligence (AI) technologies}
+
+\subsection{Instructions}
+
+For the completion of this assignment, restricted use of Artificial Intelligence (AI) technologies is permitted. Specifically, the use of AI is allowed exclusively for the following tasks:
+
+\begin{itemize}
+    \item Literature or information search
+    \item Linguistic proofreading and/or translation of text
+    \item Help with \LaTeX{} code
+    \item Review of R code that has been previously created by the students without the use of AI
+\end{itemize}
+
+\begin{enumerate}
+    \item Clearly and thoroughly identify which contents and results presented in this work have been generated using AI. For each of these contents and results, specify:
+    \begin{itemize}
+        \item Identification of the content (e.g., table, figure, R chunk, interpretation, summarization, translation, etc.)
+        \item Name and version of the AI
+        \item Prompt (question or questions asked to the AI)
+    \end{itemize}
+
+    \item Write a detailed critical reflection on how the use of the AI tools for this assignment has influenced both the process and the final outcome of the activity.
+\end{enumerate}
+
+Lack of transparency regarding the use of AI in this assignment will be considered academic misconduct and may result in a partial or total penalty on the grade for this activity, or more severe sanctions in serious cases.
+
+All authors (i.e., signatories) of this work share equal responsibility for its content and for the methods used to obtain the results.
+
+In general, committing any irregularity in any assessment activity (academic fraud, plagiarism, or improper use of AI, unless explicitly authorized in the course syllabus) that could lead to a significant change in the grade will result in a score of 0 for that assessment. Independent of this, a disciplinary procedure may be initiated against any student committing such irregularities.
 \end{document}

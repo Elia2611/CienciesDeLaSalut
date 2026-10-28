@@ -211,11 +211,27 @@ miclust_1 <- miclust(data = imp_midata,
 miclust_1$kfin # optimal k (number of clusters)
 @
 
-We need to perform a variable selection because adding variables can degrade the classification when the number of subjects is small compared to the numer of variables. As mentioned in the article, it is good practice that the number of subjects are at least 10 times the number of variables.
-In our case, the ratio is $\Sexpr{n_obs} / \Sexpr{n_vars - 1} < 10$, so a reduction of the number of variables is needed.
+
+<<cluster_analysis_text, include = FALSE>>=
+# Number of subjects per candidate variable.
+ratio <- sprintf("%.1f", nrow(copd_raw) / ncol(copd_raw))
+
+# Sentence about the need for variable selection, depending on the ratio.
+txt_ratio <- if (nrow(copd_raw) / ncol(copd_raw) < 10) {
+  "< 10$, so a reduction of the number of variables is needed"
+} else {
+  "\\geq 10$, so a reduction is not strictly needed, but we apply it as in the original analysis"
+}
+@
+  
+  
+We need to perform a variable selection because adding variables can degrade the classification when the number of subjects is small compared to the number of variables. As mentioned in the article, it is good practice that the number of subjects is at least 10 times the number of variables. The candidate
+variables are the \Sexpr{ncol(copd_raw)} numeric variables of \texttt{copd}, after removing \texttt{id} and the \Sexpr{sum(!num_cols)} non-numeric variables. In our case, the ratio is
+$\Sexpr{nrow(copd_raw)} / \Sexpr{ncol(copd_raw)} = \Sexpr{ratio} \Sexpr{txt_ratio}.
 
 As in the original analysis, we use the backward search with CritCF criterion. It starts with all the variables and, at each step, removes the variable that when excluded gives the highest CritCF. This criterion allows to rank partitions with different numbers of clusters and different numbers of variables.
 Finally, we define \texttt{k = 2:5} where the maximum value was fixed a priori, the same way as the article. Since the backward seach is repeated for each $k$ in each imputed data set, limiting the number of clusters reduces the computational cost and also keeps the resulting groups interpretable.
+
 
 
 \end{enumerate}
@@ -500,46 +516,152 @@ Table~\ref{tab:desc} corresponds to Table~3 of the original paper and describes 
 
 \section{Report}
 
-Write a brief report (400 words maximum) describing the following issues, and
-citing tables and figures:
+Write a brief report (400 words maximum) describing the following issues, and citing tables and figures:
+  
+  \begin{itemize}
+\item The final number of clusters and their sizes and uncertainty (cite your figure(s) and table(s)).
 
-\begin{itemize}
-    \item The final number of clusters and their sizes and uncertainty (cite your
-    figure(s) and table(s)).
+\item The agreement when relabeling the clusters.
 
-    \item The agreement when relabeling the clusters.
+\item The final subset of clustering variables and uncertainty.
 
-    \item The final subset of clustering variables and uncertainty.
-
-    \item The probability of assignment to each cluster and uncertainty.
+\item The probability of assignment to each cluster and uncertainty.
 \end{itemize}
 
 <<report_values, include = FALSE>>=
-var_once <- sum(perc>0) #selected at least once
-var_cand <- ncol(copd_raw) #cadidate variables
-var_sel <- length(summary_k$selectedvariables) #final selected variables
-var_sel_all <- sum(perc == M) #selected variables in all data sets
-p_last <- sprintf("%.0f", perc[var_sel]) #least frequent selected variable
-p_next <- sprintf("%.0f", perc[var_sel + 1]) #next variable (not selected)
+  # Number of candidate variables, variables selected at least once, variables
+  # in the final subset and variables selected in all the imputed data sets.
+  var_cand    <- ncol(copd_raw)
+var_once    <- sum(perc > 0)
+var_sel     <- length(summary_k$selectedvariables)
+var_sel_all <- sum(perc == 100)
+
+# Selection frequency (%) of the least frequent final variable and of the
+# next variable, which was not selected.
+p_last <- sprintf("%.0f", perc[var_sel])
+p_next <- sprintf("%.0f", perc[var_sel + 1])
+
+# Median probability of assignment of each cluster.
 med1 <- paste(sprintf("%.2f", a1[, 3]), collapse = " and ")
-min1 <- paste(sprintf("%.2f", a1[, 1]), collapse = " and ")
-n_final <- table(factor(summary_k$cluster, levels = 1:kfin))
-kappa_vals <- summary_k$kappas
-kappa_med  <- sprintf("%.2f", median(kappa_vals))
+
+# Size of each cluster after after assignment
+n_final <- table(factor(summary_k$cluster, levels = 1:kfin)) 
+
+# Cohen's kappa of each imputed data set and its median.
+kappa_vals <- summary_k$kappas 
+kappa_med <- sprintf("%.2f", median(kappa_vals))
 
 @
+  
+  <<report_text, include=FALSE>>=
+  ## 1. Number of clusters
+  
+  # CritCF values (rows: imputed data sets, columns: explored k) and explored
+  # numbers of clusters.
+  crit <- miclust_1$critcf 
+ks   <- 2:5 
 
-To find the number of clusters, we applied the backward search with the CritCF criterion to each of the \Sexpr{M} imputed data sets. Figure~\ref{fig:fig_critcf} shows that even the worst value for $k = \Sexpr{kfin}$ is above the best value for $k = \Sexpr{kfin + 1}$, so $k = \Sexpr{kfin}$ was the optimal number of clusters in all the imputed data sets. Therefore, there is practically no uncertainty in the choice of $k$.
-After the assignation, the clusters contain \Sexpr{n_final[1]} and \Sexpr{n_final[2]} subjects.
+# Optimal k in each imputed data set (highest CritCF) and number of imputed
+# data sets in which k is optimal.
+best_k <- ks[apply(crit, 1, which.max)]
+n_best <- sum(best_k == kfin)
 
-To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is good, with a median Cohen's kappa of \Sexpr{kappa_med}.
+# Choice of k: no overlap between the CritCF of kfin and
+# the other k, kfin optimal in all data sets but with overlap, or kfin not
+# optimal in all data sets.
+txt_k <- if (min(crit[, ks == kfin]) > max(crit[, ks != kfin])) {
+  sprintf("even the worst value of CritCF for $k=%d$ is above the best value for any other $k$, so $k=%d$ was optimal in all the imputed data sets and there is practically no uncertainty in the choice of $k$", kfin, kfin)
+} else if (n_best == M) {
+  sprintf("$k=%d$ was optimal in all the imputed data sets, although the CritCF distributions of different values of $k$ overlap", kfin)
+} else {
+  sprintf("$k=%d$ was optimal in %d of the %d imputed data sets, so there is some uncertainty in the choice of $k$", kfin, n_best, M)
+}
 
-For $k = \Sexpr{kfin}$, \Sexpr{var_once} of \Sexpr{var_cand} variables candidates were selected in at least one data set(Figure~\ref{fig:fig_varsel} and \ref{fig:fig_barplot}).
-The final number of selected variables is \Sexpr{var_sel}, with \Sexpr{var_sel_all} of those that are in all the imputed data sets.
-There is a clear drop in frequency right after the last selected variable (from \Sexpr{p_last}\% to \Sexpr{p_next}\%). Also, we see that the selected variables would be the same if we kept those appearing in more than 50\% of the data sets. Therefore, the variable selection is very robust to the missing data.
+# Warning if kfin is the largest explored k.
+txt_klim <- if (kfin == max(ks)) " Since $k_{fin}$ is at the upper limit of the explored range, larger values of $k$ should also be explored." else ""
 
-Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = \Sexpr{kfin}$ and  $k = \Sexpr{kfin + 1}$.  For $k = \Sexpr{kfin}$, the median probability is \Sexpr{med1} in both clusters, so most subjects are always assigned to the same cluster.  For $k = \Sexpr{kfin + 1}$, the assignment is also very stable, and this is probably because the selected variables have few missing data, so the imputed data sets are very similar. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = \Sexpr{kfin}$ is supported by the CritCF criterion.
-Table~\ref{tab:desc} shows that cluster 2 groups the subjects with more severe disease with worse lung function, more air trapping, lower arterial oxygen and worse scores in the questionnaires. We also see that results with raw and imputed data are very similar.
+## 2. Kappa
+
+# Level of agreement after relabeling.
+km <- median(kappa_vals)
+txt_kappa <- if (km > 0.8) "almost perfect" else if (km > 0.6) "substantial" else if (km > 0.4) "moderate" else "low"
+
+## 3. Variable selection
+
+# Drop in selection frequency after the last selected variable. We consider a
+# drop of 30 points or more a clear separation.
+gap   <- perc[var_sel] - perc[var_sel + 1]
+txt_var <- if (gap >= 30) {
+  sprintf("There is a clear drop in frequency right after the last selected variable (from %s\\%% to %s\\%%), so the variable selection is robust to the missing data.", p_last, p_next) 
+} else {
+  sprintf("The drop in frequency after the last selected variable is small (from %s\\%% to %s\\%%), so there is some uncertainty in the variable selection.", p_last, p_next)
+}
+
+## 4. Stability of the assignment with k = kfin + 1
+
+# The assignment is considered stable if the first quartile of the
+# probability of assignment is 1 in all cluster
+txt_next <- if (all(a2[, 2] == 1)) {
+  sprintf("For $k=%d$ the assignment is also very stable, probably because the selected variables have few missing values. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = %d$ is supported by the CritCF criterion.", kfin + 1, kfin)
+} else {
+  sprintf("For $k=%d$ the assignment is less stable, which also supports the choice of $k=%d$.", kfin + 1, kfin)
+}
+
+## 5. Cluster description
+
+# Cluster with the lowest FEV1.
+i_fev <- which(vars == "fevp_postv1")
+sev   <- which.min(mean_imputed[i_fev, ])
+
+# Comparison of raw and imputed means.
+txt_raw <- if (max(abs(raw_means - mean_imputed) / abs(mean_imputed)) < 0.05) {
+  "very similar"
+} else {
+  "somewhat different"
+}
+@
+  
+To find the number of clusters, we applied the backward search with the CritCF criterion to each of the \Sexpr{M} imputed data sets.
+Figure~\ref{fig:fig_critcf} shows that \Sexpr{txt_k}.\Sexpr{txt_klim} After the assignation, the clusters contain \Sexpr{n_final[1]} and \Sexpr{n_final[2]} subjects.
+
+To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is \Sexpr{txt_kappa}, with a median Cohen's kappa of \Sexpr{kappa_med}.
+
+For $k=\Sexpr{kfin}$, \Sexpr{var_once} of the \Sexpr{var_sel_all} candidate variables were selected in at least one data set (Figures~\ref{fig:fig_varsel} and~\ref{fig:fig_barplot}). The final subset has \Sexpr{var_sel} variables, \Sexpr{var_sel_all} of which were selected in all the imputed data sets.
+\Sexpr{txt_var}
+
+Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = \Sexpr{kfin}$ and  $k = \Sexpr{kfin + 1}$. For $k = \Sexpr{kfin}$, the median probability is \Sexpr{med1} in both clusters, so most subjects are always assigned to the same cluster.   \Sexpr{txt_next}
+
+Table~\ref{tab:desc} shows that cluster \Sexpr{sev} groups the subjects with more severe disease, with worse lung function, more air trapping, lower arterial oxygen and worse scores in the questionnaires. We also see that results with raw and imputed data are \Sexpr{txt_raw}.
 
 
+
+\section{Use of artificial intelligence (AI) technologies}
+
+\subsection{Instructions}
+
+For the completion of this assignment, restricted use of Artificial Intelligence (AI) technologies is permitted. Specifically, the use of AI is allowed exclusively for the following tasks:
+
+\begin{itemize}
+    \item Literature or information search
+    \item Linguistic proofreading and/or translation of text
+    \item Help with \LaTeX{} code
+    \item Review of R code that has been previously created by the students without the use of AI
+\end{itemize}
+
+\begin{enumerate}
+    \item Clearly and thoroughly identify which contents and results presented in this work have been generated using AI. For each of these contents and results, specify:
+    \begin{itemize}
+        \item Identification of the content (e.g., table, figure, R chunk, interpretation, summarization, translation, etc.)
+        \item Name and version of the AI
+        \item Prompt (question or questions asked to the AI)
+    \end{itemize}
+
+    \item Write a detailed critical reflection on how the use of the AI tools for this assignment has influenced both the process and the final outcome of the activity.
+\end{enumerate}
+
+Lack of transparency regarding the use of AI in this assignment will be considered academic misconduct and may result in a partial or total penalty on the grade for this activity, or more severe sanctions in serious cases.
+
+All authors (i.e., signatories) of this work share equal responsibility for its content and for the methods used to obtain the results.
+
+In general, committing any irregularity in any assessment activity (academic fraud, plagiarism, or improper use of AI, unless explicitly authorized in the course syllabus) that could lead to a significant change in the grade will result in a score of 0 for that assessment. Independent of this, a disciplinary procedure may be initiated against any student committing such irregularities.
 \end{document}
