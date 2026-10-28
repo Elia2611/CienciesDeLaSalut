@@ -1,3 +1,0 @@
-links info practica:
-
-Funció complete: https://search.r-project.org/CRAN/refmans/mice/html/complete.mids.html

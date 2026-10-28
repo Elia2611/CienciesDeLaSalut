@@ -222,52 +222,106 @@ Finally, we define \texttt{k = 2:5} where the maximum value was fixed a priori, 
 
 \section{Results}
 
-Using \texttt{plot()} and \texttt{summary()} methods in the \texttt{miclust} 
-package, provide plots and tables for the results similar than those shown in 
-the original paper. Also, show a barplot for the percentage of times each 
-variable is selected among the imputed data sets, in decreasing order. Explain 
-how you set all arguments in all functions and methods you use. Show your code.
+Using \texttt{plot()} and \texttt{summary()} methods in the \texttt{miclust} package, provide plots and tables for the results similar than those shown in the original paper. Also, show a barplot for the percentage of times each variable is selected among the imputed data sets, in decreasing order. Explain how you set all arguments in all functions and methods you use. Show your code.
 
-<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), over the ", length(miclust_1$usedimp), " imputed data sets. Each box summarises ", length(miclust_1$usedimp), " values obtained with $k$-means and backward variable selection for $k=", min(miclust_1$ks), ",\\ldots,", max(miclust_1$ks), "$. The final number of clusters, $k=", miclust_1$kfin, "$, is the one selected in most imputed data sets.")>>=
+<<results_values>>=
+# Final number of clusters selected by miclust
+kfin <- miclust_1$kfin
+
+# Number of imputations
+n_imp <- length(miclust_1$usedimp)
+@
+
+In this section we reproduce the figures and tables of Basagaña et al. using the \texttt{plot()} and \texttt{summary()} methods of the \texttt{miclust} object, in this case the name of this is \texttt{miclust\_1}. Following the instructions we use one color for all plots related to the number of clusters, dark magenta, and another one for all plots related to variable selection, sky blue.
+
+<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), over the ", n_imp, " imputed data sets. Each box summarises ", n_imp, " values obtained with $k$-means and backward variable selection for $k=", min(miclust_1$ks), ",...,", max(miclust_1$ks), "$. The final number of clusters, $k=", kfin, "$, is the one selected in most imputed data sets.")>>=
 
 # Distribution of the CritCF criterion over the imputed data sets, one box per
-# explored number of clusters (ks = 2:5);
+# explored number of clusters.
 plot(miclust_1, metric = "critcf", col.critcf = "darkmagenta")
 @
 
-<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variable selection frequency for $k=", miclust_1$kfin, "$ clusters. Each horizontal line shows the percentage of the ", length(miclust_1$usedimp), " imputed data sets in which a variable remained in the final set after the backward selection algorithm, only variables selected in at least one data set are shown. The black horizontal lines summarise the number of variables selected per imputed data set: first and third quartiles (dotted), median (dashed) and mean (dash-dotted), positioned according to the ranked list of variables. Variable names are those of the \\texttt{copd} data set.")>>=
+Figure \ref{fig:fig_critcf} corresponds to Figure 1 of the original paper. It is obtained with \texttt{plot(miclust\_1, metric = "critcf")}, the argument \texttt{metric = "critcf"} selects the boxplots of the CritCF criterion by numbers of clusters, with one value per imputed data set and per $k$. The argument \texttt{col.critcf = "darkmagenta"} makes de boxes in colour.
 
-# Final number of clusters selected by miclust
-kfin <- miclust_1$kfin
+<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variable selection frequency for $k=", miclust_1$kfin, "$ clusters. Each horizontal line shows the percentage of the ", length(miclust_1$usedimp), " imputed data sets in which a variable remained in the final set after the backward selection algorithm, only variables selected in at least one data set are shown. The black horizontal lines summarise the number of variables selected per imputed data set: first and third quartiles (dotted), median (dashed) and mean (dash-dotted), positioned according to the ranked list of variables. Variable names are those of the \\texttt{copd} data set.")>>=
 
 # Percentage of appearance of each variable (metric = "varsel") for k = kfin
 plot(miclust_1, k = kfin, metric = "varsel", col.varsel = "skyblue")
 @
+Figure \ref{fig:fig_varsel} corresponds to Figure 2 of the original paper. We use \texttt{metric = "varsel"} to show only, for each variable, the percentages of imputed data sets in which it remained in the final set of variables. With \texttt{k = kfin} we show the results for the optimal number of clusters, as in the paper, where only the data sets with the final $k$ are used for variable selection. The argument \texttt{col.varsel = "skyblue"} sets the colour of the segments.
+
+<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order. Only variables selected in at least one imputed data set are shown, bar height is the percentage of selection.")>>=
+
+# Frequency of selection of each variable across the imputed data sets
+y   <- getvariablesfrequency(miclust_1)
+
+# Sort the variables by decreasing percentage of selection
+y_ord <- order(y$percfreq, decreasing = TRUE)
+perc <- y$percfreq[y_ord]
+name <- y$varnames[y_ord]
+
+# Bars drawn as thick vertical lines (type = "h", lwd = 20).
+plot(perc, type = "h", main = "", xlab = "", ylab = "Percentage of times selected", 
+     xlim = 0.5 + c(0, length(perc)), ylim = c(0, 100),
+     lwd = 20, col = "skyblue", xaxt = "n")
+
+# Variable names below each bar, las = 2 draws them vertically, and
+# cex.axis = 0.45 shrinks them slightly so that the long names fit
+axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.45)
+
+# This code is adapted from the miclust README, which can be accessed at
+# https://cran.r-project.org/web/packages/miclust/readme/README.html
+@
+
+Figure~\ref{fig:barplot} shows the same selection percentages as Figure~\ref{fig:varsel}, as a barplot in decreasing order. The percentages are obtained with \texttt{getvariablesfrequency(miclust\_1)}, which returns the variable names (\texttt{varnames}) and the percentage of times each one was selected (\texttt{percfreq}). They are sorted with \texttt{order(..., decreasing = TRUE)}, applying the same ordering to the percentages and to the names so that each bar keeps its label. The bars are drawn with \texttt{plot(type = "h")} and a thick line (\texttt{lwd = 20}). The default x axis is removed (\texttt{xaxt = "n"}) and replaced by \texttt{axis()}, with vertical labels (\texttt{las = 2}) and reduced size (\texttt{cex.axis}) so that long names fit. The y axis is fixed to \texttt{ylim = c(0, 100)} because the values are percentages, and \texttt{col = "skyblue"} keeps the color used for variable selection. The code is adapted from the \texttt{miclust} README.
 
 
 <<summaries>>=
+# Number of clusters used for comparison.
+#   kfin + 1, if kfin < max(miclust_1$ks)
+#   kfin - 1 else.
+if (kfin < max(miclust_1$ks)) {
+  k_comp <- kfin + 1
+} else {
+  k_comp <- kfin - 1
+}
+
 # Set quantilevars = 0.5 so the numbers of final variables equals the median 
 # number of variables selected across the imputed data sets.
 summary_k <- summary(miclust_1, quantilevars = 0.5)
-
-summary_kp1 <- summary(miclust_1, k = kfin + 1, quantilevars = 0.5)
+summary_kp1 <- summary(miclust_1, k =  k_comp, quantilevars = 0.5)
 @
+
+The tables are built from the \texttt{summary()} method. We call \texttt{summary(miclust\_1, quantilevars = 0.5)}, which uses the optimal number of clusters ($k=\Sexpr{kfin}$). The argument \texttt{quantilevars = 0.5} makes the number of final variables equal to the median number of variables selected across the imputed data sets, and the variables retained are the most frequently selected ones, which is the criterion proposed in step~3a of Table~1 of Basagaña et al. We also call \texttt{summary()} with \texttt{k = k\_comp} ($k=\Sexpr{k_comp}$) only for comparison. The value \texttt{k\_comp} is $k_{\text{fin}}+1$, unless $k_{\text{fin}}$ is the largest explored number of clusters ($\Sexpr{max(miclust_1$ks)}$), in which case we use $k_{\text{fin}}-1$.
 
 <<table_alloc, results='asis'>>=
 # Distribution of the probability of assignment to each cluster, for k = kfin
-a1 <- as.matrix(summary_k$allocationprobabilities)
+a_fin <- as.matrix(summary_k$allocationprobabilities)
 
-# Same distribution, for k = kfin + 1
-a2 <- as.matrix(summary_kp1$allocationprobabilities) 
+# Same distribution, for k = k_comp
+a_comp <- as.matrix(summary_kp1$allocationprobabilities) 
+
+# Blocks ordered by increasing number of clusters
+if (k_comp > kfin) {
+  k1 <- kfin
+  a1 <- a_fin
+  k2 <- k_comp
+  a2 <- a_comp
+} else {
+  k1 <- k_comp
+  a1 <- a_comp
+  k2 <- kfin
+  a2 <- a_fin
+}
 
 # Numeric part, an empty row before each k block, followed by the rows of the 
 # corresponding summary
 vals <- rbind(rep(NA, 5), a1, rep(NA, 5), a2) 
 
 # Text part, one label per row.
-labels <- c(paste0("$k=", kfin, "$"),
+labels <- c(paste0("$k=", k1, "$"),
             paste0("Cluster ", seq_len(nrow(a1))),
-            paste0("$k=", kfin + 1, "$"),
+            paste0("$k=", k2, "$"),
             paste0("Cluster ", seq_len(nrow(a2)))) 
 
 # Combine text part, first column, and numeric values into one data.frame
@@ -281,17 +335,18 @@ tab_alloc <- data.frame(labels, vals)
 alloc <- xtable(tab_alloc,
                 digits = c(0, 0, 2, 2, 2, 2, 2),
                 align = c("l", "l", "c", "c", "c", "c", "c"),
-                caption = paste0("Distribution of the frequency of assignment of ",
-                 "participants to each cluster over the ",
-                 length(miclust_1$usedimp), " imputed data sets, ",
-                 "for $k=", kfin, "$ (final number of clusters) ",
-                 "and $k=", kfin + 1, "$. For each participant, the frequency of ",
-                 "assignment to a cluster is the proportion of ",
-                 "imputed data sets in which he or she was assigned ",
-                 "to it. Each row gives the ",
-                 "minimum, quartiles and maximum of these ",
-                 "frequencies among the participants finally ",
-                 "assigned to that cluster by majority vote."),
+                caption = paste0(
+                  "Distribution of the frequency of assignment of participants ",
+                  "to each cluster over the ", length(miclust_1$usedimp),
+                  " imputed data sets, for $k=", k1, "$ and $k=", k2, "$ ",
+                  "(the final number of clusters is $k=", kfin, "$ ",
+                  "the other value is shown for comparison only). ",
+                  "For each participant, the frequency of assignment to a cluster ",
+                  "is the proportion of imputed data sets in which he or she was ",
+                  "assigned to it. ",
+                  "Each row gives the minimum, quartiles and maximum of these ",
+                  "frequencies among the participants finally assigned to that ",
+                  "cluster by majority vote."),
                 label = "tab:alloc")
 
 # Column names, centered and in bold, the first one is left blank
@@ -311,6 +366,8 @@ print(alloc,
       sanitize.text.function = force, 
       booktabs = TRUE) 
 @
+
+Table~\ref{tab:alloc} corresponds to Table~2 of the original paper. It uses the field \texttt{allocationprobabilities} of the summaries for $k=\Sexpr{min(kfin, k_comp)}$ and $k=\Sexpr{max(kfin, k_comp)}$, which gives the minimum, quartiles and maximum of the frequency of assignment of the participants to their final cluster over the \Sexpr{n_imp} imputed data sets. A block of rows is built for each $k$, always in increasing order of $k$, so the table adapts if the number of clusters changes.
 
 <<table_description, results='asis'>>=
 # Final selected variables and the cluster summary.
@@ -436,28 +493,8 @@ print(desc,
       booktabs = TRUE)
 @
 
-<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order. Only variables selected in at least one imputed data set are shown, bar height is the percentage of selection.")>>=
+Table~\ref{tab:desc} corresponds to Table~3 of the original paper and describes the \Sexpr{length(vars)} final variables by cluster. The percentage of missing values and the means for the imputed data come from the field \texttt{summarybycluster}, and the cluster sizes (median, minimum and maximum over the imputed data sets) from \texttt{clusterssize}. For the raw data, each participant is assigned to the cluster given by majority vote (\texttt{summary\_k\$cluster}) and the mean of each variable by cluster is computed with \texttt{mean(..., na.rm = TRUE)}, so that missing values are excluded. The $F$ values are obtained with \texttt{lm()} of each variable on the cluster, as a \texttt{factor}, so that the cluster numbers are treated as labels, and \texttt{anova()}, taking the $F$ of the first row. For the imputed data, this is repeated in each of the \Sexpr{n_imp} imputed data sets with its own cluster assignment (\texttt{clustervectors}), and the $F$ values are averaged. The article does not specify how to combine them, so the mean is our choice.
 
-# Frequency of selection of each variable across the imputed data sets
-y   <- getvariablesfrequency(miclust_1)
-
-# Sort the variables by decreasing percentage of selection
-y_ord <- order(y$percfreq, decreasing = TRUE)
-perc <- y$percfreq[y_ord]
-name <- y$varnames[y_ord]
-
-# Bars drawn as thick vertical lines (type = "h", lwd = 20).
-plot(perc, type = "h", main = "", xlab = "", ylab = "Percentage of times selected", 
-     xlim = 0.5 + c(0, length(perc)), ylim = c(0, 100),
-     lwd = 20, col = "skyblue", xaxt = "n")
-
-# Variable names below each bar, las = 2 draws them vertically, and
-# cex.axis = 0.9 shrinks them slightly so that the long names fit
-axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.45)
-
-# This code is adapted from the miclust README, which can be accessed at
-# https://cran.r-project.org/web/packages/miclust/readme/README.html
-@
 
 \section{Report}
 

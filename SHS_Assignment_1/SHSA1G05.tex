@@ -363,17 +363,27 @@ Finally, we define \texttt{k = 2:5} where the maximum value was fixed a priori, 
 
 \section{Results}
 
-Using \texttt{plot()} and \texttt{summary()} methods in the \texttt{miclust} 
-package, provide plots and tables for the results similar than those shown in 
-the original paper. Also, show a barplot for the percentage of times each 
-variable is selected among the imputed data sets, in decreasing order. Explain 
-how you set all arguments in all functions and methods you use. Show your code.
+Using \texttt{plot()} and \texttt{summary()} methods in the \texttt{miclust} package, provide plots and tables for the results similar than those shown in the original paper. Also, show a barplot for the percentage of times each variable is selected among the imputed data sets, in decreasing order. Explain how you set all arguments in all functions and methods you use. Show your code.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Final number of clusters selected by miclust}
+\hldef{> }\hldef{kfin} \hlkwb{<-} \hldef{miclust_1}\hlopt{$}\hldef{kfin}
+\hldef{> }
+\hldef{> }\hlcom{# Number of imputations}
+\hldef{> }\hldef{n_imp} \hlkwb{<-} \hlkwd{length}\hldef{(miclust_1}\hlopt{$}\hldef{usedimp)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+In this section we reproduce the figures and tables of Basagaña et al. using the \texttt{plot()} and \texttt{summary()} methods of the \texttt{miclust} object, in this case the name of this is \texttt{miclust\_1}. Following the instructions we use one color for all plots related to the number of clusters, dark magenta, and another one for all plots related to variable selection, sky blue.
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
 \hldef{> }\hlcom{# Distribution of the CritCF criterion over the imputed data sets, one box per}
-\hldef{> }\hlcom{# explored number of clusters (ks = 2:5);}
+\hldef{> }\hlcom{# explored number of clusters.}
 \hldef{> }\hlkwd{plot}\hldef{(miclust_1,} \hlkwc{metric} \hldef{=} \hlsng{"critcf"}\hldef{,} \hlkwc{col.critcf} \hldef{=} \hlsng{"darkmagenta"}\hldef{)}
 \end{alltt}
 \end{kframe}\begin{figure}[H]
@@ -382,17 +392,16 @@ how you set all arguments in all functions and methods you use. Show your code.
 
 }
 
-\caption{\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), over the 100 imputed data sets. Each box summarises 100 values obtained with $k$-means and backward variable selection for $k=2,\ldots,5$. The final number of clusters, $k=2$, is the one selected in most imputed data sets.}\label{fig:fig_critcf}
+\caption{\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), over the 100 imputed data sets. Each box summarises 100 values obtained with $k$-means and backward variable selection for $k=2,...,5$. The final number of clusters, $k=2$, is the one selected in most imputed data sets.}\label{fig:fig_critcf}
 \end{figure}
 
 \end{knitrout}
 
+Figure \ref{fig:fig_critcf} corresponds to Figure 1 of the original paper. It is obtained with \texttt{plot(miclust\_1, metric = "critcf")}, the argument \texttt{metric = "critcf"} selects the boxplots of the CritCF criterion by numbers of clusters, with one value per imputed data set and per $k$. The argument \texttt{col.critcf = "darkmagenta"} makes de boxes in colour.
+
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{> }\hlcom{# Final number of clusters selected by miclust}
-\hldef{> }\hldef{kfin} \hlkwb{<-} \hldef{miclust_1}\hlopt{$}\hldef{kfin}
-\hldef{> }
 \hldef{> }\hlcom{# Percentage of appearance of each variable (metric = "varsel") for k = kfin}
 \hldef{> }\hlkwd{plot}\hldef{(miclust_1,} \hlkwc{k} \hldef{= kfin,} \hlkwc{metric} \hldef{=} \hlsng{"varsel"}\hldef{,} \hlkwc{col.varsel} \hldef{=} \hlsng{"skyblue"}\hldef{)}
 \end{alltt}
@@ -406,36 +415,98 @@ how you set all arguments in all functions and methods you use. Show your code.
 \end{figure}
 
 \end{knitrout}
+Figure \ref{fig:fig_varsel} corresponds to Figure 2 of the original paper. We use \texttt{metric = "varsel"} to show only, for each variable, the percentages of imputed data sets in which it remained in the final set of variables. With \texttt{k = kfin} we show the results for the optimal number of clusters, as in the paper, where only the data sets with the final $k$ are used for variable selection. The argument \texttt{col.varsel = "skyblue"} sets the colour of the segments.
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Frequency of selection of each variable across the imputed data sets}
+\hldef{> }\hldef{y}   \hlkwb{<-} \hlkwd{getvariablesfrequency}\hldef{(miclust_1)}
+\hldef{> }
+\hldef{> }\hlcom{# Sort the variables by decreasing percentage of selection}
+\hldef{> }\hldef{y_ord} \hlkwb{<-} \hlkwd{order}\hldef{(y}\hlopt{$}\hldef{percfreq,} \hlkwc{decreasing} \hldef{=} \hlnum{TRUE}\hldef{)}
+\hldef{> }\hldef{perc} \hlkwb{<-} \hldef{y}\hlopt{$}\hldef{percfreq[y_ord]}
+\hldef{> }\hldef{name} \hlkwb{<-} \hldef{y}\hlopt{$}\hldef{varnames[y_ord]}
+\hldef{> }
+\hldef{> }\hlcom{# Bars drawn as thick vertical lines (type = "h", lwd = 20).}
+\hldef{> }\hlkwd{plot}\hldef{(perc,} \hlkwc{type} \hldef{=} \hlsng{"h"}\hldef{,} \hlkwc{main} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{xlab} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{ylab} \hldef{=} \hlsng{"Percentage of times selected"}\hldef{,}
+\hldef{+ }     \hlkwc{xlim} \hldef{=} \hlnum{0.5} \hlopt{+} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlkwd{length}\hldef{(perc)),} \hlkwc{ylim} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{100}\hldef{),}
+\hldef{+ }     \hlkwc{lwd} \hldef{=} \hlnum{20}\hldef{,} \hlkwc{col} \hldef{=} \hlsng{"skyblue"}\hldef{,} \hlkwc{xaxt} \hldef{=} \hlsng{"n"}\hldef{)}
+\hldef{> }
+\hldef{> }\hlcom{# Variable names below each bar, las = 2 draws them vertically, and}
+\hldef{> }\hlcom{# cex.axis = 0.45 shrinks them slightly so that the long names fit}
+\hldef{> }\hlkwd{axis}\hldef{(}\hlnum{1}\hldef{,} \hlkwc{at} \hldef{=} \hlnum{1}\hlopt{:}\hlkwd{length}\hldef{(name),} \hlkwc{labels} \hldef{= name,} \hlkwc{las} \hldef{=} \hlnum{2}\hldef{,} \hlkwc{cex.axis} \hldef{=} \hlnum{0.45}\hldef{)}
+\end{alltt}
+\end{kframe}\begin{figure}[H]
+
+{\centering \includegraphics[width=0.9\textwidth]{figure/fig_barplot-1} 
+
+}
+
+\caption{\label{fig:barplot}Percentage of the 100 imputed data sets in which each variable was selected by the backward algorithm for $k=2$, in decreasing order. Only variables selected in at least one imputed data set are shown, bar height is the percentage of selection.}\label{fig:fig_barplot}
+\end{figure}
+
+\begin{kframe}\begin{alltt}
+\hldef{> }\hlcom{# This code is adapted from the miclust README, which can be accessed at}
+\hldef{> }\hlcom{# https://cran.r-project.org/web/packages/miclust/readme/README.html}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Figure~\ref{fig:barplot} shows the same selection percentages as Figure~\ref{fig:varsel}, as a barplot in decreasing order. The percentages are obtained with \texttt{getvariablesfrequency(miclust\_1)}, which returns the variable names (\texttt{varnames}) and the percentage of times each one was selected (\texttt{percfreq}). They are sorted with \texttt{order(..., decreasing = TRUE)}, applying the same ordering to the percentages and to the names so that each bar keeps its label. The bars are drawn with \texttt{plot(type = "h")} and a thick line (\texttt{lwd = 20}). The default x axis is removed (\texttt{xaxt = "n"}) and replaced by \texttt{axis()}, with vertical labels (\texttt{las = 2}) and reduced size (\texttt{cex.axis}) so that long names fit. The y axis is fixed to \texttt{ylim = c(0, 100)} because the values are percentages, and \texttt{col = "skyblue"} keeps the color used for variable selection. The code is adapted from the \texttt{miclust} README.
 
 
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
+\hldef{> }\hlcom{# Number of clusters used for comparison.}
+\hldef{> }\hlcom{#   kfin + 1, if kfin < max(miclust_1$ks)}
+\hldef{> }\hlcom{#   kfin - 1 else.}
+\hldef{> }\hlkwa{if} \hldef{(kfin} \hlopt{<} \hlkwd{max}\hldef{(miclust_1}\hlopt{$}\hldef{ks)) \{}
+\hldef{+ }  \hldef{k_comp} \hlkwb{<-} \hldef{kfin} \hlopt{+} \hlnum{1}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hldef{k_comp} \hlkwb{<-} \hldef{kfin} \hlopt{-} \hlnum{1}
+\hldef{+ }\hldef{\}}
+\hldef{> }
 \hldef{> }\hlcom{# Set quantilevars = 0.5 so the numbers of final variables equals the median }
 \hldef{> }\hlcom{# number of variables selected across the imputed data sets.}
 \hldef{> }\hldef{summary_k} \hlkwb{<-} \hlkwd{summary}\hldef{(miclust_1,} \hlkwc{quantilevars} \hldef{=} \hlnum{0.5}\hldef{)}
-\hldef{> }
-\hldef{> }\hldef{summary_kp1} \hlkwb{<-} \hlkwd{summary}\hldef{(miclust_1,} \hlkwc{k} \hldef{= kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlkwc{quantilevars} \hldef{=} \hlnum{0.5}\hldef{)}
+\hldef{> }\hldef{summary_kp1} \hlkwb{<-} \hlkwd{summary}\hldef{(miclust_1,} \hlkwc{k} \hldef{=  k_comp,} \hlkwc{quantilevars} \hldef{=} \hlnum{0.5}\hldef{)}
 \end{alltt}
 \end{kframe}
 \end{knitrout}
 
+The tables are built from the \texttt{summary()} method. We call \texttt{summary(miclust\_1, quantilevars = 0.5)}, which uses the optimal number of clusters ($k=2$). The argument \texttt{quantilevars = 0.5} makes the number of final variables equal to the median number of variables selected across the imputed data sets, and the variables retained are the most frequently selected ones, which is the criterion proposed in step~3a of Table~1 of Basagaña et al. We also call \texttt{summary()} with \texttt{k = k\_comp} ($k=3$) only for comparison. The value \texttt{k\_comp} is $k_{\text{fin}}+1$, unless $k_{\text{fin}}$ is the largest explored number of clusters ($5$), in which case we use $k_{\text{fin}}-1$.
+
 \begin{kframe}
 \begin{alltt}
 \hldef{> }\hlcom{# Distribution of the probability of assignment to each cluster, for k = kfin}
-\hldef{> }\hldef{a1} \hlkwb{<-} \hlkwd{as.matrix}\hldef{(summary_k}\hlopt{$}\hldef{allocationprobabilities)}
+\hldef{> }\hldef{a_fin} \hlkwb{<-} \hlkwd{as.matrix}\hldef{(summary_k}\hlopt{$}\hldef{allocationprobabilities)}
 \hldef{> }
-\hldef{> }\hlcom{# Same distribution, for k = kfin + 1}
-\hldef{> }\hldef{a2} \hlkwb{<-} \hlkwd{as.matrix}\hldef{(summary_kp1}\hlopt{$}\hldef{allocationprobabilities)}
+\hldef{> }\hlcom{# Same distribution, for k = k_comp}
+\hldef{> }\hldef{a_comp} \hlkwb{<-} \hlkwd{as.matrix}\hldef{(summary_kp1}\hlopt{$}\hldef{allocationprobabilities)}
+\hldef{> }
+\hldef{> }\hlcom{# Blocks ordered by increasing number of clusters}
+\hldef{> }\hlkwa{if} \hldef{(k_comp} \hlopt{>} \hldef{kfin) \{}
+\hldef{+ }  \hldef{k1} \hlkwb{<-} \hldef{kfin}
+\hldef{+ }  \hldef{a1} \hlkwb{<-} \hldef{a_fin}
+\hldef{+ }  \hldef{k2} \hlkwb{<-} \hldef{k_comp}
+\hldef{+ }  \hldef{a2} \hlkwb{<-} \hldef{a_comp}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hldef{k1} \hlkwb{<-} \hldef{k_comp}
+\hldef{+ }  \hldef{a1} \hlkwb{<-} \hldef{a_comp}
+\hldef{+ }  \hldef{k2} \hlkwb{<-} \hldef{kfin}
+\hldef{+ }  \hldef{a2} \hlkwb{<-} \hldef{a_fin}
+\hldef{+ }\hldef{\}}
 \hldef{> }
 \hldef{> }\hlcom{# Numeric part, an empty row before each k block, followed by the rows of the }
 \hldef{> }\hlcom{# corresponding summary}
 \hldef{> }\hldef{vals} \hlkwb{<-} \hlkwd{rbind}\hldef{(}\hlkwd{rep}\hldef{(}\hlnum{NA}\hldef{,} \hlnum{5}\hldef{), a1,} \hlkwd{rep}\hldef{(}\hlnum{NA}\hldef{,} \hlnum{5}\hldef{), a2)}
 \hldef{> }
 \hldef{> }\hlcom{# Text part, one label per row.}
-\hldef{> }\hldef{labels} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlkwd{paste0}\hldef{(}\hlsng{"$k="}\hldef{, kfin,} \hlsng{"$"}\hldef{),}
+\hldef{> }\hldef{labels} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlkwd{paste0}\hldef{(}\hlsng{"$k="}\hldef{, k1,} \hlsng{"$"}\hldef{),}
 \hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"Cluster "}\hldef{,} \hlkwd{seq_len}\hldef{(}\hlkwd{nrow}\hldef{(a1))),}
-\hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"$k="}\hldef{, kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlsng{"$"}\hldef{),}
+\hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"$k="}\hldef{, k2,} \hlsng{"$"}\hldef{),}
 \hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"Cluster "}\hldef{,} \hlkwd{seq_len}\hldef{(}\hlkwd{nrow}\hldef{(a2))))}
 \hldef{> }
 \hldef{> }\hlcom{# Combine text part, first column, and numeric values into one data.frame}
@@ -449,17 +520,18 @@ how you set all arguments in all functions and methods you use. Show your code.
 \hldef{> }\hldef{alloc} \hlkwb{<-} \hlkwd{xtable}\hldef{(tab_alloc,}
 \hldef{+ }                \hlkwc{digits} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{),}
 \hldef{+ }                \hlkwc{align} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"l"}\hldef{,} \hlsng{"l"}\hldef{,} \hlsng{"c"}\hldef{,} \hlsng{"c"}\hldef{,} \hlsng{"c"}\hldef{,} \hlsng{"c"}\hldef{,} \hlsng{"c"}\hldef{),}
-\hldef{+ }                \hlkwc{caption} \hldef{=} \hlkwd{paste0}\hldef{(}\hlsng{"Distribution of the frequency of assignment of "}\hldef{,}
-\hldef{+ }                 \hlsng{"participants to each cluster over the "}\hldef{,}
-\hldef{+ }                 \hlkwd{length}\hldef{(miclust_1}\hlopt{$}\hldef{usedimp),} \hlsng{" imputed data sets, "}\hldef{,}
-\hldef{+ }                 \hlsng{"for $k="}\hldef{, kfin,} \hlsng{"$ (final number of clusters) "}\hldef{,}
-\hldef{+ }                 \hlsng{"and $k="}\hldef{, kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlsng{"$. For each participant, the frequency of "}\hldef{,}
-\hldef{+ }                 \hlsng{"assignment to a cluster is the proportion of "}\hldef{,}
-\hldef{+ }                 \hlsng{"imputed data sets in which he or she was assigned "}\hldef{,}
-\hldef{+ }                 \hlsng{"to it. Each row gives the "}\hldef{,}
-\hldef{+ }                 \hlsng{"minimum, quartiles and maximum of these "}\hldef{,}
-\hldef{+ }                 \hlsng{"frequencies among the participants finally "}\hldef{,}
-\hldef{+ }                 \hlsng{"assigned to that cluster by majority vote."}\hldef{),}
+\hldef{+ }                \hlkwc{caption} \hldef{=} \hlkwd{paste0}\hldef{(}
+\hldef{+ }                  \hlsng{"Distribution of the frequency of assignment of participants "}\hldef{,}
+\hldef{+ }                  \hlsng{"to each cluster over the "}\hldef{,} \hlkwd{length}\hldef{(miclust_1}\hlopt{$}\hldef{usedimp),}
+\hldef{+ }                  \hlsng{" imputed data sets, for $k="}\hldef{, k1,} \hlsng{"$ and $k="}\hldef{, k2,} \hlsng{"$ "}\hldef{,}
+\hldef{+ }                  \hlsng{"(the final number of clusters is $k="}\hldef{, kfin,} \hlsng{"$ "}\hldef{,}
+\hldef{+ }                  \hlsng{"the other value is shown for comparison only). "}\hldef{,}
+\hldef{+ }                  \hlsng{"For each participant, the frequency of assignment to a cluster "}\hldef{,}
+\hldef{+ }                  \hlsng{"is the proportion of imputed data sets in which he or she was "}\hldef{,}
+\hldef{+ }                  \hlsng{"assigned to it. "}\hldef{,}
+\hldef{+ }                  \hlsng{"Each row gives the minimum, quartiles and maximum of these "}\hldef{,}
+\hldef{+ }                  \hlsng{"frequencies among the participants finally assigned to that "}\hldef{,}
+\hldef{+ }                  \hlsng{"cluster by majority vote."}\hldef{),}
 \hldef{+ }                \hlkwc{label} \hldef{=} \hlsng{"tab:alloc"}\hldef{)}
 \hldef{> }
 \hldef{> }\hlcom{# Column names, centered and in bold, the first one is left blank}
@@ -480,7 +552,7 @@ how you set all arguments in all functions and methods you use. Show your code.
 \hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
-% Tue Oct 27 20:32:39 2026
+% Wed Oct 28 11:30:42 2026
 \begin{table}[ht]
 \centering
 \begingroup\footnotesize
@@ -498,10 +570,12 @@ $k=2$ &  &  &  &  &  \\
    \bottomrule
 \end{tabular}
 \endgroup
-\caption{Distribution of the frequency of assignment of participants to each cluster over the 100 imputed data sets, for $k=2$ (final number of clusters) and $k=3$. For each participant, the frequency of assignment to a cluster is the proportion of imputed data sets in which he or she was assigned to it. Each row gives the minimum, quartiles and maximum of these frequencies among the participants finally assigned to that cluster by majority vote.} 
+\caption{Distribution of the frequency of assignment of participants to each cluster over the 100 imputed data sets, for $k=2$ and $k=3$ (the final number of clusters is $k=2$ the other value is shown for comparison only). For each participant, the frequency of assignment to a cluster is the proportion of imputed data sets in which he or she was assigned to it. Each row gives the minimum, quartiles and maximum of these frequencies among the participants finally assigned to that cluster by majority vote.} 
 \label{tab:alloc}
 \end{table}
 
+
+Table~\ref{tab:alloc} corresponds to Table~2 of the original paper. It uses the field \texttt{allocationprobabilities} of the summaries for $k=2$ and $k=3$, which gives the minimum, quartiles and maximum of the frequency of assignment of the participants to their final cluster over the 100 imputed data sets. A block of rows is built for each $k$, always in increasing order of $k$, so the table adapts if the number of clusters changes.
 
 \begin{kframe}
 \begin{alltt}
@@ -628,7 +702,7 @@ $k=2$ &  &  &  &  &  \\
 \hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
-% Tue Oct 27 20:54:35 2026
+% Wed Oct 28 11:26:12 2026
 \begin{table}[H]
 \centering
 \begingroup\footnotesize
@@ -659,41 +733,8 @@ activityv1 & 1.2 & 37.21 & 58.86 & 85.26 & 37.01 & 59.02 & 88.56 \\
 \end{table}
 
 
-\begin{knitrout}\footnotesize
-\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
-\begin{alltt}
-\hldef{> }\hlcom{# Frequency of selection of each variable across the imputed data sets}
-\hldef{> }\hldef{y}   \hlkwb{<-} \hlkwd{getvariablesfrequency}\hldef{(miclust_1)}
-\hldef{> }
-\hldef{> }\hlcom{# Sort the variables by decreasing percentage of selection}
-\hldef{> }\hldef{y_ord} \hlkwb{<-} \hlkwd{order}\hldef{(y}\hlopt{$}\hldef{percfreq,} \hlkwc{decreasing} \hldef{=} \hlnum{TRUE}\hldef{)}
-\hldef{> }\hldef{perc} \hlkwb{<-} \hldef{y}\hlopt{$}\hldef{percfreq[y_ord]}
-\hldef{> }\hldef{name} \hlkwb{<-} \hldef{y}\hlopt{$}\hldef{varnames[y_ord]}
-\hldef{> }
-\hldef{> }\hlcom{# Bars drawn as thick vertical lines (type = "h", lwd = 20).}
-\hldef{> }\hlkwd{plot}\hldef{(perc,} \hlkwc{type} \hldef{=} \hlsng{"h"}\hldef{,} \hlkwc{main} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{xlab} \hldef{=} \hlsng{""}\hldef{,} \hlkwc{ylab} \hldef{=} \hlsng{"Percentage of times selected"}\hldef{,}
-\hldef{+ }     \hlkwc{xlim} \hldef{=} \hlnum{0.5} \hlopt{+} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlkwd{length}\hldef{(perc)),} \hlkwc{ylim} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{100}\hldef{),}
-\hldef{+ }     \hlkwc{lwd} \hldef{=} \hlnum{20}\hldef{,} \hlkwc{col} \hldef{=} \hlsng{"skyblue"}\hldef{,} \hlkwc{xaxt} \hldef{=} \hlsng{"n"}\hldef{)}
-\hldef{> }
-\hldef{> }\hlcom{# Variable names below each bar, las = 2 draws them vertically, and}
-\hldef{> }\hlcom{# cex.axis = 0.9 shrinks them slightly so that the long names fit}
-\hldef{> }\hlkwd{axis}\hldef{(}\hlnum{1}\hldef{,} \hlkwc{at} \hldef{=} \hlnum{1}\hlopt{:}\hlkwd{length}\hldef{(name),} \hlkwc{labels} \hldef{= name,} \hlkwc{las} \hldef{=} \hlnum{2}\hldef{,} \hlkwc{cex.axis} \hldef{=} \hlnum{0.45}\hldef{)}
-\end{alltt}
-\end{kframe}\begin{figure}[H]
+Table~\ref{tab:desc} corresponds to Table~3 of the original paper and describes the 13 final variables by cluster. The percentage of missing values and the means for the imputed data come from the field \texttt{summarybycluster}, and the cluster sizes (median, minimum and maximum over the imputed data sets) from \texttt{clusterssize}. For the raw data, each participant is assigned to the cluster given by majority vote (\texttt{summary\_k\$cluster}) and the mean of each variable by cluster is computed with \texttt{mean(..., na.rm = TRUE)}, so that missing values are excluded. The $F$ values are obtained with \texttt{lm()} of each variable on the cluster, as a \texttt{factor}, so that the cluster numbers are treated as labels, and \texttt{anova()}, taking the $F$ of the first row. For the imputed data, this is repeated in each of the 100 imputed data sets with its own cluster assignment (\texttt{clustervectors}), and the $F$ values are averaged. The article does not specify how to combine them, so the mean is our choice.
 
-{\centering \includegraphics[width=0.9\textwidth]{figure/fig_barplot-1} 
-
-}
-
-\caption{\label{fig:barplot}Percentage of the 100 imputed data sets in which each variable was selected by the backward algorithm for $k=2$, in decreasing order. Only variables selected in at least one imputed data set are shown, bar height is the percentage of selection.}\label{fig:fig_barplot}
-\end{figure}
-
-\begin{kframe}\begin{alltt}
-\hldef{> }\hlcom{# This code is adapted from the miclust README, which can be accessed at}
-\hldef{> }\hlcom{# https://cran.r-project.org/web/packages/miclust/readme/README.html}
-\end{alltt}
-\end{kframe}
-\end{knitrout}
 
 \section{Report}
 
