@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.23)  28 OCT 2026 13:22
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.9.23)  28 OCT 2026 17:10
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -566,7 +566,25 @@ LaTeX Font Info:    Trying to load font information for TS1+cmtt on input line
 (C:\Users\Usuari\AppData\Local\Programs\MiKTeX\tex/latex/base\ts1cmtt.fd
 File: ts1cmtt.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
-[14] [15] (SHSA1G05.aux)
+[14]
+<figure/fig_ai-1.png, id=160, 666.99188pt x 123.46124pt>
+File: figure/fig_ai-1.png Graphic file (type png)
+<use figure/fig_ai-1.png>
+Package pdftex.def Info: figure/fig_ai-1.png  used on input line 818.
+(pdftex.def)             Requested size: 455.24411pt x 84.269pt.
+ [15]
+<figure/fig_ai-2.png, id=168, 1014.03844pt x 83.5622pt>
+File: figure/fig_ai-2.png Graphic file (type png)
+<use figure/fig_ai-2.png>
+Package pdftex.def Info: figure/fig_ai-2.png  used on input line 841.
+(pdftex.def)             Requested size: 455.24411pt x 37.51465pt.
+<figure/fig_ai-3.png, id=169, 581.17125pt x 215.30438pt>
+File: figure/fig_ai-3.png Graphic file (type png)
+<use figure/fig_ai-3.png>
+Package pdftex.def Info: figure/fig_ai-3.png  used on input line 864.
+(pdftex.def)             Requested size: 455.24411pt x 168.6562pt.
+ [16 <./figure/fig_ai-1.png> <./figure/fig_ai-2.png>] [17 <./figure/fig_ai-3.pn
+g>] (SHSA1G05.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-04>
@@ -575,41 +593,44 @@ Package rerunfilecheck Info: File `SHSA1G05.out' has not changed.
 (rerunfilecheck)             Checksum: CB4FAE35F3E68775C4F63F4F1DD45A3B;1451.
  ) 
 Here is how much of TeX's memory you used:
- 12477 strings out of 474480
- 196940 string characters out of 5743198
+ 12514 strings out of 474480
+ 197711 string characters out of 5743198
  1992542 words of memory out of 5000000
- 34545 multiletter control sequences out of 15000+600000
- 568969 words of font info for 79 fonts, out of 8000000 for 9000
+ 34572 multiletter control sequences out of 15000+600000
+ 569279 words of font info for 80 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,9n,79p,1177b,618s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\Usuari\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\tct
 t1000.pk> <C:\Users\Usuari\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi
 600\tcrm1000.pk><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/publ
-ic/amsfonts/cm/cmbx12.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/
-type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKT
-eX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/Usuari/AppData/Local/Prog
-rams/MiKTeX/fonts/type1/public/amsfonts/cm/cmitt10.pfb><C:/Users/Usuari/AppData
-/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Users/Usua
-ri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/U
-sers/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi9.
-pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/
-cm/cmr10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/
-amsfonts/cm/cmr12.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type
-1/public/amsfonts/cm/cmr17.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/f
-onts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Usuari/AppData/Local/Programs/
-MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/Usuari/AppData/Local/P
-rograms/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.pfb><C:/Users/Usuari/AppData
-/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmss10.pfb><C:/Users/Usua
-ri/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C:/
-Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy8
+ic/amsfonts/cm/cmbx10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/
+type1/public/amsfonts/cm/cmbx12.pfb><C:/Users/Usuari/AppData/Local/Programs/MiK
+TeX/fonts/type1/public/amsfonts/cm/cmbx7.pfb><C:/Users/Usuari/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx8.pfb><C:/Users/Usuari/AppData/
+Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx9.pfb><C:/Users/Usuari
+/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmitt10.pfb><C:/U
+sers/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmmi10
 .pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
-/cm/cmti10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/publi
-c/amsfonts/cm/cmtt10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/t
-ype1/public/amsfonts/cm/cmtt8.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTe
-X/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
-Output written on SHSA1G05.pdf (15 pages, 333178 bytes).
+/cm/cmmi8.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public
+/amsfonts/cm/cmmi9.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmr10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/Usuari/AppData/Local/Program
+s/MiKTeX/fonts/type1/public/amsfonts/cm/cmr17.pfb><C:/Users/Usuari/AppData/Loca
+l/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/Usuari/AppD
+ata/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr7.pfb><C:/Users/Usu
+ari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/U
+sers/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr9.p
+fb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmss10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmsy10.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmsy8.pfb><C:/Users/Usuari/AppData/Local/Programs/MiKTeX/
+fonts/type1/public/amsfonts/cm/cmti10.pfb><C:/Users/Usuari/AppData/Local/Progra
+ms/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt10.pfb><C:/Users/Usuari/AppData/Lo
+cal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt8.pfb><C:/Users/Usuari/A
+ppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmtt9.pfb>
+Output written on SHSA1G05.pdf (17 pages, 439789 bytes).
 PDF statistics:
- 269 PDF objects out of 1000 (max. 8388607)
- 38 named destinations out of 1000 (max. 500000)
- 88 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 307 PDF objects out of 1000 (max. 8388607)
+ 47 named destinations out of 1000 (max. 500000)
+ 103 words of extra memory for PDF output out of 10000 (max. 10000000)
 

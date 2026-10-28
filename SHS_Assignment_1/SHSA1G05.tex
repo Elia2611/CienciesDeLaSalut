@@ -760,14 +760,14 @@ Write a brief report (400 words maximum) describing the following issues, and ci
 
 
   
-
+  
   
 To find the number of clusters, we applied the backward search with the CritCF criterion to each of the 100 imputed data sets.
 Figure~\ref{fig:fig_critcf} shows that even the worst value of CritCF for $k=2$ is above the best value for any other $k$, so $k=2$ was optimal in all the imputed data sets and there is practically no uncertainty in the choice of $k$. After the assignation, the clusters contain 184 and 158 subjects.
 
 To prevent a potential problem caused by the automatic labeling of the clusters, the clusters were relabeled taking the first data set as a reference and evaluating them with Cohen's kappa, same as the article. The agreement after relabeling is almost perfect, with a median Cohen's kappa of 0.97.
 
-For $k=2$, 15 of the 11 candidate variables were selected in at least one data set (Figures~\ref{fig:fig_varsel} and~\ref{fig:fig_barplot}). The final subset has 13 variables, 11 of which were selected in all the imputed data sets.
+For $k=2$, 15 of the 33 candidate variables were selected in at least one data set (Figures~\ref{fig:fig_varsel} and~\ref{fig:fig_barplot}). The final subset has 13 variables, 11 of which were selected in all the imputed data sets.
 There is a clear drop in frequency right after the last selected variable (from 90\% to 37\%), so the variable selection is robust to the missing data.
 
 Each subject was assigned to the cluster to which they were allocated most often across the imputed data sets.  In table ~\ref{tab:alloc} we can see how this frequency is distributed in  $k = 2$ and  $k = 3$. For $k = 2$, the median probability is 1.00 and 1.00 in both clusters, so most subjects are always assigned to the same cluster.   For $k=3$ the assignment is also very stable, probably because the selected variables have few missing values. Given this, we see that a stable assignment does not necessarily mean that the clusters are adequate, we have already seen that the choice of $k = 2$ is supported by the CritCF criterion.
@@ -805,4 +805,102 @@ Lack of transparency regarding the use of AI in this assignment will be consider
 All authors (i.e., signatories) of this work share equal responsibility for its content and for the methods used to obtain the results.
 
 In general, committing any irregularity in any assessment activity (academic fraud, plagiarism, or improper use of AI, unless explicitly authorized in the course syllabus) that could lead to a significant change in the grade will result in a score of 0 for that assessment. Independent of this, a disciplinary procedure may be initiated against any student committing such irregularities.
+
+
+
+\subsection*{ChatGPT, GPT-6 (OpenAI)}
+
+\begin{description}
+  \item[Translation of the assignment statement to \LaTeX{}.] \hfill \\
+  ``Translate this image into LaTeX code, without footnotes 1 and 2.''
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{figure/fig_ai-1.png}
+  \caption{Image of the assignment statement given to ChatGPT to translate into \LaTeX{}.}
+  \label{fig:fig_ai}
+\end{figure}
+
+
+  \item[R chunk \texttt{fig\_barplot}.] \hfill \\
+  ``Reduce variable label size and set orientation to vertical.''
+  
+  \item[R chunks \texttt{fig\_critcf}, \texttt{fig\_varsel} and \texttt{fig\_barplot}: comments and captions.] \hfill \\
+  ``Check the comments and the captions for mistakes.'' 
+  
+
+  \item[R chunk \texttt{summaries}.] \hfill \\
+  ``Does the article specify what value to set for \texttt{quantilevars}?''
+
+  \item[Interpretation of the \texttt{summarybycluster} output.] \hfill \\
+  ``Is \texttt{\%miss.} the \% of subjects with missing values?''
+
+  \item[R chunk \texttt{table\_description}: two-level header.] \hfill \\
+  ``How can I make this two-level header using LaTeX?''
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{figure/fig_ai-2.png}
+  \caption{Image of the assignment statement given to ChatGPT to translate into \LaTeX{}.}
+  \label{fig:fig_ai2}
+\end{figure}
+
+  \item[R chunks \texttt{table\_alloc} and \texttt{table\_description}: comments and captions.] \hfill \\
+  ``Check the comments and the captions for mistakes.'' 
+
+  \item[Text of Section 3 (Results).] \hfill \\
+  ``Check the text for mistakes.'' 
+\end{description}
+
+\subsection*{Claude Opus 5.5 (Anthropic)}
+
+\begin{description}
+  \item[Interpretation of the article and its methods.] \hfill \\
+  ``Explain the article by Basaga\~na et al.\ (2013).''\\
+  ``Why do clusters need to be relabeled? Is it explained in the article?''
+    
+    \item[Translation of the assignment statement to \LaTeX{}.] \hfill \\
+  ``Translate this image into LaTeX code.''
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{figure/fig_ai-3.png}
+  \caption{Image of the assignment statement given to Claude to translate into \LaTeX{}.}
+  \label{fig:fig_ai3}
+\end{figure}
+
+  \item[R chunk \texttt{report\_text}: level of agreement of Cohen's kappa.] \hfill \\
+  ``Taking into account that we used Cohen's kappa to measure the agreement
+  between imputed data sets after relabeling the clusters, how can I separate
+  the different levels of agreement?''
+
+  \item[Report with R chunks \texttt{report\_values} and \texttt{report\_text}.] \hfill \\
+  ``I have the following text in the report section of my document, along with
+  this .Rnw chunk. The text should be reusable if the data set were to change.
+  Do you think there is anything I've overlooked that might still need to be modified?''
+  
+\end{description}
+
+  
+  \subsection*{Gemini (Google)}
+
+\begin{description}
+  \item[R chunk \texttt{data\_prep}: removal of the \texttt{id} variable.] \hfill \\
+  ``How can I remove the \texttt{id} variable from a list of data frames?''
+
+  \item[R chunk \texttt{data\_prep}: selection of numeric variables.] \hfill \\
+  ``How can I make sure that all the variables in a data frame are numeric?''
+\end{description}
+
+\subsection*{Critical reflection}
+
+
+The use of AI tools in this activity has been helpful as a supporting resource, contributing to a more efficient workflow. In particular, these tools have helped clarify specific questions and facilitate the understanding of certain concepts.
+
+They have also provided suggestions for identifying potential errors and improving the language used in the report, which has been particularly useful given that English is not our native language.
+
+However, AI tools also have certain limitations. Therefore, it has been necessary to critically review each response and assess its accuracy and relevance in relation to the knowledge acquired and the course materials. These tools have been used to complement our own work rather than replace our own reasoning and decision-making.
+
+In conclusion, AI has helped make certain aspects of the work more efficient and improve its overall presentation. Nevertheless, all AI-generated suggestions have been carefully reviewed and checked before being incorporated into the final report.
+
+
+
+
 \end{document}
