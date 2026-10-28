@@ -487,11 +487,13 @@ head_top <- paste0(
             "& & \\multicolumn{", kfin + 1, "}{c}{\\bf Raw data} & ",
             "\\multicolumn{", kfin + 1, "}{c}{\\bf Imputed data} \\\\\n")
 head_sub <- paste0(
-            "\\bf Variable & \\bf \\% missing & ",
-            paste0("\\bf Cl.~", 1:kfin, " ($n=", n_raw, "$)", collapse = " & "),
-            " & \\bf $F$ & ",
-            paste0("\\bf Cl.~", 1:kfin, " ($n=", n_imp_med, "$)", collapse = " & "),
-            " & \\bf $F$ \\\\\n")
+            "\\bf\\scriptsize Variable & \\bf\\scriptsize \\% missing & ",
+            paste0("\\bf\\scriptsize \\shortstack{Cl.~", 1:kfin, 
+                   " \\\\ ($n=", n_raw, "$)}", collapse = " & "),
+                   " & \\bf\\scriptsize $F$ & ",
+            paste0("\\bf\\scriptsize \\shortstack{Cl.~", 1:kfin, 
+                   " \\\\ ($n=", n_imp_med, "$)}", collapse = " & "),
+                   " & \\bf\\scriptsize $F$ \\\\\n")
 
 # Create the cmidrule lines.
 cmidrules <- paste0("\\cmidrule(lr){3-", kfin + 3, "} ",
@@ -504,7 +506,7 @@ head_structure <- list(pos=list(0),
 # Print the table as LaTeX code.
 print(desc,
       table.placement = "H",
-      size = "footnotesize",
+      size = "scriptsize",
       include.rownames = FALSE,
       include.colnames = FALSE,           # header is written by add.to.row
       add.to.row = head_structure,

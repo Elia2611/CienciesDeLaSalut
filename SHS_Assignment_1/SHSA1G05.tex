@@ -686,11 +686,13 @@ Table~\ref{tab:alloc} corresponds to Table~2 of the original paper. It uses the 
 \hldef{+ }            \hlsng{"& & \textbackslash{}\textbackslash{}multicolumn\{"}\hldef{, kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlsng{"\}\{c\}\{\textbackslash{}\textbackslash{}bf Raw data\} & "}\hldef{,}
 \hldef{+ }            \hlsng{"\textbackslash{}\textbackslash{}multicolumn\{"}\hldef{, kfin} \hlopt{+} \hlnum{1}\hldef{,} \hlsng{"\}\{c\}\{\textbackslash{}\textbackslash{}bf Imputed data\} \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}n"}\hldef{)}
 \hldef{> }\hldef{head_sub} \hlkwb{<-} \hlkwd{paste0}\hldef{(}
-\hldef{+ }            \hlsng{"\textbackslash{}\textbackslash{}bf Variable & \textbackslash{}\textbackslash{}bf \textbackslash{}\textbackslash{}% missing & "}\hldef{,}
-\hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf Cl.~"}\hldef{,} \hlnum{1}\hlopt{:}\hldef{kfin,} \hlsng{" ($n="}\hldef{, n_raw,} \hlsng{"$)"}\hldef{,} \hlkwc{collapse} \hldef{=} \hlsng{" & "}\hldef{),}
-\hldef{+ }            \hlsng{" & \textbackslash{}\textbackslash{}bf $F$ & "}\hldef{,}
-\hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf Cl.~"}\hldef{,} \hlnum{1}\hlopt{:}\hldef{kfin,} \hlsng{" ($n="}\hldef{, n_imp_med,} \hlsng{"$)"}\hldef{,} \hlkwc{collapse} \hldef{=} \hlsng{" & "}\hldef{),}
-\hldef{+ }            \hlsng{" & \textbackslash{}\textbackslash{}bf $F$ \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}n"}\hldef{)}
+\hldef{+ }            \hlsng{"\textbackslash{}\textbackslash{}bf\textbackslash{}\textbackslash{}scriptsize Variable & \textbackslash{}\textbackslash{}bf\textbackslash{}\textbackslash{}scriptsize \textbackslash{}\textbackslash{}% missing & "}\hldef{,}
+\hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf\textbackslash{}\textbackslash{}scriptsize \textbackslash{}\textbackslash{}shortstack\{Cl.~"}\hldef{,} \hlnum{1}\hlopt{:}\hldef{kfin,}
+\hldef{+ }                   \hlsng{" \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{} ($n="}\hldef{, n_raw,} \hlsng{"$)\}"}\hldef{,} \hlkwc{collapse} \hldef{=} \hlsng{" & "}\hldef{),}
+\hldef{+ }                   \hlsng{" & \textbackslash{}\textbackslash{}bf\textbackslash{}\textbackslash{}scriptsize $F$ & "}\hldef{,}
+\hldef{+ }            \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}bf\textbackslash{}\textbackslash{}scriptsize \textbackslash{}\textbackslash{}shortstack\{Cl.~"}\hldef{,} \hlnum{1}\hlopt{:}\hldef{kfin,}
+\hldef{+ }                   \hlsng{" \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{} ($n="}\hldef{, n_imp_med,} \hlsng{"$)\}"}\hldef{,} \hlkwc{collapse} \hldef{=} \hlsng{" & "}\hldef{),}
+\hldef{+ }                   \hlsng{" & \textbackslash{}\textbackslash{}bf\textbackslash{}\textbackslash{}scriptsize $F$ \textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}n"}\hldef{)}
 \hldef{> }
 \hldef{> }\hlcom{# Create the cmidrule lines.}
 \hldef{> }\hldef{cmidrules} \hlkwb{<-} \hlkwd{paste0}\hldef{(}\hlsng{"\textbackslash{}\textbackslash{}cmidrule(lr)\{3-"}\hldef{, kfin} \hlopt{+} \hlnum{3}\hldef{,} \hlsng{"\} "}\hldef{,}
@@ -703,7 +705,7 @@ Table~\ref{tab:alloc} corresponds to Table~2 of the original paper. It uses the 
 \hldef{> }\hlcom{# Print the table as LaTeX code.}
 \hldef{> }\hlkwd{print}\hldef{(desc,}
 \hldef{+ }      \hlkwc{table.placement} \hldef{=} \hlsng{"H"}\hldef{,}
-\hldef{+ }      \hlkwc{size} \hldef{=} \hlsng{"footnotesize"}\hldef{,}
+\hldef{+ }      \hlkwc{size} \hldef{=} \hlsng{"scriptsize"}\hldef{,}
 \hldef{+ }      \hlkwc{include.rownames} \hldef{=} \hlnum{FALSE}\hldef{,}
 \hldef{+ }      \hlkwc{include.colnames} \hldef{=} \hlnum{FALSE}\hldef{,}           \hlcom{# header is written by add.to.row}
 \hldef{+ }      \hlkwc{add.to.row} \hldef{= head_structure,}
@@ -712,15 +714,15 @@ Table~\ref{tab:alloc} corresponds to Table~2 of the original paper. It uses the 
 \hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
-% Wed Oct 28 18:30:38 2026
+% Wed Oct 28 19:00:05 2026
 \begin{table}[H]
 \centering
-\begingroup\footnotesize
+\begingroup\scriptsize
 \begin{tabular}{lccccccc}
   \toprule
   & & \multicolumn{3}{c}{\bf Raw data} & \multicolumn{3}{c}{\bf Imputed data} \\
 \cmidrule(lr){3-5} \cmidrule(lr){6-8}
-\bf Variable & \bf \% missing & \bf Cl.~1 ($n=184$) & \bf Cl.~2 ($n=158$) & \bf $F$ & \bf Cl.~1 ($n=184$) & \bf Cl.~2 ($n=158$) & \bf $F$ \\
+\bf\scriptsize Variable & \bf\scriptsize \% missing & \bf\scriptsize \shortstack{Cl.~1 \\ ($n=184$)} & \bf\scriptsize \shortstack{Cl.~2 \\ ($n=158$)} & \bf\scriptsize $F$ & \bf\scriptsize \shortstack{Cl.~1 \\ ($n=184$)} & \bf\scriptsize \shortstack{Cl.~2 \\ ($n=158$)} & \bf\scriptsize $F$ \\
  \midrule
 activityv1 & 1.2 & 37.21 & 58.86 & 85.26 & 37.01 & 59.02 & 88.56 \\ 
   fevp\_postv1 & 0.0 & 62.90 & 39.09 & 359.64 & 62.87 & 39.08 & 353.71 \\ 
