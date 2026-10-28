@@ -232,44 +232,44 @@ kfin <- miclust_1$kfin
 n_imp <- length(miclust_1$usedimp)
 @
 
-In this section we reproduce the figures and tables of Basagaña et al. using the \texttt{plot()} and \texttt{summary()} methods of the \texttt{miclust} object, in this case the name of this is \texttt{miclust\_1}. Following the instructions we use one color for all plots related to the number of clusters, dark magenta, and another one for all plots related to variable selection, sky blue.
+In this section, we reproduce the figures and tables of Basagaña et al. using the \texttt{plot()} and \texttt{summary()} methods of the \texttt{miclust} object, named \texttt{miclust\_1}. Following the instructions, we use one colour for all plots related to the number of clusters, dark magenta, and another for all plots related to variable selection, sky blue.
+<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), across the ", n_imp, " imputed data sets. Each box summarises ", n_imp, " values obtained with $k$-means and backward variable selection for $k=", min(miclust_1$ks), ",...,", max(miclust_1$ks), "$. The final number of clusters, $k=", kfin, "$, is the one selected in most imputed data sets.")>>=
 
-<<fig_critcf, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:critcf}Distribution of the CritCF criterion (higher values are preferred) by number of clusters ($k$), over the ", n_imp, " imputed data sets. Each box summarises ", n_imp, " values obtained with $k$-means and backward variable selection for $k=", min(miclust_1$ks), ",...,", max(miclust_1$ks), "$. The final number of clusters, $k=", kfin, "$, is the one selected in most imputed data sets.")>>=
-
-# Distribution of the CritCF criterion over the imputed data sets, one box per
+# Distribution of the CritCF criterion across the imputed data sets, one box per
 # explored number of clusters.
 plot(miclust_1, metric = "critcf", col.critcf = "darkmagenta")
 @
 
-Figure \ref{fig:fig_critcf} corresponds to Figure 1 of the original paper. It is obtained with \texttt{plot(miclust\_1, metric = "critcf")}, the argument \texttt{metric = "critcf"} selects the boxplots of the CritCF criterion by numbers of clusters, with one value per imputed data set and per $k$. The argument \texttt{col.critcf = "darkmagenta"} makes de boxes in colour.
+Figure \ref{fig:fig_critcf} corresponds to Figure 1 of the original paper. It is obtained with \texttt{plot(miclust\_1, metric = "critcf")}, the argument \texttt{metric = "critcf"} selects the boxplots of the CritCF criterion by numbers of clusters, with one value per imputed data set and per $k$. The argument \texttt{col.critcf = "darkmagenta"} makes de boxes in color.
 
-<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variable selection frequency for $k=", miclust_1$kfin, "$ clusters. Each horizontal line shows the percentage of the ", length(miclust_1$usedimp), " imputed data sets in which a variable remained in the final set after the backward selection algorithm, only variables selected in at least one data set are shown. The black horizontal lines summarise the number of variables selected per imputed data set: first and third quartiles (dotted), median (dashed) and mean (dash-dotted), positioned according to the ranked list of variables. Variable names are those of the \\texttt{copd} data set.")>>=
+<<fig_varsel, fig.pos='H', fig.align='center', fig.width=8, fig.height=6, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:varsel}Variable selection frequency for $k=", miclust_1$kfin, "$ clusters. Each horizontal line shows the percentage of the ", length(miclust_1$usedimp), " imputed data sets in which a variable remained in the final set after the backward selection algorithm. Only variables selected in at least one data set are shown. The black horizontal lines summarise the number of variables selected per imputed data set: first and third quartiles (dotted), median (dashed) and mean (dash-dotted), positioned according to the ranked list of variables. Variable names are those of the \\texttt{copd} data set.")>>=
 
-# Percentage of appearance of each variable (metric = "varsel") for k = kfin
+# Percentage of appearance of each variable (metric = "varsel") for k = kfin.
 plot(miclust_1, k = kfin, metric = "varsel", col.varsel = "skyblue")
 @
-Figure \ref{fig:fig_varsel} corresponds to Figure 2 of the original paper. We use \texttt{metric = "varsel"} to show only, for each variable, the percentages of imputed data sets in which it remained in the final set of variables. With \texttt{k = kfin} we show the results for the optimal number of clusters, as in the paper, where only the data sets with the final $k$ are used for variable selection. The argument \texttt{col.varsel = "skyblue"} sets the colour of the segments.
 
-<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order. Only variables selected in at least one imputed data set are shown, bar height is the percentage of selection.")>>=
+Figure \ref{fig:fig_varsel} corresponds to Figure 2 of the original paper. We use \texttt{metric = "varsel"} to show only, for each variable, the percentages of imputed data sets in which it remained in the final set of variables. With \texttt{k = kfin} we show the results for the optimal number of clusters, as in the paper, where only the data sets with the final $k$ are used for variable selection. The argument \texttt{col.varsel = "skyblue"} sets the color of the segments.
 
-# Frequency of selection of each variable across the imputed data sets
+<<fig_barplot, fig.pos='H', fig.align='center', fig.width=8, fig.height=8, out.width='0.9\\textwidth', fig.cap=paste0("\\label{fig:barplot}Percentage of the ", length(miclust_1$usedimp), " imputed data sets in which each variable was selected by the backward algorithm for $k=", miclust_1$kfin, "$, in decreasing order. Only variables selected in at least one imputed data set are shown. Bar heights represent the percentage of selection.")>>=
+
+# Frequency of selection of each variable across the imputed data sets.
 y   <- getvariablesfrequency(miclust_1)
 
-# Sort the variables by decreasing percentage of selection
+# Sort the variables by decreasing percentage of selection.
 y_ord <- order(y$percfreq, decreasing = TRUE)
 perc <- y$percfreq[y_ord]
 name <- y$varnames[y_ord]
 
-# Bars drawn as thick vertical lines (type = "h", lwd = 20).
+# Bars are drawn as thick vertical lines (type = "h", lwd = 20).
 plot(perc, type = "h", main = "", xlab = "", ylab = "Percentage of times selected", 
      xlim = 0.5 + c(0, length(perc)), ylim = c(0, 100),
      lwd = 20, col = "skyblue", xaxt = "n")
 
-# Variable names below each bar, las = 2 draws them vertically, and
-# cex.axis = 0.45 shrinks them slightly so that the long names fit
+# Variable names below each bar: las = 2 draws them vertically, and
+# cex.axis = 0.45 reduces their size so that the long names fit.
 axis(1, at = 1:length(name), labels = name, las = 2, cex.axis = 0.45)
 
-# This code is adapted from the miclust README, which can be accessed at
+# This code is adapted from the miclust README:
 # https://cran.r-project.org/web/packages/miclust/readme/README.html
 @
 
@@ -295,13 +295,14 @@ summary_kp1 <- summary(miclust_1, k =  k_comp, quantilevars = 0.5)
 The tables are built from the \texttt{summary()} method. We call \texttt{summary(miclust\_1, quantilevars = 0.5)}, which uses the optimal number of clusters ($k=\Sexpr{kfin}$). The argument \texttt{quantilevars = 0.5} makes the number of final variables equal to the median number of variables selected across the imputed data sets, and the variables retained are the most frequently selected ones, which is the criterion proposed in step~3a of Table~1 of Basagaña et al. We also call \texttt{summary()} with \texttt{k = k\_comp} ($k=\Sexpr{k_comp}$) only for comparison. The value \texttt{k\_comp} is $k_{\text{fin}}+1$, unless $k_{\text{fin}}$ is the largest explored number of clusters ($\Sexpr{max(miclust_1$ks)}$), in which case we use $k_{\text{fin}}-1$.
 
 <<table_alloc, results='asis'>>=
-# Distribution of the probability of assignment to each cluster, for k = kfin
+# Distribution of the assignment probabilities for each cluster,
+# for k = kfin.
 a_fin <- as.matrix(summary_k$allocationprobabilities)
 
-# Same distribution, for k = k_comp
+# Same distribution, for k = k_comp.
 a_comp <- as.matrix(summary_kp1$allocationprobabilities) 
 
-# Blocks ordered by increasing number of clusters
+# Order the blocks by increasing number of clusters.
 if (k_comp > kfin) {
   k1 <- kfin
   a1 <- a_fin
@@ -314,53 +315,53 @@ if (k_comp > kfin) {
   a2 <- a_fin
 }
 
-# Numeric part, an empty row before each k block, followed by the rows of the 
-# corresponding summary
+# Numeric part: an empty row before each k block, followed by the rows
+# of the corresponding summary.
 vals <- rbind(rep(NA, 5), a1, rep(NA, 5), a2) 
 
-# Text part, one label per row.
+# Text part: one label per row.
 labels <- c(paste0("$k=", k1, "$"),
             paste0("Cluster ", seq_len(nrow(a1))),
             paste0("$k=", k2, "$"),
             paste0("Cluster ", seq_len(nrow(a2)))) 
 
-# Combine text part, first column, and numeric values into one data.frame
+# Combine the text labels in the first column with the numeric values.
 tab_alloc <- data.frame(labels, vals) 
 
 
-# Create the xtable object. 'digits' has 7 elements: the 1st is for the automatic
-# row names (not printed), the 2nd for the text labels, and the last 5 for the 
-# numeric columns (2 decimals each).
-# The caption and the label are defined here.
+# Create the xtable object. 'digits' has seven elements: the first
+# specifies the automatic row names (not printed), the second specifies
+# the text labels, and the remaining five specify the numeric columns.
+# Define the caption and label.
 alloc <- xtable(tab_alloc,
                 digits = c(0, 0, 2, 2, 2, 2, 2),
                 align = c("l", "l", "c", "c", "c", "c", "c"),
                 caption = paste0(
-                  "Distribution of the frequency of assignment of participants ",
-                  "to each cluster over the ", length(miclust_1$usedimp),
+                  "Distribution of the assignment frequencies of participants ",
+                  "to each cluster across the ", length(miclust_1$usedimp),
                   " imputed data sets, for $k=", k1, "$ and $k=", k2, "$ ",
-                  "(the final number of clusters is $k=", kfin, "$ ",
+                  "(the final number of clusters is $k=", kfin, "$; ",
                   "the other value is shown for comparison only). ",
-                  "For each participant, the frequency of assignment to a cluster ",
-                  "is the proportion of imputed data sets in which he or she was ",
-                  "assigned to it. ",
-                  "Each row gives the minimum, quartiles and maximum of these ",
-                  "frequencies among the participants finally assigned to that ",
-                  "cluster by majority vote."),
+                  "For each participant, the assignment frequency for a cluster ",
+                  "is the proportion of imputed data sets in which the participant ",
+                  "was assigned to that cluster. ",
+                  "Each row gives the minimum, first quartile, median, third ",
+                  "quartile, and maximum of these frequencies among participants ",
+                  "finally assigned to that cluster by majority vote."),
                 label = "tab:alloc")
 
-# Column names, centered and in bold, the first one is left blank
+# Column names, centred and in bold; the first column is left blank.
 colnames(alloc) <- c("","\\multicolumn{1}{c}{\\bf Minimum}", 
                          "\\multicolumn{1}{c}{\\bf First quartile}", 
                          "\\multicolumn{1}{c}{\\bf Median}", 
                          "\\multicolumn{1}{c}{\\bf Third quartile}", 
                          "\\multicolumn{1}{c}{\\bf Maximum}") 
 
-# Print the table in LaTeX
+# Print the table as LaTeX code.
 print(alloc,
       table.placement = "ht",
       size = "footnotesize",
-      include.rownames = FALSE, # Row names are not printed, labels are in column 1
+      include.rownames = FALSE, # Row names are not printed, labels are in columne 1
       include.colnames = TRUE,
       floating = TRUE,
       sanitize.text.function = force, 
@@ -374,13 +375,14 @@ Table~\ref{tab:alloc} corresponds to Table~2 of the original paper. It uses the 
 vars <- summary_k$selectedvariables
 summary_cluster <- summary_k$summarybycluster 
 
-# % of missing values of each variable.
+# Percentage of missing values for each variable.
 miss <- summary_cluster$`%miss.` 
 
-# Imputed data, mean of each variable by cluster.
-mean_imputed <- as.matrix(summary_cluster[, grep("^mean", names(summary_cluster))])
+# Imputed data means for each variable by cluster.
+mean_imputed <- as.matrix(
+  summary_cluster[, grep("^mean", names(summary_cluster))])
 
-# Majority-vote cluster of each participant.
+# Majority-vote cluster assignment for each participant.
 cl <- summary_k$cluster 
 
 # Empty matrix (variables x clusters) for the raw-data means, and empty vector 
@@ -388,12 +390,12 @@ cl <- summary_k$cluster
 raw_means <- matrix(NA, nrow = length(vars), ncol = kfin)
 F_raw <- vector(length = length(vars)) 
 
-# Raw data: compute the F-statistic and mean for each selected variable in 
-# each cluster.
+# Raw data: compute the F-statistic and mean for each selected variable 
+# in each cluster.
 for (i in 1:length(vars)) {
-      # Values of the selected variable i for all participants.
+      # Values of the selected variable for all participants.
       x <- copd_raw[[vars[i]]]
-      # Variable explained by cluster.
+      # Fit a linear model with cluster as the explanatory factor.
       fit <- lm(x ~ factor(cl)) 
       # Extract the F-statistic for the cluster effect from the first row of 
       # the ANOVA table.
@@ -473,11 +475,11 @@ head_sub <- paste0(
             paste0("\\bf Cl.~", 1:kfin, " ($n=", n_imp_med, "$)", collapse = " & "),
             " & \\bf $F$ \\\\\n")
 
-# Create the cmidrule lines
+# Create the cmidrule lines.
 cmidrules <- paste0("\\cmidrule(lr){3-", kfin + 3, "} ",
                     "\\cmidrule(lr){", kfin + 4, "-", 2 * kfin + 4, "}\n")
 
-# Store the entire add.to.row structure in a variable
+# Store the complete add.to.row structure in a variable.
 head_structure <- list(pos=list(0),
                        command = paste0(head_top, cmidrules, head_sub))
 
