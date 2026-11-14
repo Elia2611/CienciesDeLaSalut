@@ -1,0 +1,353 @@
+\documentclass[a4paper,10pt]{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}                       % for mathematical features 
+\usepackage[left=2.5cm,top=3cm,bottom=3cm,right=2.5cm]{geometry}   % text margins
+\usepackage{booktabs}                      % for booktabs in print(xtable)).
+\usepackage{authblk}                       % for footnote style author/affiliation
+\usepackage{amssymb}
+\usepackage{amsthm}
+% LaTeX package for captions customization:
+\usepackage[margin=10pt,font=small,labelfont=bf,format=hang]{caption}
+\usepackage{hyperref}                      % Hyperlinks and \url{}
+\usepackage{float}
+\hypersetup{
+    colorlinks=true, % Enable colored text for links instead of drawing boxes
+    linkcolor=blue,  % Color for internal document links (e.g., sections, equations, figures, tables)
+    citecolor=blue,  % Color for bibliographic citation links (e.g., \cite{})
+    urlcolor=blue    % Color for external web URLs (e.g., \url{})
+}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+\title{Statistics in Health Sciences - Assignment 2}
+\author{G05: Judit Félelz Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
+\date{25th November 2026}
+
+
+
+\maketitle
+
+\newpage
+
+\section{Introduction}
+\label{sec:introduction}
+
+In 1961, Doll and Hill\hyperlink{ref:doll}{[1]} sent out a questionnaire to all men on the British Medical Register asking about their smoking habits. Almost 70\% of such men replied. Death certificates were obtained for medical practitioners and causes of death were assigned on the basis of these certificates. The breslow data set\hyperlink{ref:breslow}{[2]} (attached in the \texttt{breslow.RData} file) contains the person-years of observations and deaths from coronary artery disease accumulated during the first ten years of the study. Such data are shown in Table~\ref{tab:coronary}.
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c cc cc}
+\toprule
+& \multicolumn{2}{c}{Person-years}
+& \multicolumn{2}{c}{Coronary deaths} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+Age & Nonsmokers & Smokers & Nonsmokers & Smokers \\
+\midrule
+35--44 & 18790 & 52407 & 2  & 32  \\
+45--54 & 10673 & 43248 & 12 & 104 \\
+55--64 & 5710  & 28612 & 28 & 206 \\
+65--74 & 2585  & 12663 & 28 & 186 \\
+75--84 & 1462  & 5317  & 31 & 102 \\
+\bottomrule
+\end{tabular}
+\caption{Data on coronary death rates.}
+\label{tab:coronary}
+\end{table}
+
+The aim of this exercise is to analyse the relationship between incidence of coronary deaths (outcome of interest) and smoking status (exposure of interest), taking into account the possible role of age (as a potential confounder or as a potential effect modifier). Specifically:
+
+\begin{itemize}
+
+    \item In Section~\hyperref[sec:section2]{2}, you will estimate incidence rates of coronary mortality and incidence rate ratios associated to smoking status for different age groups. You also will perform a data visualization.
+
+    \item In Section~\hyperref[sec:section3]{3}, you will use the Poisson regression model to estimate the incidence rate of coronary mortality as a function of smoking status, taking into account age as potential confounder or potential effect modifier.
+
+    \item In Section~\hyperref[sec:section4]{4}, you will summarize the results of your analysis.
+
+\end{itemize}
+
+
+
+
+
+
+
+
+\section{Comparing incidence rates}
+\label{sec:section2}
+\begin{enumerate}
+    \item Add extra columns in Table~\ref{tab:coronary} for:
+    \begin{enumerate}
+        \item $I_{r_{ij}}$, the sample coronary death rates per 1000 person-years for smoking status $i$ ($i = 0$ for nonsmokers and $i = 1$ for smokers) in age group $j$ ($j = 0, 1, \dots, 4$ for 35-44, 45-54, \dots, 75-84, respectively) (two columns, one for each smoking status).
+    
+        \item $\text{IRR}_j = \frac{I_{r_{1j}}}{I_{r_{0j}}}$, the incidence rate ratio for smokers vs.\ nonsmokers in age group $j$ (one column).
+    \end{enumerate}
+    
+    Print the updated table as Table 2, with a proper caption.
+    
+    \textbf{Show your code here for creating Table 2.}
+    
+\begin{kframe}
+\begin{alltt}
+\hldef{> }\hldef{Ir_Nonsmokers} \hlkwb{<-} \hldef{breslow}\hlopt{$}\hldef{deaths[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"no"}\hldef{]} \hlopt{/}
+\hldef{+ }    \hldef{breslow}\hlopt{$}\hldef{personYears[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"no"}\hldef{]} \hlopt{*} \hlnum{1000}
+\hldef{> }\hldef{Ir_Smokers} \hlkwb{<-} \hldef{breslow}\hlopt{$}\hldef{deaths[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"yes"}\hldef{]} \hlopt{/}
+\hldef{+ }    \hldef{breslow}\hlopt{$}\hldef{personYears[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"yes"}\hldef{]} \hlopt{*} \hlnum{1000}
+\hldef{> }
+\hldef{> }\hldef{Ir_IRR} \hlkwb{<-} \hlkwd{data.frame}\hldef{(}
+\hldef{+ }  \hlkwc{Age} \hldef{= breslow}\hlopt{$}\hldef{age[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"no"}\hldef{],}
+\hldef{+ }  \hlkwc{Nonsmokers_py} \hldef{= breslow}\hlopt{$}\hldef{personYears[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"no"}\hldef{],}
+\hldef{+ }  \hlkwc{Smokers_py} \hldef{= breslow}\hlopt{$}\hldef{personYears[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"yes"}\hldef{],}
+\hldef{+ }  \hlkwc{Nonsmokers_cd} \hldef{= breslow}\hlopt{$}\hldef{deaths[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"no"}\hldef{],}
+\hldef{+ }  \hlkwc{Smokers_cd} \hldef{= breslow}\hlopt{$}\hldef{deaths[breslow}\hlopt{$}\hldef{smoker} \hlopt{==} \hlsng{"yes"}\hldef{],}
+\hldef{+ }  \hlkwc{Nonsmokers_Ir} \hldef{= Ir_Nonsmokers,}
+\hldef{+ }  \hlkwc{Smokers_Ir} \hldef{= Ir_Smokers,}
+\hldef{+ }  \hlkwc{IRR} \hldef{= Ir_Smokers} \hlopt{/} \hldef{Ir_Nonsmokers}
+\hldef{+ }\hldef{)}
+\hldef{> }
+\hldef{> }
+\hldef{> }\hldef{tab_ir_irr} \hlkwb{<-} \hlkwd{xtable}\hldef{(Ir_IRR,}
+\hldef{+ }                 \hlkwc{digits} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{),}
+\hldef{+ }                 \hlkwc{align} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"l"}\hldef{,} \hlsng{"c"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{),}
+\hldef{+ }                 \hlkwc{caption} \hldef{=} \hlkwd{paste0}\hldef{(}\hlsng{"Coronary deaths and person-years by age "}\hldef{,}
+\hldef{+ }                 \hlsng{"group and smoking status, with sample incidence rates "}\hldef{,}
+\hldef{+ }                 \hlsng{"($I_\{r_\{ij\}\}$, deaths per 1000 person-years) for smoking "}\hldef{,}
+\hldef{+ }                 \hlsng{"status $i$ ($i = 0$ nonsmokers, $i = 1$ smokers) and age "}\hldef{,}
+\hldef{+ }                 \hlsng{"group $j$ ($j = 0, \textbackslash{}\textbackslash{}dots, 4$ for 35--44, \textbackslash{}\textbackslash{}dots, 75--84), "}\hldef{,}
+\hldef{+ }                 \hlsng{"and incidence rate ratios ($\textbackslash{}\textbackslash{}mathrm\{IRR\}_j = "}\hldef{,}
+\hldef{+ }                 \hlsng{"I_\{r_\{1j\}\}/I_\{r_\{0j\}\}$, smokers vs.\textbackslash{}\textbackslash{} nonsmokers). "}\hldef{,}
+\hldef{+ }                 \hlsng{"British doctors' study, first ten years of follow-up."}\hldef{),}
+
+\hldef{+ }                 \hlkwc{label} \hldef{=} \hlsng{"tab:rates"}\hldef{)}
+\hldef{> }
+\hldef{> }\hlkwd{colnames}\hldef{(tab_ir_irr)} \hlkwb{<-} \hlkwd{c}\hldef{(}\hlsng{"Age"}\hldef{,} \hlsng{"Nonsmokers"}\hldef{,} \hlsng{"Smokers"}\hldef{,} \hlsng{"Nonsmokers"}\hldef{,}
+\hldef{+ }                      \hlsng{"Smokers"}\hldef{,} \hlsng{"Nonsmokers"}\hldef{,} \hlsng{"Smokers"}\hldef{,} \hlsng{"IRR"}\hldef{)}
+\hldef{> }
+\hldef{> }\hldef{addtorow} \hlkwb{<-} \hlkwd{list}\hldef{()}
+\hldef{> }\hldef{addtorow}\hlopt{$}\hldef{pos} \hlkwb{<-} \hlkwd{list}\hldef{(}\hlopt{-}\hlnum{1}\hldef{)}
+\hldef{> }\hldef{addtorow}\hlopt{$}\hldef{command} \hlkwb{<-} \hlkwd{paste0}\hldef{(}
+\hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}toprule\textbackslash{}n &"}\hldef{,}
+\hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}multicolumn\{2\}\{c\}\{Person-years\} & "}\hldef{,}
+\hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}multicolumn\{2\}\{c\}\{Coronary deaths\} & "}\hldef{,}
+\hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}multicolumn\{2\}\{c\}\{$I_\{r_\{ij\}\}$ (per 1000 p-y)\} &"}\hldef{,}
+\hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}\textbackslash{}n"}\hldef{,}
+\hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}cmidrule(lr)\{2-3\} \textbackslash{}\textbackslash{}cmidrule(lr)\{4-5\} \textbackslash{}\textbackslash{}cmidrule(lr)\{6-7\}\textbackslash{}n"}
+\hldef{+ }\hldef{)}
+\hldef{> }
+\hldef{> }\hlkwd{print}\hldef{(tab_ir_irr,}
+\hldef{+ }      \hlkwc{table.placement} \hldef{=} \hlsng{"ht"}\hldef{,}
+\hldef{+ }      \hlkwc{include.rownames} \hldef{=} \hlnum{FALSE}\hldef{,}
+\hldef{+ }      \hlkwc{include.colnames} \hldef{=} \hlnum{TRUE}\hldef{,}
+\hldef{+ }      \hlkwc{floating} \hldef{=} \hlnum{TRUE}\hldef{,}
+\hldef{+ }      \hlkwc{sanitize.text.function} \hldef{= force,}
+\hldef{+ }      \hlkwc{add.to.row} \hldef{= addtorow,}
+\hldef{+ }      \hlkwc{hline.after} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlkwd{nrow}\hldef{(Ir_IRR)),}
+\hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
+\end{alltt}
+\end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
+% Sat Nov 14 10:49:27 2026
+\begin{table}[ht]
+\centering
+\begin{tabular}{crrrrrrr}
+  \toprule
+ &\multicolumn{2}{c}{Person-years} & \multicolumn{2}{c}{Coronary deaths} & \multicolumn{2}{c}{$I_{r_{ij}}$ (per 1000 p-y)} &\\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \\ 
+  \midrule
+35-44 & 18790 & 52407 & 2 & 32 & 0.11 & 0.61 & 5.74 \\ 
+  45-54 & 10673 & 43248 & 12 & 104 & 1.12 & 2.40 & 2.14 \\ 
+  55-64 & 5710 & 28612 & 28 & 206 & 4.90 & 7.20 & 1.47 \\ 
+  65-74 & 2585 & 12663 & 28 & 186 & 10.83 & 14.69 & 1.36 \\ 
+  75-84 & 1462 & 5317 & 31 & 102 & 21.20 & 19.18 & 0.90 \\ 
+   \bottomrule
+\end{tabular}
+\caption{Coronary deaths and person-years by age group and smoking status, with sample incidence rates ($I_{r_{ij}}$, deaths per 1000 person-years) for smoking status $i$ ($i = 0$ nonsmokers, $i = 1$ smokers) and age group $j$ ($j = 0, \dots, 4$ for 35--44, \dots, 75--84), and incidence rate ratios ($\mathrm{IRR}_j = I_{r_{1j}}/I_{r_{0j}}$, smokers vs.\ nonsmokers). British doctors' study, first ten years of follow-up.} 
+\label{tab:rates}
+\end{table}
+
+
+    \item For age group 45-54, complete the following sentences with numbers and proper units \textbf{(using \texttt{\textbackslash Sexpr} in your \texttt{Rnw} document)}:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hldef{age} \hlkwb{<-} \hlsng{"45-54"}
+\hldef{> }\hldef{idx} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Age} \hlopt{==} \hldef{age}
+\hldef{> }\hldef{Ir_S} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Smokers_Ir[idx]}
+\hldef{> }\hldef{Ir_NS} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Nonsmokers_Ir[idx]}
+\hldef{> }\hldef{IRR} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{IRR[idx]}
+\hldef{> }\hldef{CD_S} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Smokers_cd[idx]}
+\hldef{> }\hldef{CD_NS} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Nonsmokers_cd[idx]}
+\hldef{> }\hldef{PY_S} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Smokers_py[idx]}
+\hldef{> }\hldef{PY_NS} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Nonsmokers_py[idx]}
+\hldef{> }
+\hldef{> }\hldef{wald_test} \hlkwb{<-} \hlkwd{rateratio.wald}\hldef{(}\hlkwd{matrix}\hldef{(}\hlkwd{c}\hldef{(CD_NS, CD_S, PY_NS, PY_S),} \hlnum{2}\hldef{,} \hlnum{2}\hldef{))}
+\hldef{> }\hldef{p_value_wald} \hlkwb{<-} \hldef{wald_test}\hlopt{$}\hldef{p.value[}\hlnum{2}\hldef{,} \hlsng{"wald"}\hldef{]}
+\hldef{> }
+\hldef{> }\hldef{alpha} \hlkwb{<-} \hlnum{0.05}
+\hldef{> }\hldef{significant} \hlkwb{<-} \hldef{p_value_wald} \hlopt{<} \hldef{alpha}
+\hldef{> }\hldef{direction} \hlkwb{<-} \hlkwa{if} \hldef{(IRR} \hlopt{>} \hlnum{1}\hldef{)} \hlsng{"higher"} \hlkwa{else if} \hldef{(IRR} \hlopt{<} \hlnum{1}\hldef{)} \hlsng{"lower"} \hlkwa{else} \hlsng{"the same"}
+\hldef{> }
+\hldef{> }\hldef{decision} \hlkwb{<-} \hlkwa{if} \hldef{(significant) \{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"we reject the null hypothesis, there is evidence that the coronary "}\hldef{,}
+\hldef{+ }         \hlsng{"mortality rate among smokers is "}\hldef{, direction,}
+\hldef{+ }         \hlsng{" than among nonsmokers in this age group"}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"we do not reject the null hypothesis, there is not enough evidence "}\hldef{,}
+\hldef{+ }         \hlsng{"of a difference in coronary mortality rates between smokers and "}\hldef{,}
+\hldef{+ }         \hlsng{"nonsmokers in this age group"}\hldef{)}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hldef{ratio_text} \hlkwb{<-} \hlkwa{if} \hldef{(IRR} \hlopt{>=} \hlnum{1}\hldef{) \{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"about "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.1f"}\hldef{, IRR),} \hlsng{" times that of nonsmokers"}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"about "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.1f"}\hldef{,} \hlnum{1} \hlopt{/} \hldef{IRR),} \hlsng{" times lower than that of nonsmokers"}\hldef{)}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hldef{p_text} \hlkwb{<-} \hlkwd{format.pval}\hldef{(p_value_wald,} \hlkwc{digits} \hldef{=} \hlnum{3}\hldef{,} \hlkwc{eps} \hldef{=} \hlnum{0.0001}\hldef{)}
+\hldef{> }\hldef{p_text} \hlkwb{<-} \hlkwa{if} \hldef{(p_value_wald} \hlopt{<} \hlnum{0.0001}\hldef{)} \hlkwd{paste0}\hldef{(}\hlsng{"p "}\hldef{, p_text)} \hlkwa{else} \hlkwd{paste0}\hldef{(}\hlsng{"p = "}\hldef{, p_text)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+    \begin{enumerate}
+        \item The incidence rate among smokers was 2.405 coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was 1.124 coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was 2.139.
+        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was 0.0106.
+        \item Write a paragraph for the interpretation of previous results (including all quantities).
+        
+          Among doctors aged 45-54, the coronary death rate was 2.405 deaths per 1000 person-years in smokers (104 deaths over 43248 person-years) and 1.124 deaths per 1000 person-years in nonsmokers (12 deaths over 10673 person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was 2.139, meaning that the coronary mortality rate among smokers was about 2.1 times that of nonsmokers. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave p = 0.0106, so at the 5\% significance level we reject the null hypothesis, there is evidence that the coronary mortality rate among smokers is higher than among nonsmokers in this age group. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
+    \end{enumerate}
+
+
+\item For age group 75-84, complete the following sentences with numbers and proper units \textbf{(using \texttt{\textbackslash Sexpr} in your \texttt{Rnw} document)}:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hldef{age} \hlkwb{<-} \hlsng{"75-84"}
+\hldef{> }\hldef{idx} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Age} \hlopt{==} \hldef{age}
+\hldef{> }\hldef{Ir_S} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Smokers_Ir[idx]}
+\hldef{> }\hldef{Ir_NS} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Nonsmokers_Ir[idx]}
+\hldef{> }\hldef{IRR} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{IRR[idx]}
+\hldef{> }\hldef{CD_S} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Smokers_cd[idx]}
+\hldef{> }\hldef{CD_NS} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Nonsmokers_cd[idx]}
+\hldef{> }\hldef{PY_S} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Smokers_py[idx]}
+\hldef{> }\hldef{PY_NS} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Nonsmokers_py[idx]}
+\hldef{> }
+\hldef{> }\hldef{wald_test} \hlkwb{<-} \hlkwd{rateratio.wald}\hldef{(}\hlkwd{matrix}\hldef{(}\hlkwd{c}\hldef{(CD_NS, CD_S, PY_NS, PY_S),} \hlnum{2}\hldef{,} \hlnum{2}\hldef{))}
+\hldef{> }\hldef{p_value_wald} \hlkwb{<-} \hldef{wald_test}\hlopt{$}\hldef{p.value[}\hlnum{2}\hldef{,} \hlsng{"wald"}\hldef{]}
+\hldef{> }
+\hldef{> }\hldef{alpha} \hlkwb{<-} \hlnum{0.05}
+\hldef{> }\hldef{significant} \hlkwb{<-} \hldef{p_value_wald} \hlopt{<} \hldef{alpha}
+\hldef{> }\hldef{direction} \hlkwb{<-} \hlkwa{if} \hldef{(IRR} \hlopt{>} \hlnum{1}\hldef{)} \hlsng{"higher"} \hlkwa{else if} \hldef{(IRR} \hlopt{<} \hlnum{1}\hldef{)} \hlsng{"lower"} \hlkwa{else} \hlsng{"the same"}
+\hldef{> }
+\hldef{> }\hldef{decision} \hlkwb{<-} \hlkwa{if} \hldef{(significant) \{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"we reject the null hypothesis, there is evidence that the coronary "}\hldef{,}
+\hldef{+ }         \hlsng{"mortality rate among smokers is "}\hldef{, direction,}
+\hldef{+ }         \hlsng{" than among nonsmokers in this age group"}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"we do not reject the null hypothesis, there is not enough evidence "}\hldef{,}
+\hldef{+ }         \hlsng{"of a difference in coronary mortality rates between smokers and "}\hldef{,}
+\hldef{+ }         \hlsng{"nonsmokers in this age group"}\hldef{)}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hldef{ratio_text} \hlkwb{<-} \hlkwa{if} \hldef{(IRR} \hlopt{>=} \hlnum{1}\hldef{) \{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"about "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.1f"}\hldef{, IRR),} \hlsng{" times that of nonsmokers"}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"about "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.1f"}\hldef{,} \hlnum{1} \hlopt{/} \hldef{IRR),} \hlsng{" times lower than that of nonsmokers"}\hldef{)}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hldef{p_text} \hlkwb{<-} \hlkwd{format.pval}\hldef{(p_value_wald,} \hlkwc{digits} \hldef{=} \hlnum{3}\hldef{,} \hlkwc{eps} \hldef{=} \hlnum{0.0001}\hldef{)}
+\hldef{> }\hldef{p_text} \hlkwb{<-} \hlkwa{if} \hldef{(p_value_wald} \hlopt{<} \hlnum{0.0001}\hldef{)} \hlkwd{paste0}\hldef{(}\hlsng{"p "}\hldef{, p_text)} \hlkwa{else} \hlkwd{paste0}\hldef{(}\hlsng{"p = "}\hldef{, p_text)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+    \begin{enumerate}
+        \item The incidence rate among smokers was 19.184 coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was 21.204 coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was 0.905.
+        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was 0.6253.
+        \item Write a paragraph for the interpretation of previous results (including all quantities).
+        
+          Among doctors aged 75-84, the coronary death rate was 19.184 deaths per 1000 person-years in smokers (102 deaths over 5317 person-years) and 21.204 deaths per 1000 person-years in nonsmokers (31 deaths over 1462 person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was 0.905, meaning that the coronary mortality rate among smokers was about 1.1 times lower than that of nonsmokers. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave p = 0.625, so at the 5\% significance level we do not reject the null hypothesis, there is not enough evidence of a difference in coronary mortality rates between smokers and nonsmokers in this age group. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
+    \end{enumerate}
+  
+\end{enumerate}
+
+
+
+\section{Modeling incidence rates with a Poisson regression model}
+\label{sec:section3}
+
+\section{Discussion}
+\label{sec:section4}
+
+\section{Use of artificial intelligence (AI) technologies}
+
+\section*{References}
+\label{sec:references}
+
+\begin{description}
+    \item[{\hypertarget{ref:doll}{[1]}}]
+    Doll R, Hill A.B. Mortality of British doctors in relation to smoking:
+    Observations on coronary thrombosis. National Cancer Institute
+    Monograph. 1966;19:205--268.
+
+    \item[{\hypertarget{ref:breslow}{[2]}}]
+    Breslow N.E. Cohort Analysis in Epidemiology. In A Celebration of
+    Statistics A.C. Atkinson and S.E. Fienberg (editors).
+    1985;109--143. Springer-Verlag.
+\end{description}
+
+\end{document}

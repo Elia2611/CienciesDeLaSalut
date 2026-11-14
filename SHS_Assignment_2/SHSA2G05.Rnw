@@ -1,0 +1,297 @@
+\documentclass[a4paper,10pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}                       % for mathematical features 
+\usepackage[left=2.5cm,top=3cm,bottom=3cm,right=2.5cm]{geometry}   % text margins
+\usepackage{booktabs}                      % for booktabs in print(xtable)).
+\usepackage{authblk}                       % for footnote style author/affiliation
+\usepackage{amssymb}
+\usepackage{amsthm}
+% LaTeX package for captions customization:
+\usepackage[margin=10pt,font=small,labelfont=bf,format=hang]{caption}
+\usepackage{hyperref}                      % Hyperlinks and \url{}
+\usepackage{float}
+\hypersetup{
+    colorlinks=true, % Enable colored text for links instead of drawing boxes
+    linkcolor=blue,  % Color for internal document links (e.g., sections, equations, figures, tables)
+    citecolor=blue,  % Color for bibliographic citation links (e.g., \cite{})
+    urlcolor=blue    % Color for external web URLs (e.g., \url{})
+}
+
+
+\begin{document}
+\title{Statistics in Health Sciences - Assignment 2}
+\author{G05: Judit Félelz Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
+\date{25th November 2026}
+
+
+
+\maketitle
+
+\newpage
+
+\section{Introduction}
+\label{sec:introduction}
+
+In 1961, Doll and Hill\hyperlink{ref:doll}{[1]} sent out a questionnaire to all men on the British Medical Register asking about their smoking habits. Almost 70\% of such men replied. Death certificates were obtained for medical practitioners and causes of death were assigned on the basis of these certificates. The breslow data set\hyperlink{ref:breslow}{[2]} (attached in the \texttt{breslow.RData} file) contains the person-years of observations and deaths from coronary artery disease accumulated during the first ten years of the study. Such data are shown in Table~\ref{tab:coronary}.
+
+
+\begin{table}[ht]
+\centering
+\begin{tabular}{c cc cc}
+\toprule
+& \multicolumn{2}{c}{Person-years}
+& \multicolumn{2}{c}{Coronary deaths} \\
+\cmidrule(lr){2-3} \cmidrule(lr){4-5}
+Age & Nonsmokers & Smokers & Nonsmokers & Smokers \\
+\midrule
+35--44 & 18790 & 52407 & 2  & 32  \\
+45--54 & 10673 & 43248 & 12 & 104 \\
+55--64 & 5710  & 28612 & 28 & 206 \\
+65--74 & 2585  & 12663 & 28 & 186 \\
+75--84 & 1462  & 5317  & 31 & 102 \\
+\bottomrule
+\end{tabular}
+\caption{Data on coronary death rates.}
+\label{tab:coronary}
+\end{table}
+
+The aim of this exercise is to analyse the relationship between incidence of coronary deaths (outcome of interest) and smoking status (exposure of interest), taking into account the possible role of age (as a potential confounder or as a potential effect modifier). Specifically:
+
+\begin{itemize}
+
+    \item In Section~\hyperref[sec:section2]{2}, you will estimate incidence rates of coronary mortality and incidence rate ratios associated to smoking status for different age groups. You also will perform a data visualization.
+
+    \item In Section~\hyperref[sec:section3]{3}, you will use the Poisson regression model to estimate the incidence rate of coronary mortality as a function of smoking status, taking into account age as potential confounder or potential effect modifier.
+
+    \item In Section~\hyperref[sec:section4]{4}, you will summarize the results of your analysis.
+
+\end{itemize}
+
+
+<<libraries, include=FALSE>>=
+### libraries related to knit:
+library(knitr)
+library(xtable)     # to create nice LaTeX tables
+library(epitools)
+@
+
+<<setting, include=FALSE, purl=FALSE>>=
+### output options (there are a lot..):
+options(width = 90, # max. width, in characters, of the R output. Default is 80.
+        scipen = 4)  # to avoid printing inline R output numbers in scientific
+# notation if they are lower than 10^4
+
+
+### set global chunk options. They apply to all chuncks except to those in which you set otherwise
+opts_chunk$set(echo = TRUE,         # show R input code
+               eval = TRUE,         # show R output
+               message = TRUE,       # set to FALSE to avoid nuisance messages (be careful!)         
+               warning = TRUE,       # set to FALSE to avoid nuisance messages (be careful!)         
+               size = "footnotesize", # set the R output and output font size 
+               cache = TRUE,        # useful for computationally costly chunks (be careful if set to TRUE!)
+               prompt = TRUE)
+@
+
+<<data, include=FALSE>>=
+### Loading data from "breslow.RData" file in the working directory:
+load("./breslow.RData")
+@
+
+\section{Comparing incidence rates}
+\label{sec:section2}
+\begin{enumerate}
+    \item Add extra columns in Table~\ref{tab:coronary} for:
+    \begin{enumerate}
+        \item $I_{r_{ij}}$, the sample coronary death rates per 1000 person-years for smoking status $i$ ($i = 0$ for nonsmokers and $i = 1$ for smokers) in age group $j$ ($j = 0, 1, \dots, 4$ for 35-44, 45-54, \dots, 75-84, respectively) (two columns, one for each smoking status).
+    
+        \item $\text{IRR}_j = \frac{I_{r_{1j}}}{I_{r_{0j}}}$, the incidence rate ratio for smokers vs.\ nonsmokers in age group $j$ (one column).
+    \end{enumerate}
+    
+    Print the updated table as Table 2, with a proper caption.
+    
+    \textbf{Show your code here for creating Table 2.}
+    
+<<Ir_and_IRR_data, results='asis'>>=
+Ir_Nonsmokers <- breslow$deaths[breslow$smoker == "no"] / 
+    breslow$personYears[breslow$smoker == "no"] * 1000
+Ir_Smokers <- breslow$deaths[breslow$smoker == "yes"] / 
+    breslow$personYears[breslow$smoker == "yes"] * 1000
+
+Ir_IRR <- data.frame(
+  Age = breslow$age[breslow$smoker == "no"],
+  Nonsmokers_py = breslow$personYears[breslow$smoker == "no"],
+  Smokers_py = breslow$personYears[breslow$smoker == "yes"],
+  Nonsmokers_cd = breslow$deaths[breslow$smoker == "no"],
+  Smokers_cd = breslow$deaths[breslow$smoker == "yes"],
+  Nonsmokers_Ir = Ir_Nonsmokers,
+  Smokers_Ir = Ir_Smokers,
+  IRR = Ir_Smokers / Ir_Nonsmokers
+)
+
+
+tab_ir_irr <- xtable(Ir_IRR, 
+                 digits = c(0, 0, 0, 0, 0, 0, 2, 2, 2),
+                 align = c("l", "c", "r", "r", "r", "r", "r", "r", "r"),
+                 caption = paste0("Coronary deaths and person-years by age ",
+                 "group and smoking status, with sample incidence rates ",
+                 "($I_{r_{ij}}$, deaths per 1000 person-years) for smoking ",
+                 "status $i$ ($i = 0$ nonsmokers, $i = 1$ smokers) and age ",
+                 "group $j$ ($j = 0, \\dots, 4$ for 35--44, \\dots, 75--84), ",
+                 "and incidence rate ratios ($\\mathrm{IRR}_j = ",
+                 "I_{r_{1j}}/I_{r_{0j}}$, smokers vs.\\ nonsmokers). ",
+                 "British doctors' study, first ten years of follow-up."),
+                                  
+                 label = "tab:rates")
+
+colnames(tab_ir_irr) <- c("Age", "Nonsmokers", "Smokers", "Nonsmokers", 
+                      "Smokers", "Nonsmokers", "Smokers", "IRR")
+
+addtorow <- list()
+addtorow$pos <- list(-1)
+addtorow$command <- paste0(
+  "\\toprule\n &",
+  "\\multicolumn{2}{c}{Person-years} & ",
+  "\\multicolumn{2}{c}{Coronary deaths} & ",
+  "\\multicolumn{2}{c}{$I_{r_{ij}}$ (per 1000 p-y)} &",
+  "\\\\\n",
+  "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5} \\cmidrule(lr){6-7}\n"
+)
+
+print(tab_ir_irr,
+      table.placement = "ht",
+      include.rownames = FALSE,
+      include.colnames = TRUE,
+      floating = TRUE,
+      sanitize.text.function = force,
+      add.to.row = addtorow,
+      hline.after = c(0, nrow(Ir_IRR)),
+      booktabs = TRUE)
+@
+
+    \item For age group 45-54, complete the following sentences with numbers and proper units \textbf{(using \texttt{\textbackslash Sexpr} in your \texttt{Rnw} document)}:
+<<sentences_45>>=
+age <- "45-54"
+idx <- Ir_IRR$Age == age
+Ir_S <- Ir_IRR$Smokers_Ir[idx]
+Ir_NS <- Ir_IRR$Nonsmokers_Ir[idx]
+IRR <- Ir_IRR$IRR[idx]
+CD_S <- Ir_IRR$Smokers_cd[idx]
+CD_NS <- Ir_IRR$Nonsmokers_cd[idx]
+PY_S <- Ir_IRR$Smokers_py[idx]
+PY_NS <- Ir_IRR$Nonsmokers_py[idx]
+
+wald_test <- rateratio.wald(matrix(c(CD_NS, CD_S, PY_NS, PY_S), 2, 2))
+p_value_wald <- wald_test$p.value[2, "wald"]
+
+alpha <- 0.05
+significant <- p_value_wald < alpha
+direction <- if (IRR > 1) "higher" else if (IRR < 1) "lower" else "the same"
+
+decision <- if (significant) {
+  paste0("we reject the null hypothesis, there is evidence that the coronary ",
+         "mortality rate among smokers is ", direction,
+         " than among nonsmokers in this age group")
+} else {
+  paste0("we do not reject the null hypothesis, there is not enough evidence ",
+         "of a difference in coronary mortality rates between smokers and ",
+         "nonsmokers in this age group")
+}
+
+ratio_text <- if (IRR >= 1) {
+  paste0("about ", sprintf("%.1f", IRR), " times that of nonsmokers")
+} else {
+  paste0("about ", sprintf("%.1f", 1 / IRR), " times lower than that of nonsmokers")
+}
+
+p_text <- format.pval(p_value_wald, digits = 3, eps = 0.0001)
+p_text <- if (p_value_wald < 0.0001) paste0("p ", p_text) else paste0("p = ", p_text)
+@
+
+    \begin{enumerate}
+        \item The incidence rate among smokers was \Sexpr{sprintf("%.3f", Ir_S)} coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was \Sexpr{sprintf("%.3f", Ir_NS)} coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was \Sexpr{sprintf("%.3f", IRR)}.
+        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was \Sexpr{sprintf("%.4f", p_value_wald)}.
+        \item Write a paragraph for the interpretation of previous results (including all quantities).
+        
+          Among doctors aged \Sexpr{age}, the coronary death rate was \Sexpr{sprintf("%.3f", Ir_S)} deaths per 1000 person-years in smokers (\Sexpr{CD_S} deaths over \Sexpr{PY_S} person-years) and \Sexpr{sprintf("%.3f", Ir_NS)} deaths per 1000 person-years in nonsmokers (\Sexpr{CD_NS} deaths over \Sexpr{PY_NS} person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was \Sexpr{sprintf("%.3f", IRR)}, meaning that the coronary mortality rate among smokers was \Sexpr{ratio_text}. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave \Sexpr{p_text}, so at the \Sexpr{alpha*100}\% significance level \Sexpr{decision}. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
+    \end{enumerate}
+
+
+\item For age group 75-84, complete the following sentences with numbers and proper units \textbf{(using \texttt{\textbackslash Sexpr} in your \texttt{Rnw} document)}:
+<<sentences_75>>=
+age <- "75-84"
+idx <- Ir_IRR$Age == age
+Ir_S <- Ir_IRR$Smokers_Ir[idx]
+Ir_NS <- Ir_IRR$Nonsmokers_Ir[idx]
+IRR <- Ir_IRR$IRR[idx]
+CD_S <- Ir_IRR$Smokers_cd[idx]
+CD_NS <- Ir_IRR$Nonsmokers_cd[idx]
+PY_S <- Ir_IRR$Smokers_py[idx]
+PY_NS <- Ir_IRR$Nonsmokers_py[idx]
+
+wald_test <- rateratio.wald(matrix(c(CD_NS, CD_S, PY_NS, PY_S), 2, 2))
+p_value_wald <- wald_test$p.value[2, "wald"]
+
+alpha <- 0.05
+significant <- p_value_wald < alpha
+direction <- if (IRR > 1) "higher" else if (IRR < 1) "lower" else "the same"
+
+decision <- if (significant) {
+  paste0("we reject the null hypothesis, there is evidence that the coronary ",
+         "mortality rate among smokers is ", direction,
+         " than among nonsmokers in this age group")
+} else {
+  paste0("we do not reject the null hypothesis, there is not enough evidence ",
+         "of a difference in coronary mortality rates between smokers and ",
+         "nonsmokers in this age group")
+}
+
+ratio_text <- if (IRR >= 1) {
+  paste0("about ", sprintf("%.1f", IRR), " times that of nonsmokers")
+} else {
+  paste0("about ", sprintf("%.1f", 1 / IRR), " times lower than that of nonsmokers")
+}
+
+p_text <- format.pval(p_value_wald, digits = 3, eps = 0.0001)
+p_text <- if (p_value_wald < 0.0001) paste0("p ", p_text) else paste0("p = ", p_text)
+@
+
+    \begin{enumerate}
+        \item The incidence rate among smokers was \Sexpr{sprintf("%.3f", Ir_S)} coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was \Sexpr{sprintf("%.3f", Ir_NS)} coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was \Sexpr{sprintf("%.3f", IRR)}.
+        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was \Sexpr{sprintf("%.4f", p_value_wald)}.
+        \item Write a paragraph for the interpretation of previous results (including all quantities).
+        
+          Among doctors aged \Sexpr{age}, the coronary death rate was \Sexpr{sprintf("%.3f", Ir_S)} deaths per 1000 person-years in smokers (\Sexpr{CD_S} deaths over \Sexpr{PY_S} person-years) and \Sexpr{sprintf("%.3f", Ir_NS)} deaths per 1000 person-years in nonsmokers (\Sexpr{CD_NS} deaths over \Sexpr{PY_NS} person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was \Sexpr{sprintf("%.3f", IRR)}, meaning that the coronary mortality rate among smokers was \Sexpr{ratio_text}. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave \Sexpr{p_text}, so at the \Sexpr{alpha*100}\% significance level \Sexpr{decision}. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
+    \end{enumerate}
+  
+\end{enumerate}
+
+
+
+\section{Modeling incidence rates with a Poisson regression model}
+\label{sec:section3}
+
+\section{Discussion}
+\label{sec:section4}
+
+\section{Use of artificial intelligence (AI) technologies}
+
+\section*{References}
+\label{sec:references}
+
+\begin{description}
+    \item[{\hypertarget{ref:doll}{[1]}}]
+    Doll R, Hill A.B. Mortality of British doctors in relation to smoking:
+    Observations on coronary thrombosis. National Cancer Institute
+    Monograph. 1966;19:205--268.
+
+    \item[{\hypertarget{ref:breslow}{[2]}}]
+    Breslow N.E. Cohort Analysis in Epidemiology. In A Celebration of
+    Statistics A.C. Atkinson and S.E. Fienberg (editors).
+    1985;109--143. Springer-Verlag.
+\end{description}
+
+\end{document}
