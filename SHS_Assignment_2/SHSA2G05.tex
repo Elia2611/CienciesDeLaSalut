@@ -161,13 +161,13 @@ The aim of this exercise is to analyse the relationship between incidence of cor
 \hldef{+ }  \hlkwc{IRR} \hldef{= Ir_Smokers} \hlopt{/} \hldef{Ir_Nonsmokers}      \hlcom{# IRR_j = I_r1j / I_r0j}
 \hldef{+ }\hldef{)}
 \hldef{> }
-\hldef{> }\hlcom{### 3. Create the LaTeX table with xtable}
+\hldef{> }\hlcom{# Create the LaTeX table with xtable}
 \hldef{> }\hldef{tab_ir_irr} \hlkwb{<-} \hlkwd{xtable}\hldef{(Ir_IRR,}
 \hldef{+ }                 \hlcom{# One value per column, including the row names}
 \hldef{+ }                 \hlcom{# (0 decimals for counts, 2 for rates and IRR)}
 \hldef{+ }                 \hlkwc{digits} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{,} \hlnum{2}\hldef{),}
 \hldef{+ }                 \hlcom{# Column alignment (row names + 8 columns)}
-\hldef{+ }                 \hlkwc{align} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"l"}\hldef{,} \hlsng{"c"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{),}
+\hldef{+ }                 \hlkwc{align} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"l"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{,} \hlsng{"r"}\hldef{),}
 \hldef{+ }                 \hlcom{# Self-contained caption, defines i, j, I_r and IRR}
 \hldef{+ }                 \hlkwc{caption} \hldef{=} \hlkwd{paste0}\hldef{(}\hlsng{"Coronary deaths and person-years by age "}\hldef{,}
 \hldef{+ }                 \hlsng{"group and smoking status, with sample incidence rates "}\hldef{,}
@@ -198,22 +198,20 @@ The aim of this exercise is to analyse the relationship between incidence of cor
 \hldef{+ }  \hlsng{"\textbackslash{}\textbackslash{}cmidrule(lr)\{2-3\} \textbackslash{}\textbackslash{}cmidrule(lr)\{4-5\} \textbackslash{}\textbackslash{}cmidrule(lr)\{6-7\}\textbackslash{}n"}
 \hldef{+ }\hldef{)}
 \hldef{> }
-\hldef{> }\hlcom{### 5. Print the table as LaTeX}
+\hldef{> }\hlcom{# Print the table as LaTeX}
 \hldef{> }\hlkwd{print}\hldef{(tab_ir_irr,}
-\hldef{+ }      \hlkwc{table.placement} \hldef{=} \hlsng{"H"}\hldef{,}            \hlcom{# Static placement}
+\hldef{+ }      \hlkwc{table.placement} \hldef{=} \hlsng{"H"}\hldef{,}
 \hldef{+ }      \hlkwc{include.rownames} \hldef{=} \hlnum{FALSE}\hldef{,}         \hlcom{# Do not print row numbers}
 \hldef{+ }      \hlkwc{include.colnames} \hldef{=} \hlnum{TRUE}\hldef{,}          \hlcom{# Print the column names}
-\hldef{+ }      \hlkwc{floating} \hldef{=} \hlnum{TRUE}\hldef{,}                  \hlcom{# Wrap in table environment (caption)}
-\hldef{+ }      \hlkwc{sanitize.text.function} \hldef{= force,}   \hlcom{# Keep LaTeX code (e.g. $...$) as is}
 \hldef{+ }      \hlkwc{add.to.row} \hldef{= addtorow,}            \hlcom{# Add the grouped header}
 \hldef{+ }      \hlkwc{hline.after} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlkwd{nrow}\hldef{(Ir_IRR)),} \hlcom{# Rules after the header and at the end}
-\hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}                  \hlcom{# Use \textbackslash{}toprule, \textbackslash{}midrule, \textbackslash{}bottomrule}
+\hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
-% Sun Nov 15 13:31:20 2026
+% Fri Nov 20 10:38:10 2026
 \begin{table}[H]
 \centering
-\begin{tabular}{crrrrrrr}
+\begin{tabular}{rrrrrrrr}
   \toprule
  &\multicolumn{2}{c}{Person-years} & \multicolumn{2}{c}{Coronary deaths} & \multicolumn{2}{c}{$I_{r_{ij}}$ (per 1000 p-y)} &\\
 \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
@@ -234,15 +232,79 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 
 
     \item For age group 45-54, complete the following sentences with numbers and proper units \textbf{(using \texttt{\textbackslash Sexpr} in your \texttt{Rnw} document)}:
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Summary of one age group: rates, IRR, Wald test and automatic text}
+\hldef{> }\hlcom{# age:   age group label exactly as in Ir_IRR$Age (e.g. "45-54")}
+\hldef{> }\hlcom{# data:  data frame with the table of rates (default: Ir_IRR)}
+\hldef{> }\hlcom{# alpha: significance level for the Wald test (default: 0.05)}
+\hldef{> }\hldef{age_summary} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{age}\hldef{,} \hlkwc{data} \hldef{= Ir_IRR,} \hlkwc{alpha} \hldef{=} \hlnum{0.05}\hldef{) \{}
+\hldef{+ }  \hldef{idx} \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Age} \hlopt{==} \hldef{age}
 
+\hldef{+ }  \hlcom{# Quantities for the selected age group}
+\hldef{+ }  \hldef{Ir_S}  \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Smokers_Ir[idx]}
+\hldef{+ }  \hldef{Ir_NS} \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Nonsmokers_Ir[idx]}
+\hldef{+ }  \hldef{IRR}   \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{IRR[idx]}
+\hldef{+ }  \hldef{CD_S}  \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Smokers_cd[idx]}
+\hldef{+ }  \hldef{CD_NS} \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Nonsmokers_cd[idx]}
+\hldef{+ }  \hldef{PY_S}  \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Smokers_py[idx]}
+\hldef{+ }  \hldef{PY_NS} \hlkwb{<-} \hldef{data}\hlopt{$}\hldef{Nonsmokers_py[idx]}
 
+\hldef{+ }  \hlcom{# Wald test for the rate ratio (nonsmokers = reference row)}
+\hldef{+ }  \hldef{wald_test}    \hlkwb{<-} \hlkwd{rateratio.wald}\hldef{(}\hlkwd{matrix}\hldef{(}\hlkwd{c}\hldef{(CD_NS, CD_S, PY_NS, PY_S),} \hlnum{2}\hldef{,} \hlnum{2}\hldef{))}
+\hldef{+ }  \hldef{p_value_wald} \hlkwb{<-} \hldef{wald_test}\hlopt{$}\hldef{p.value[}\hlnum{2}\hldef{,} \hlsng{"wald"}\hldef{]}
 
+\hldef{+ }  \hlcom{# Text that depends on the results}
+\hldef{+ }  \hldef{significant} \hlkwb{<-} \hldef{p_value_wald} \hlopt{<} \hldef{alpha}
+\hldef{+ }  \hldef{direction}   \hlkwb{<-} \hlkwa{if} \hldef{(IRR} \hlopt{>} \hlnum{1}\hldef{)} \hlsng{"higher"} \hlkwa{else if} \hldef{(IRR} \hlopt{<} \hlnum{1}\hldef{)} \hlsng{"lower"} \hlkwa{else} \hlsng{"the same"}
+
+\hldef{+ }  \hldef{decision} \hlkwb{<-} \hlkwa{if} \hldef{(significant) \{}
+\hldef{+ }    \hlkwd{paste0}\hldef{(}\hlsng{"we reject the null hypothesis and conclude that the coronary "}\hldef{,}
+\hldef{+ }           \hlsng{"mortality rate among smokers is "}\hldef{, direction,}
+\hldef{+ }           \hlsng{" than among nonsmokers in this age group"}\hldef{)}
+\hldef{+ }  \hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }    \hlkwd{paste0}\hldef{(}\hlsng{"we do not reject the null hypothesis, as there is not enough "}\hldef{,}
+\hldef{+ }           \hlsng{"evidence of a difference in coronary mortality rates between "}\hldef{,}
+\hldef{+ }           \hlsng{"smokers and nonsmokers in this age group"}\hldef{)}
+\hldef{+ }  \hldef{\}}
+
+\hldef{+ }  \hlcom{# Text describing the IRR}
+\hldef{+ }  \hldef{ratio_text} \hlkwb{<-} \hlkwa{if} \hldef{(IRR} \hlopt{>=} \hlnum{1}\hldef{) \{}
+\hldef{+ }    \hlkwd{paste0}\hldef{(}\hlsng{"about "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.1f"}\hldef{, IRR),} \hlsng{" times that of nonsmokers"}\hldef{)}
+\hldef{+ }  \hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }    \hlkwd{paste0}\hldef{(}\hlsng{"about "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.1f"}\hldef{, (}\hlnum{1} \hlopt{-} \hldef{IRR)} \hlopt{*} \hlnum{100}\hldef{),}
+\hldef{+ }           \hlsng{"\textbackslash{}\textbackslash{}% lower than that of nonsmokers"}\hldef{)}
+\hldef{+ }  \hldef{\}}
+
+\hldef{+ }  \hldef{p_text} \hlkwb{<-} \hlkwd{format.pval}\hldef{(p_value_wald,} \hlkwc{digits} \hldef{=} \hlnum{3}\hldef{,} \hlkwc{eps} \hldef{=} \hlnum{0.0001}\hldef{)}
+\hldef{+ }  \hldef{p_text} \hlkwb{<-} \hlkwa{if} \hldef{(p_value_wald} \hlopt{<} \hlnum{0.0001}\hldef{)} \hlkwd{paste0}\hldef{(}\hlsng{"p "}\hldef{, p_text)} \hlkwa{else} \hlkwd{paste0}\hldef{(}\hlsng{"p = "}\hldef{, p_text)}
+
+\hldef{+ }  \hlcom{# Return everything in a named list}
+\hldef{+ }  \hlkwd{list}\hldef{(}\hlkwc{age} \hldef{= age,} \hlkwc{Ir_S} \hldef{= Ir_S,} \hlkwc{Ir_NS} \hldef{= Ir_NS,} \hlkwc{IRR} \hldef{= IRR,}
+\hldef{+ }       \hlkwc{CD_S} \hldef{= CD_S,} \hlkwc{CD_NS} \hldef{= CD_NS,} \hlkwc{PY_S} \hldef{= PY_S,} \hlkwc{PY_NS} \hldef{= PY_NS,}
+\hldef{+ }       \hlkwc{p_value} \hldef{= p_value_wald,} \hlkwc{p_text} \hldef{= p_text,} \hlkwc{alpha} \hldef{= alpha,}
+\hldef{+ }       \hlkwc{significant} \hldef{= significant,} \hlkwc{decision} \hldef{= decision,}
+\hldef{+ }       \hlkwc{ratio_text} \hldef{= ratio_text)}
+\hldef{+ }\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Quantities and texts for age group 45-54.}
+\hldef{> }\hldef{res45} \hlkwb{<-} \hlkwd{age_summary}\hldef{(}\hlsng{"45-54"}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
     \begin{enumerate}
         \item The incidence rate among smokers was 2.405 coronary deaths per 1000 person-years.
         \item The incidence rate among nonsmokers was 1.124 coronary deaths per 1000 person-years.
         \item The incidence rate ratio was 2.139.
-        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was .
+        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was 0.0106.
         \item Write a paragraph for the interpretation of previous results (including all quantities).
         
           Among doctors aged 45-54, the coronary death rate was 2.405 deaths per 1000 person-years in smokers (104 deaths over 43248 person-years) and 1.124 deaths per 1000 person-years in nonsmokers (12 deaths over 10673 person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was 2.139, meaning that the coronary mortality rate among smokers was about 2.1 times that of nonsmokers. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave p = 0.0106, so at the 5\% significance level we reject the null hypothesis and conclude that the coronary mortality rate among smokers is higher than among nonsmokers in this age group. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
@@ -250,16 +312,23 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 
 
   \item For age group 75-84, complete the following sentences with numbers and proper units \textbf{(using \texttt{\textbackslash Sexpr} in your \texttt{Rnw} document)}:
-
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Quantities and texts for age group 75-84.}
+\hldef{> }\hldef{res75} \hlkwb{<-} \hlkwd{age_summary}\hldef{(}\hlsng{"75-84"}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
     \begin{enumerate}
         \item The incidence rate among smokers was 19.184 coronary deaths per 1000 person-years.
         \item The incidence rate among nonsmokers was 21.204 coronary deaths per 1000 person-years.
         \item The incidence rate ratio was 0.905.
-        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was .
+        \item The $p$-value of the Wald test to decide if the incidence rate among smokers is the same than among nonsmokers was 0.6253.
         \item Write a paragraph for the interpretation of previous results (including all quantities).
         
-          Among doctors aged 75-84, the coronary death rate was 19.184 deaths per 1000 person-years in smokers (102 deaths over 5317 person-years) and 21.204 deaths per 1000 person-years in nonsmokers (31 deaths over 1462 person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was 0.905, meaning that the coronary mortality rate among smokers was about 1.1 times lower than that of nonsmokers. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave p = 0.625, so at the 5\% significance level we do not reject the null hypothesis, as there is not enough evidence of a difference in coronary mortality rates between smokers and nonsmokers in this age group. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
+          Among doctors aged 75-84, the coronary death rate was 19.184 deaths per 1000 person-years in smokers (102 deaths over 5317 person-years) and 21.204 deaths per 1000 person-years in nonsmokers (31 deaths over 1462 person-years). The incidence rate ratio (smokers vs.\ nonsmokers) was 0.905, meaning that the coronary mortality rate among smokers was about 9.5\% lower than that of nonsmokers. The Wald test of the null hypothesis of equal incidence rates (IRR $=1$) gave p = 0.625, so at the 5\% significance level we do not reject the null hypothesis, as there is not enough evidence of a difference in coronary mortality rates between smokers and nonsmokers in this age group. Since this is an observational study, any association should not be interpreted as causal without considering other potential confounders.
     \end{enumerate}
     
 
@@ -313,26 +382,26 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 \begin{alltt}
 \hldef{> }\hlcom{# Data for the plots}
 \hldef{> }\hldef{age_groups} \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{Age}            \hlcom{# labels for the horizontal axis}
-\hldef{> }\hldef{x_pos}      \hlkwb{<-} \hlkwd{seq_along}\hldef{(age_groups)} \hlcom{# numeric positions 1, 2, ..., 5}
-\hldef{> }\hldef{irr}        \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{IRR}            \hlcom{# incidence rate ratios (vertical axis)}
+\hldef{> }\hldef{x_pos}      \hlkwb{<-} \hlkwd{seq_along}\hldef{(age_groups)} \hlcom{# numeric positions}
+\hldef{> }\hldef{irr}        \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{IRR}            \hlcom{# labels for the vertical axis, incidence rate ratios}
 \hldef{> }
-\hldef{> }\hlcom{### Vertical axis shared by both plots}
+\hldef{> }\hlcom{# Vertical axis shared by both plots}
 \hldef{> }\hldef{yticks} \hlkwb{<-} \hlkwd{pretty}\hldef{(}\hlkwd{range}\hldef{(irr))}        \hlcom{# "round" tick values covering the IRR range}
 \hldef{> }\hldef{yticks} \hlkwb{<-} \hldef{yticks[yticks} \hlopt{>} \hlnum{0}\hldef{]}        \hlcom{# log scale cannot display 0 or negatives}
 \hldef{> }\hldef{ylims}  \hlkwb{<-} \hlkwd{range}\hldef{(yticks, irr)}        \hlcom{# limits that include all ticks and data}
 \hldef{> }
-\hldef{> }\hlcom{### Layout, two plots side by side, with outer margin on top for the title}
+\hldef{> }\hlcom{# Layout, two plots side by side, with outer margin on top for the title}
 \hldef{> }\hlkwd{par}\hldef{(}\hlkwc{mfrow} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{1}\hldef{,} \hlnum{2}\hldef{),} \hlkwc{oma} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlnum{0}\hldef{,} \hlnum{3}\hldef{,} \hlnum{0}\hldef{))}
 \hldef{> }
-\hldef{> }\hlcom{### Left plot: natural scale}
+\hldef{> }\hlcom{# Left plot: natural scale}
 \hldef{> }\hlcom{# xaxt = "n" and yaxt = "n" suppress the default axes, which are drawn}
 \hldef{> }\hlcom{# manually below with the desired labels and ticks}
 \hldef{> }\hlkwd{plot}\hldef{(x_pos, irr,} \hlkwc{type} \hldef{=} \hlsng{"o"}\hldef{,} \hlkwc{pch} \hldef{=} \hlnum{16}\hldef{,} \hlkwc{xlab} \hldef{=} \hlsng{"Age group (years)"}\hldef{,}
 \hldef{+ }     \hlkwc{ylim} \hldef{= ylims,} \hlkwc{ylab} \hldef{=} \hlsng{"Incidence rate ratio"}\hldef{,}
 \hldef{+ }     \hlkwc{main} \hldef{=} \hlsng{"Natural scale"}\hldef{,} \hlkwc{xaxt} \hldef{=} \hlsng{"n"}\hldef{,} \hlkwc{yaxt} \hldef{=} \hlsng{"n"}\hldef{)}
-\hldef{> }\hlkwd{axis}\hldef{(}\hlnum{1}\hldef{,} \hlkwc{at} \hldef{= x_pos,} \hlkwc{labels} \hldef{= age_groups)}      \hlcom{# horizontal axis: age groups}
+\hldef{> }\hlkwd{axis}\hldef{(}\hlnum{1}\hldef{,} \hlkwc{at} \hldef{= x_pos,} \hlkwc{labels} \hldef{= age_groups)}       \hlcom{# horizontal axis: age groups}
 \hldef{> }\hlkwd{axis}\hldef{(}\hlnum{2}\hldef{,} \hlkwc{at} \hldef{= yticks,} \hlkwc{labels} \hldef{= yticks,} \hlkwc{las} \hldef{=} \hlnum{1}\hldef{)} \hlcom{# vertical axis: same ticks in both plots}
-\hldef{> }\hlkwd{abline}\hldef{(}\hlkwc{h} \hldef{=} \hlnum{1}\hldef{,} \hlkwc{lty} \hldef{=} \hlnum{2}\hldef{)}                        \hlcom{# dashed reference line at IRR = 1}
+\hldef{> }\hlkwd{abline}\hldef{(}\hlkwc{h} \hldef{=} \hlnum{1}\hldef{,} \hlkwc{lty} \hldef{=} \hlnum{2}\hldef{)}                         \hlcom{# dashed reference line at IRR = 1}
 \hldef{> }
 \hldef{> }\hlcom{# Right plot: logarithmic scale on the vertical axis}
 \hldef{> }\hlcom{# log = "y" plots the IRR in log scale, ylim and the tick labels are given in}
@@ -344,7 +413,7 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 \hldef{> }\hlkwd{axis}\hldef{(}\hlnum{2}\hldef{,} \hlkwc{at} \hldef{= yticks,} \hlkwc{labels} \hldef{= yticks,} \hlkwc{las} \hldef{=} \hlnum{1}\hldef{)}
 \hldef{> }\hlkwd{abline}\hldef{(}\hlkwc{h} \hldef{=} \hlnum{1}\hldef{,} \hlkwc{lty} \hldef{=} \hlnum{2}\hldef{)}
 \hldef{> }
-\hldef{> }\hlcom{# Single title shared by both plots}
+\hldef{> }\hlcom{# Title shared by both plots}
 \hldef{> }\hlkwd{title}\hldef{(}\hlkwc{main} \hldef{=} \hlsng{"Coronary mortality: IRR of smokers vs. nonsmokers by age group"}\hldef{,}
 \hldef{+ }      \hlkwc{outer} \hldef{=} \hlnum{TRUE}\hldef{,} \hlkwc{line} \hldef{=} \hlnum{1}\hldef{)}
 \end{alltt}
@@ -362,7 +431,86 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
   \item According to Figure 1:
   
   
-
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Data}
+\hldef{> }\hldef{irr_all}  \hlkwb{<-} \hldef{Ir_IRR}\hlopt{$}\hldef{IRR}                      \hlcom{# IRR of every age group}
+\hldef{> }\hldef{ages_tex}     \hlkwb{<-} \hlkwd{as.character}\hldef{(Ir_IRR}\hlopt{$}\hldef{Age)}    \hlcom{# age group labels}
+\hldef{> }
+\hldef{> }\hlcom{# (a) Is the IRR greater than 1 in all age groups?}
+\hldef{> }\hldef{all_gt1}    \hlkwb{<-} \hlkwd{all}\hldef{(irr_all} \hlopt{>} \hlnum{1}\hldef{)}          \hlcom{# TRUE if IRR > 1 everywhere}
+\hldef{> }\hldef{gt1_groups} \hlkwb{<-} \hldef{ages_tex[irr_all} \hlopt{>} \hlnum{1}\hldef{]}     \hlcom{# groups with IRR > 1}
+\hldef{> }\hldef{le1_groups} \hlkwb{<-} \hldef{ages_tex[irr_all} \hlopt{<=} \hlnum{1}\hldef{]}    \hlcom{# groups with IRR <= 1}
+\hldef{> }
+\hldef{> }\hlcom{# Vector to a list: "A", "A and B", "A, B and C"}
+\hldef{> }\hldef{list_groups} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{) \{}
+\hldef{+ }  \hlkwa{if} \hldef{(}\hlkwd{length}\hldef{(x)} \hlopt{<=} \hlnum{1}\hldef{)} \hlkwd{return}\hldef{(x)}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlkwd{paste}\hldef{(x[}\hlopt{-}\hlkwd{length}\hldef{(x)],} \hlkwc{collapse} \hldef{=} \hlsng{", "}\hldef{),} \hlsng{" and "}\hldef{, x[}\hlkwd{length}\hldef{(x)])}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# Answer text for (a)}
+\hldef{> }\hldef{answer_a} \hlkwb{<-} \hlkwa{if} \hldef{(all_gt1) \{}
+\hldef{+ }  \hlcom{# Case 1: IRR > 1 in every group}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"Yes. The rate ratio is greater than 1 in all age groups, which "}\hldef{,}
+\hldef{+ }         \hlsng{"means that the coronary death rate is higher among smokers than "}\hldef{,}
+\hldef{+ }         \hlsng{"among nonsmokers in every age group."}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else if} \hldef{(}\hlkwd{all}\hldef{(irr_all} \hlopt{<=} \hlnum{1}\hldef{)) \{}
+\hldef{+ }  \hlcom{# Case 2: IRR > 1 in no group}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"No. The rate ratio is not greater than 1 in any age group, which "}\hldef{,}
+\hldef{+ }         \hlsng{"means that the coronary death rate among smokers is not higher "}\hldef{,}
+\hldef{+ }         \hlsng{"than among nonsmokers in any age group."}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlcom{# Case 3: mixed.}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"No. The rate ratio is greater than 1 in the age group"}\hldef{,}
+\hldef{+ }         \hlkwa{if} \hldef{(}\hlkwd{length}\hldef{(gt1_groups)} \hlopt{>} \hlnum{1}\hldef{)} \hlsng{"s "} \hlkwa{else} \hlsng{" "}\hldef{,}
+\hldef{+ }         \hlkwd{list_groups}\hldef{(gt1_groups),}
+\hldef{+ }         \hlsng{", which means that, in "}\hldef{,}
+\hldef{+ }         \hlkwa{if} \hldef{(}\hlkwd{length}\hldef{(gt1_groups)} \hlopt{>} \hlnum{1}\hldef{)} \hlsng{"these groups"} \hlkwa{else} \hlsng{"this group"}\hldef{,}
+\hldef{+ }         \hlsng{", the coronary death rate is higher among smokers than among "}\hldef{,}
+\hldef{+ }         \hlsng{"nonsmokers. However, in the age group"}\hldef{,}
+\hldef{+ }         \hlkwa{if} \hldef{(}\hlkwd{length}\hldef{(le1_groups)} \hlopt{>} \hlnum{1}\hldef{)} \hlsng{"s "} \hlkwa{else} \hlsng{" "}\hldef{,}
+\hldef{+ }         \hlkwd{list_groups}\hldef{(le1_groups),} \hlsng{" it is not greater than 1 ("}\hldef{,}
+\hldef{+ }         \hlkwd{paste}\hldef{(}\hlkwd{sprintf}\hldef{(}\hlsng{"%.2f"}\hldef{, irr_all[irr_all} \hlopt{<=} \hlnum{1}\hldef{]),} \hlkwc{collapse} \hldef{=} \hlsng{", "}\hldef{),}
+\hldef{+ }         \hlsng{"), so the death rate among smokers is not higher than among "}\hldef{,}
+\hldef{+ }         \hlsng{"nonsmokers."}\hldef{)}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# (b) Is the IRR constant over age groups?}
+\hldef{> }\hldef{irr_min} \hlkwb{<-} \hlkwd{min}\hldef{(irr_all)}
+\hldef{> }\hldef{irr_max} \hlkwb{<-} \hlkwd{max}\hldef{(irr_all)}
+\hldef{> }
+\hldef{> }\hlcom{# We considered the IRR "aproximately constant" if the maximum is less than }
+\hldef{> }\hlcom{#20% above the minimum.}
+\hldef{> }\hldef{constant} \hlkwb{<-} \hldef{(irr_max} \hlopt{/} \hldef{irr_min)} \hlopt{<} \hlnum{1.2}
+\hldef{> }
+\hldef{> }\hlcom{# Description of the pattern with age)}
+\hldef{> }\hldef{trend} \hlkwb{<-} \hlkwa{if} \hldef{(}\hlkwd{all}\hldef{(}\hlkwd{diff}\hldef{(irr_all)} \hlopt{<} \hlnum{0}\hldef{)) \{}
+\hldef{+ }  \hlsng{"decreases with age"}                        \hlcom{# strictly decreasing}
+\hldef{+ }\hldef{\}} \hlkwa{else if} \hldef{(}\hlkwd{all}\hldef{(}\hlkwd{diff}\hldef{(irr_all)} \hlopt{>} \hlnum{0}\hldef{)) \{}
+\hldef{+ }  \hlsng{"increases with age"}                        \hlcom{# strictly increasing}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlsng{"varies with age without a monotone trend"}  \hlcom{# neither}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# Answer text for (b)}
+\hldef{> }\hldef{answer_b} \hlkwb{<-} \hlkwa{if} \hldef{(constant) \{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"Yes, approximately. The rate ratio is roughly constant over age "}\hldef{,}
+\hldef{+ }         \hlsng{"groups (between "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2f"}\hldef{, irr_min),} \hlsng{" and "}\hldef{,}
+\hldef{+ }         \hlkwd{sprintf}\hldef{(}\hlsng{"%.2f"}\hldef{, irr_max),} \hlsng{"), which means that the association "}\hldef{,}
+\hldef{+ }         \hlsng{"between smoking and coronary mortality is similar in all age "}\hldef{,}
+\hldef{+ }         \hlsng{"groups, so age does not appear to be an effect modifier."}\hldef{)}
+\hldef{+ }\hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }  \hlkwd{paste0}\hldef{(}\hlsng{"No. The rate ratio "}\hldef{, trend,} \hlsng{", ranging from "}\hldef{,}
+\hldef{+ }         \hlkwd{sprintf}\hldef{(}\hlsng{"%.2f"}\hldef{, irr_max),} \hlsng{" to "}\hldef{,} \hlkwd{sprintf}\hldef{(}\hlsng{"%.2f"}\hldef{, irr_min),}
+\hldef{+ }         \hlsng{". This means that the association between smoking and coronary "}\hldef{,}
+\hldef{+ }         \hlsng{"mortality is not the same in all age groups, so age acts as a "}\hldef{,}
+\hldef{+ }         \hlsng{"potential effect modifier of the relationship between smoking "}\hldef{,}
+\hldef{+ }         \hlsng{"and coronary death."}\hldef{)}
+\hldef{+ }\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
   
   \begin{enumerate}
     \item Is the rate ratio greater than 1 for all age groups? What does it means?
@@ -372,7 +520,7 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
     
     \item Is the rate ratio constant over age groups? What does it means?
     
-    No. The rate ratio decreases with age, ranging from 0.90 to 5.74. This means that the association between smoking and coronary mortality is not the same in all age groups, so age acts as a potential effect modifier of the relationship between smoking and coronary death.
+    No. The rate ratio decreases with age, ranging from 5.74 to 0.90. This means that the association between smoking and coronary mortality is not the same in all age groups, so age acts as a potential effect modifier of the relationship between smoking and coronary death.
   \end{enumerate}
 
 \end{enumerate}
