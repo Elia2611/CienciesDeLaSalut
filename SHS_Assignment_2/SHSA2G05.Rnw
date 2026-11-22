@@ -16,11 +16,13 @@
     citecolor=blue,  % Color for bibliographic citation links (e.g., \cite{})
     urlcolor=blue    % Color for external web URLs (e.g., \url{})
 }
+\usepackage{bbm}              % for \mathbbm
+\newcommand{\I}{\mathbb{I}}   % shortcut for indicator function
 
 
 \begin{document}
 \title{Statistics in Health Sciences - Assignment 2}
-\author{G05: Judit Félez Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
+\author{G05: Judit Félez Guerrero (1704833), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
 \date{29th November 2026}
 \maketitle
 \thispagestyle{empty} % Hides page number 
@@ -448,6 +450,269 @@ answer_b <- if (constant) {
 
 \section{Modeling incidence rates with a Poisson regression model}
 \label{sec:section3}
+
+
+
+Suppose we are interested in modeling the coronary deaths rate, $Ir=\frac{I}{\Delta t}$ where $I$ is the coronary deaths count and $\Delta t$ is follow-up (in person-years), as a function of smoking status ($E$), which is the exposure of interest, and age group ($A$), as a potential confounder or as a potential effect modifier. 
+
+To do that, we consider here the Generalized Linear Model (GLM) framework. GLM can be thought as an extension of the linear regression model for cases in which the outcome is assumed to follow a probability distribution different to the normal distribution. In the specific case in which the outcome is assumed to follow a Poisson distribution, we have a particular case of GLM named Poisson regression model. Since our outcome, the coronary mortality $I$, is a count variable, it makes sense considering here the Poisson regression model.
+
+Regarding the role of age in the association of interest (i.e., the association between coronary mortality and smoking status), we consider two possible scenarios:
+
+\begin{itemize}
+  \item \textbf{Scenario 1:} Age could be a confounder in the association of interest, i.e., when comparing incidence rates between smokers and nonsmoker via incidence rate ratio (IRR), the comparison must be done within the same age group (i.e., we are estimating age-adjusted IRR), and we are assuming that IRR resulting of comparing smokers vs nonsmokers within each age group is the same (i.e., age-adjusted IRR does not depend on age). In this scenario, the Poisson regression model to estimate the coronary deaths rate for individuals with smoking status $i$ and in age group $j$, $Ir_{ij}$ is
+  
+  
+\begin{equation}
+\label{eq:modelmain}
+\left\{
+\begin{array}{l}
+\bullet\ \text{Probability distribution:} \\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qquad
+I_{r_{ij}}
+=
+\frac{I_{ij}}{\Delta t_{ij}},
+\qquad
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I_{ij} \sim  \text{Pois}(\lambda_{ij}),
+\qquad
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Delta t_{ij}\text{ is the follow-up;}\\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bullet\ \text{Model for the mean:} \\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qquad
+\log
+\left(
+\frac{\lambda_{ij}}{\Delta t_{ij}}
+\right)
+=
+L(E_i, A_j) \text{ (the linear predictor)}\\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qquad
+L(E_i, A_j)
+ = 
+\alpha + \beta_i E_i + \gamma_j A_j\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+}
+ = 
+\alpha + \\
+%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+} + \beta_1 \I_{i=1} + \\
+%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+} + 
+\gamma_1 \I_{j=1} +
+\gamma_2 \I_{j=2} +
+\gamma_3 \I_{j=3} +
+\gamma_4 \I_{j=4},
+\end{array}
+\right.
+\end{equation}
+where
+\begin{equation*}
+\I_{x=a}
+=
+\left\{
+\begin{array}{ll}
+1, & \text{if } x = a \\
+0, & \text{if } x \neq a
+\end{array}
+\right..
+\end{equation*}
+
+    
+    
+  \item \textbf{Scenario 2:} Age could be an effect modifier\footnote{We say $Z$ is an effect modifier of the association between $X$ and $Y$ if the effect of $X$ on $Y$ depends on $Z$. For instance, in our data, age ($Z$) would be an effect modifier of the association between smoking status ($X$) and coronary mortality ($Y$) if the age-adjusted coronary mortality incidence rate ratio when comparing smokers vs nonsmokers depends on age.} in the association of interest, i.e., when comparing incidence rates between smokers and nonsmoker via IRR within the same age group (i.e., we are estimating age-adjusted IRR), the resulting IRR is not the same in all age groups (i.e., the age-adjusted IRR depends on age). In this scenario, the Poisson regression model to estimate the coronary deaths rate for individuals with smoking status $i$ and in age group $j$, $Ir_{ij}$, is
+
+  
+
+\begin{equation}
+\label{eq:modelinter}
+\left\{
+\begin{array}{l}
+\bullet\ \text{Probability distribution:} \\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qquad
+I_{r_{ij}}
+=
+\frac{I_{ij}}{\Delta t_{ij}},
+\qquad
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+I_{ij} \sim  \text{Pois}(\lambda_{ij}),
+\qquad
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\Delta t_{ij}\text{ is the follow-up;}\\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\bullet\ \text{Model for the mean:} \\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qquad
+\log
+\left(
+\frac{\lambda_{ij}}{\Delta t_{ij}}
+\right)
+=
+L(E_i, A_j) \text{ (the linear predictor)}\\ \\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\qquad
+L(E_i, A_j)
+ = 
+\alpha + \beta_i E_i + \gamma_j A_j + \delta_{ij} E_i A_j\\
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+}
+ = 
+\alpha + \\
+%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+} + \beta_1 \I_{i=1} + \\
+%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+} + 
+\gamma_1 \I_{j=1} +
+\gamma_2 \I_{j=2} +
+\gamma_3 \I_{j=3} +
+\gamma_4 \I_{j=4} +\\
+%%%
+\phantom{
+\qquad
+L(E_i, A_j)
+} + 
+\delta_{11} \I_{i=1}\I_{j=1} +
+\delta_{12} \I_{i=1}\I_{j=2} +
+\delta_{13} \I_{i=1}\I_{j=3} +
+\delta_{14} \I_{i=1}\I_{j=4}.
+\end{array}
+\right.
+\end{equation}
+% where
+% \begin{equation*}
+% \I_{x=a}
+% =
+% \left\{
+% \begin{array}{ll}
+% 1, & \text{if } x = a \\
+% 0, & \text{if } x \neq a
+% \end{array}
+% \right..
+% \end{equation*}
+
+
+\end{itemize}
+
+Note that, in models (\ref{eq:modelmain}) and (\ref{eq:modelinter})\footnote{You can find the \LaTeX\ code to write models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) in files \texttt{mode\_main.tex} and \texttt{model\_inter.tex}, respectively.}, $Ir_{ij}$ is a random variable (different individuals with same smoking status and age can suffer or not coronary death within the same follow-up). Hence, the aim of fitting models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) is to estimate the expectation (i.e., mean) of the coronary deaths rate as:
+
+$$\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\frac{\mathbb{E}(I_{ij})}{\Delta t_{ij}}=\frac{\lambda_{ij}}{\Delta t_{ij}}=\exp(L(E_{i},A_{j})).$$
+
+\begin{enumerate}
+  \item Note that the logarithm function in models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) implies that we are assuming that the incidence rate varies exponentially with age. Is that assumption reasonable based on information provided by Figure \ref{fig:fig_1}? Why?
+
+  \item Prove that, under model (\ref{eq:modelmain}), the age-adjusted expected IRR for smokers vs nonsmokers in group \(j\) does not depend on age and it is:
+
+  \begin{equation}
+  \label{eq:eq3}
+  IRR_{j}=\exp(\beta_{1}), \quad \forall j.
+  \end{equation}
+
+  \item Prove that, under model (\ref{eq:modelinter}), the age-adjusted expected IRR for smokers vs nonsmokers in group \(j\) depends on age and it is:
+  
+  \begin{equation}
+  \label{eq:eq4}
+  IRR_{j}=\begin{cases}
+  \exp(\beta_{1}), & \text{if } j=0 \\
+  \exp(\beta_{1}+\delta_{1j}), & \text{if } j\ne 0
+  \end{cases}
+  \end{equation}
+
+  \item According to Figure \ref{fig:fig_1}, explain what sign (i.e., positive, negative or zero) do you expect for \(\delta_{1j}\) in model (\ref{eq:modelinter}).
+
+  \item Now, we fit models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) in R:
+
+
+
+<<code_ex3_5_a, eval=TRUE>>=
+### model without the term for the interaction between smoking status and
+### age. Under this model, age is considered as a potential confounder:
+mod1 <- glm(deaths ~ smoker + age + offset(log(personYears)),
+            family = poisson,
+            data = breslow)
+### summary of mod1 fitting:
+summary(mod1)
+
+### model with the term for the interaction between smoking status and age.
+### Under this model, age is considered as a potential effect modifier,
+### i.e., the effect of smoking on mortality depends on age:
+mod2 <- glm(deaths ~ smoker * age + offset(log(personYears)),
+            family = poisson,
+            data = breslow)
+### summary of mod2 fitting:
+summary(mod2)
+@  
+
+
+The only difference between models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) is the interaction term $\delta_{ij}E_{i}A_{j}$ included in model (\ref{eq:modelinter}). Now, we test the significance of this interaction term using the Likelihood-ratio test (LRT) and setting a significance level of 0.05. In this LRT, the null hypothesis is that $\delta_{ij}E_{i}A_{j}=0$, i.e., that models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) are the same model:
+
+<<code_ex3_5_b, eval=TRUE>>=
+### lLikelihood-ratio test (LRT) for the interaction term:
+anova(mod1, mod2, test = "LRT")
+@
+
+According to the p-value $=0.0164<0.05$, we reject the null hypothesis. Accordingly, from now on, we discard model (\ref{eq:modelmain}) and \textbf{continue the exercise using model} (\ref{eq:modelinter}) \textbf{(i.e., the fitted model \texttt{mod2})}. As a consequence, we are assuming that age is an effect modifier.
+
+  \item According to the fitted model \texttt{mod2}, complete the following list \textbf{(using \texttt{\textbackslash Sexpr} in your Rnw document)}:
+    \begin{itemize}
+        \item $\hat{\alpha} =$ 
+        \item $\hat{\beta}_{1} =$ 
+        \item $\hat{\gamma}_{1} =$ 
+        \item $\hat{\gamma}_{2} =$ 
+        \item $\hat{\gamma}_{3} =$ 
+        \item $\hat{\gamma}_{4} =$ 
+        \item $\hat{\delta}_{1} =$ 
+        \item $\hat{\delta}_{2} =$ 
+        \item $\hat{\delta}_{3} =$ 
+        \item $\hat{\delta}_{4} =$ 
+    \end{itemize}
+
+  \item Use formula (4) and estimates provided by \texttt{summary(mod2)} to complete the following list \textbf{(using \texttt{\textbackslash Sexpr} in your Rnw document)}:
+    \begin{itemize}
+        \item $\widehat{IRR}_{35-44} =$
+        \item $\widehat{IRR}_{45-54} =$
+        \item $\widehat{IRR}_{55-64} =$ 
+        \item $\widehat{IRR}_{65-74} =$ 
+        \item $\widehat{IRR}_{75-84} =$ 
+    \end{itemize}
+
+\item Solve again questions 2. and 3. (only (a), (b) and (c)) in Section \ref{sec:section2}, but using now model (\ref{eq:modelinter}), formula \ref{eq:eq4} and coefficients estimates provided by \texttt{summary(mod2)}. Check that you get identical results. What do you think is the reason for this? 
+
+\textbf{Show your R code here.}
+
+
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+
 
 \section{Discussion}
 \label{sec:section4}
