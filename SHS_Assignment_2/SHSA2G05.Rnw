@@ -600,24 +600,29 @@ L(E_i, A_j)
 \end{array}
 \right.
 \end{equation}
-% where
-% \begin{equation*}
-% \I_{x=a}
-% =
-% \left\{
-% \begin{array}{ll}
-% 1, & \text{if } x = a \\
-% 0, & \text{if } x \neq a
-% \end{array}
-% \right..
-% \end{equation*}
+where
+\begin{equation*}
+\I_{x=a}
+=
+\left\{
+\begin{array}{ll}
+1, & \text{if } x = a \\
+0, & \text{if } x \neq a
+\end{array}
+\right..
+\end{equation*}
 
 
 \end{itemize}
 
 Note that, in models (\ref{eq:modelmain}) and (\ref{eq:modelinter})\footnote{You can find the \LaTeX\ code to write models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) in files \texttt{mode\_main.tex} and \texttt{model\_inter.tex}, respectively.}, $Ir_{ij}$ is a random variable (different individuals with same smoking status and age can suffer or not coronary death within the same follow-up). Hence, the aim of fitting models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) is to estimate the expectation (i.e., mean) of the coronary deaths rate as:
 
-$$\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\frac{\mathbb{E}(I_{ij})}{\Delta t_{ij}}=\frac{\lambda_{ij}}{\Delta t_{ij}}=\exp(L(E_{i},A_{j})).$$
+\begin{equation}
+\tag{a}
+\label{eq:eqA}
+\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\frac{\mathbb{E}(I_{ij})}{\Delta t_{ij}}=\frac{\lambda_{ij}}{\Delta t_{ij}}=\exp(L(E_{i},A_{j})).
+\end{equation}
+
 
 \begin{enumerate}
   \item Note that the logarithm function in models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) implies that we are assuming that the incidence rate varies exponentially with age. Is that assumption reasonable based on information provided by Figure \ref{fig:fig_1}? Why?
@@ -629,6 +634,40 @@ $$\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\fr
   IRR_{j}=\exp(\beta_{1}), \quad \forall j.
   \end{equation}
 
+  
+
+Taking the definition of $IRR_j$ based on the expected incidence rates, together with the relation $\mathbb{E}(I_{r_{ij}})=\exp(L(E_{i},A_{j}))$ demonstrated in (\ref{eq:eqA}), we obtain:
+  
+  \begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \frac{ \mathbb{E}(I_{r_{1j}}) }
+                    { \mathbb{E}(I_{r_{0j}}) } \\ 
+            &= \frac{ \exp(L(E_{1},A_{j})) }
+                    { \exp(L(E_{0},A_{j})) } \\ 
+            &= \exp(L(E_{1},A_{j}) - L(E_{0},A_{j}))
+  \end{aligned}
+  \end{equation*}
+
+Now we substitute model (\ref{eq:modelmain}):
+
+  \begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \exp(\alpha+\beta_{1}E_{1}+\gamma_{j}A_{j} - (\alpha+\beta_{0}E_{0}+\gamma_{j}A_{j})) \\ 
+            &= \exp(\beta_{1}E_{1} - \beta_{0}E_{0}))
+  \end{aligned}
+  \end{equation*}
+  
+We can observe that the age group term $A_j$ cancels out, implying that the age-adjusted IRR does not depend on age.
+Furthermore, since $E_1=1$ for smokers and $E_0=0$ for nonsmokers, we obtain
+
+  \begin{equation*}
+    IRR_{j} = \exp(\beta_{1})
+  \end{equation*}
+  
+Thus, proving (\ref{eq:eq3}) and that the age-adjusted expected IRR for smokers vs nonsmokers in group j does not depend on age.\\
+
+
+
   \item Prove that, under model (\ref{eq:modelinter}), the age-adjusted expected IRR for smokers vs nonsmokers in group \(j\) depends on age and it is:
   
   \begin{equation}
@@ -638,6 +677,65 @@ $$\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\fr
   \exp(\beta_{1}+\delta_{1j}), & \text{if } j\ne 0
   \end{cases}
   \end{equation}
+  
+Following the same reasoning as in the previous exercise
+
+\begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \frac{ \mathbb{E}(I_{r_{1j}}) }
+                    { \mathbb{E}(I_{r_{0j}}) } \\ 
+            &= \frac{ \exp(L(E_{1},A_{j})) }
+                    { \exp(L(E_{0},A_{j})) } \\ 
+            &= \exp(L(E_{1},A_{j}) - L(E_{0},A_{j}))
+  \end{aligned}
+  \end{equation*}
+
+Now we substitute model (\ref{eq:modelinter}):
+
+  \begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \exp(\alpha+\beta_{1}E_{1}+\gamma_{j}A_{j}+\delta_{1j}E_{1}A_{j} - 
+               (\alpha+\beta_{0}E_{0}+\gamma_{j}A_{j}+\delta_{0j}E_{0}A_{j})) \\ 
+            &= \exp(\beta_{1}E_{1} - \beta_{0}E_{0} + \delta_{1j}E_{1}A_{j} - \delta_{0j}E_{0}A_{j})
+  \end{aligned}
+  \end{equation*}
+
+Since $E_1=1$ for smokers and $E_0=0$ for nonsmokers, we obtain:
+
+ \begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \exp(\beta_{1} + \delta_{1j}A_{j})
+  \end{aligned}
+  \end{equation*}
+  
+Therefore, the age-adjusted IRR depends on the age group through the term $\delta_{1j}A_{j}$.\\
+
+For the baseline age group ($j=0$) no interaction parameter $\delta_{10}$ is included in the model, therefore 
+  
+    \begin{equation*}
+      IRR_{j} = \exp(\beta_{1})
+    \end{equation*}
+  
+For the remaining age groups ($j\ne 0$) we have 
+  
+  \begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \exp(\beta_{1} + \delta_{1j}A_{j}) \\
+            &= \exp(\beta_{1} + \delta_{11}\I_{j=1} + \delta_{12}\I_{j=2} +\delta_{13}\I_{j=3} + \delta_{14}\I_{j=4})\\
+  \end{aligned}
+  \end{equation*}
+  
+  Using the definition of $\I_{x=a}$ in (\ref{eq:modelinter}), only one  $\I$ variable is equal to 1 for a given age group $j$, while all the others are equal to 0. Therefore,
+
+  \begin{equation*}
+  \begin{aligned}
+    IRR_{j} &= \exp(\beta_{1} + \delta_{1j}\I_{j=j}) \\
+            &= \exp(\beta_{1} + \delta_{1j})
+  \end{aligned}
+  \end{equation*}
+  
+Which proves (\ref{eq:eq4}). Therefore, the age-adjusted expected IRR for smokers versus nonsmokers depends on age, indicating that age acts as an effect modifier of the association between smoking and coronary mortality.\\
+
 
   \item According to Figure \ref{fig:fig_1}, explain what sign (i.e., positive, negative or zero) do you expect for \(\delta_{1j}\) in model (\ref{eq:modelinter}).
 

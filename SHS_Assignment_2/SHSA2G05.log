@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.9.16)  22 NOV 2026 13:23
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Debian) (preloaded format=pdflatex 2026.9.16)  22 NOV 2026 21:25
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -539,7 +539,28 @@ File: figure/fig_1-1.pdf Graphic file (type pdf)
 <use figure/fig_1-1.pdf>
 Package pdftex.def Info: figure/fig_1-1.pdf  used on input line 424.
 (pdftex.def)             Requested size: 455.24411pt x 227.62413pt.
- [5] [6 <./figure/fig_1-1.pdf>] [7] [8] [9] [10] [11] (./SHSA2G05.aux)
+ [5] [6 <./figure/fig_1-1.pdf>] [7] [8]
+Underfull \hbox (badness 10000) in paragraph at lines 748--749
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 792--793
+
+ []
+
+[9
+pdfTeX warning (ext4): destination with the same identifier (name{equation.3.3}
+) has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.793 
+      ]
+Underfull \hbox (badness 10000) in paragraph at lines 818--819
+
+ []
+
+[10] [11] [12] (./SHSA2G05.aux)
  ***********
 LaTeX2e <2023-11-01> patch level 1
 L3 programming layer <2024-01-22>
@@ -548,10 +569,10 @@ Package rerunfilecheck Info: File `SHSA2G05.out' has not changed.
 (rerunfilecheck)             Checksum: BBC125E8C3544206DEC3395CAC037BBD;1018.
  ) 
 Here is how much of TeX's memory you used:
- 12453 strings out of 474222
- 193656 string characters out of 5748733
+ 12458 strings out of 474222
+ 193734 string characters out of 5748733
  1950975 words of memory out of 5000000
- 34471 multiletter control sequences out of 15000+600000
+ 34474 multiletter control sequences out of 15000+600000
  567493 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,11n,79p,918b,727s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -580,10 +601,10 @@ fb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></u
 sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/share
 /texmf/fonts/type1/public/cm-super/sfrm1000.pfb>
-Output written on SHSA2G05.pdf (12 pages, 349547 bytes).
+Output written on SHSA2G05.pdf (13 pages, 353027 bytes).
 PDF statistics:
- 316 PDF objects out of 1000 (max. 8388607)
- 243 compressed objects within 3 object streams
- 62 named destinations out of 1000 (max. 500000)
+ 328 PDF objects out of 1000 (max. 8388607)
+ 254 compressed objects within 3 object streams
+ 64 named destinations out of 1000 (max. 500000)
  46 words of extra memory for PDF output out of 10000 (max. 10000000)
 
