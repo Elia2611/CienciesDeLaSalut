@@ -20,14 +20,14 @@
 
 \begin{document}
 \title{Statistics in Health Sciences - Assignment 2}
-\author{G05: Judit Félelz Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
-\date{25th November 2026}
-
-
-
+\author{G05: Judit Félez Guerrero (17048330), Lídia Abio Rojo (1705251), Catalina Mascaró Català (1708159), Elia Campos Villaro (1703842)}
+\date{29th November 2026}
 \maketitle
+\thispagestyle{empty} % Hides page number 
+
 
 \newpage
+\pagenumbering{arabic} % Enables Arabic numerals and resets the counter to 1
 
 \section{Introduction}
 \label{sec:introduction}
