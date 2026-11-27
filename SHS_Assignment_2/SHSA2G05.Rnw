@@ -916,23 +916,51 @@ identical_res
 
 
 <<s3_ex8_text, echo=FALSE>>=
-n_par   <- length(coef(mod2))   # number of parameters of model (2)
-n_obs   <- nrow(breslow)        # number of observations
-df_res  <- df.residual(mod2)    # residual degrees of freedom
-dev_res <- round(deviance(mod2), 3)   # residual deviance 
+
+n_par   <- length(coef(mod2))           # number of parameters of model (2)
+n_obs   <- nrow(breslow)                # number of observations
+n_age   <- nlevels(breslow$age)         # number of age groups
+n_smk   <- nlevels(breslow$smoker)      # number of smoking statuses
+df_res  <- df.residual(mod2)            # residual degrees of freedom of model (2)
+dev_res <- round(deviance(mod2), 3)     # residual deviance of model (2)
+n_par1  <- length(coef(mod1))           # number of parameters of model (1)
+df_res1 <- df.residual(mod1)            # residual degrees of freedom of model (1)
+dev_res1 <- round(deviance(mod1), 2)    # residual deviance of model (1)
 
 if (identical_res && n_par == n_obs) {
-  reason <- paste0("The results obtained with model (2) are identical to those ",
-                   "obtained in questions 2 and 3 of Section 2. Model (2) has ",
-                   n_par, " parameters for ", n_obs, " observations, so it has ",
-                   df_res, " residual degrees of freedom and a residual deviance of ",
-                   dev_res, ". Therefore, the model fits the data perfectly.")
+  reason <- paste0("The results obtained with model (\\ref{eq:modelinter}) are identical to ",
+    "those obtained in questions 2 and 3 of Section~\\ref{sec:section2}. ",
+    "Our data contains ", n_obs, " observations, one for each combination ",
+    "of age group and smoking status (", n_age, " age groups $\\times$ ", n_smk,
+    " smoking statuses), and model (\\ref{eq:modelinter}) has exactly ", n_par,
+    " parameters. When a model has as many parameters as observations, ",
+    "it fits the data perfectly and the residuals are zero, no matter what 
+    the true relationship between the variables is \\hyperlink{ref:james}{[3]}. 
+    Such a model is called saturated \\hyperlink{ref:agresti}{[4]}.",
+    "\n\n",
+        "In our case, each new cell of the table adds exactly one new parameter ",
+    "to the model ($\\alpha$, $\\beta_1$, $\\gamma_j$ or $\\delta_{1j}$), which ",
+    "can be chosen so that the model matches the observed rate in that cell. ",
+    "Therefore, the model reproduces the observed number of deaths in every ",
+    "cell and the rates and IRRs it estimates are exactly the sample ones. ", 
+    "This is confirmed by the R output: the residual deviance of model ",
+    "(\\ref{eq:modelinter}), which compares the fitted model with the saturated ",
+    "one, is ", dev_res, " on ", df_res, " degrees of freedom.",
+    "\n\n",
+    "In conclusion, model (\\ref{eq:modelinter}) does not summarize the data ",
+    "with a simpler structure, but reproduces them. This contrasts with model ",
+    "(\\ref{eq:modelmain}), which has only ", n_par1, " parameters and imposes ",
+    "the same IRR in all age groups; so it does not reproduce the ",
+    "observed rates exactly, as shown by its residual deviance of ", dev_res1,
+    " on ", df_res1, " degrees of freedom.\n"
+  )
 } else {
   reason <- paste0("The results obtained with model (2) are not identical to those ",
                    "obtained in questions 2 and 3 of Section 2. Model (2) has ",
                    n_par, " parameters for ", n_obs, " observations, so it has ",
                    df_res, " residual degrees of freedom and a residual deviance of ",
                    dev_res, ". Therefore, the model does not reproduce the data exactly.")
+  
 }
 @
 
@@ -959,6 +987,14 @@ if (identical_res && n_par == n_obs) {
     Breslow N.E. Cohort Analysis in Epidemiology. In A Celebration of
     Statistics A.C. Atkinson and S.E. Fienberg (editors).
     1985;109--143. Springer-Verlag.
+    
+    \item[{\hypertarget{ref:james}{[3]}}]
+    James G, Witten D, Hastie T, Tibshirani R. An Introduction to Statistical
+    Learning with Applications in R. 2nd ed. Springer; 2021. Section 6.4.2.
+
+    \item[{\hypertarget{ref:agresti}{[4]}}]
+    Agresti A. Categorical Data Analysis. 3rd ed. Hoboken, NJ: John Wiley \&
+    Sons; 2013.
 \end{description}
 
 \end{document}

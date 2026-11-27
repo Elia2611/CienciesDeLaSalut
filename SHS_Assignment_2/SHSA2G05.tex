@@ -210,7 +210,7 @@ The aim of this exercise is to analyse the relationship between incidence of cor
 \hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
 \end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
-% Fri Nov 27 20:10:19 2026
+% Fri Nov 27 23:47:20 2026
 \begin{table}[H]
 \centering
 \begin{tabular}{rrrrrrrr}
@@ -1092,7 +1092,14 @@ According to the p-value $=0.0164<0.05$, we reject the null hypothesis. Accordin
 
 
 
-The results obtained with model (2) are identical to those obtained in questions 2 and 3 of Section 2. Model (2) has 10 parameters for 10 observations, so it has 0 residual degrees of freedom and a residual deviance of 0. Therefore, the model fits the data perfectly.
+The results obtained with model (\ref{eq:modelinter}) are identical to those obtained in questions 2 and 3 of Section~\ref{sec:section2}. Our data contains 10 observations, one for each combination of age group and smoking status (5 age groups $\times$ 2 smoking statuses), and model (\ref{eq:modelinter}) has exactly 10 parameters. When a model has as many parameters as observations, it fits the data perfectly and the residuals are zero, no matter what 
+    the true relationship between the variables is \hyperlink{ref:james}{[3]}. 
+    Such a model is called saturated \hyperlink{ref:agresti}{[4]}.
+
+In our case, each new cell of the table adds exactly one new parameter to the model ($\alpha$, $\beta_1$, $\gamma_j$ or $\delta_{1j}$), which can be chosen so that the model matches the observed rate in that cell. Therefore, the model reproduces the observed number of deaths in every cell and the rates and IRRs it estimates are exactly the sample ones. This is confirmed by the R output: the residual deviance of model (\ref{eq:modelinter}), which compares the fitted model with the saturated one, is 0 on 0 degrees of freedom.
+
+In conclusion, model (\ref{eq:modelinter}) does not summarize the data with a simpler structure, but reproduces them. This contrasts with model (\ref{eq:modelmain}), which has only 6 parameters and imposes the same IRR in all age groups; so it does not reproduce the observed rates exactly, as shown by its residual deviance of 12.13 on 4 degrees of freedom.
+
 
 \end{enumerate}
 
@@ -1115,6 +1122,14 @@ The results obtained with model (2) are identical to those obtained in questions
     Breslow N.E. Cohort Analysis in Epidemiology. In A Celebration of
     Statistics A.C. Atkinson and S.E. Fienberg (editors).
     1985;109--143. Springer-Verlag.
+    
+    \item[{\hypertarget{ref:james}{[3]}}]
+    James G, Witten D, Hastie T, Tibshirani R. An Introduction to Statistical
+    Learning with Applications in R. 2nd ed. Springer; 2021. Section 6.4.2.
+
+    \item[{\hypertarget{ref:agresti}{[4]}}]
+    Agresti A. Categorical Data Analysis. 3rd ed. Hoboken, NJ: John Wiley \&
+    Sons; 2013.
 \end{description}
 
 \end{document}
