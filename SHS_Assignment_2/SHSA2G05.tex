@@ -135,9 +135,9 @@ The aim of this exercise is to analyse the relationship between incidence of cor
         \item $\text{IRR}_j = \frac{I_{r_{1j}}}{I_{r_{0j}}}$, the incidence rate ratio for smokers vs.\ nonsmokers in age group $j$ (one column).
     \end{enumerate}
     
-    Print the updated table as Table 2, with a proper caption.
+    Print the updated table as Table~\ref{tab:rates}, with a proper caption.
     
-    \textbf{Show your code here for creating Table 2.}
+    \textbf{Show your code here for creating Table~\ref{tab:rates}.}
     
 \begin{kframe}
 \begin{alltt}
@@ -209,8 +209,8 @@ The aim of this exercise is to analyse the relationship between incidence of cor
 \hldef{+ }      \hlkwc{hline.after} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlkwd{nrow}\hldef{(Ir_IRR)),} \hlcom{# Rules after the header and at the end}
 \hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
-\end{kframe}% latex table generated in R 4.6.1 by xtable 1.8-8 package
-% Fri Nov 27 19:53:02 2026
+\end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
+% Fri Nov 27 20:10:19 2026
 \begin{table}[H]
 \centering
 \begin{tabular}{rrrrrrrr}
@@ -334,10 +334,10 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
     \end{enumerate}
     
 
-  \item Create a graphical visualization, named Figure 1, as follows:
+  \item Create a graphical visualization, named Figure~\ref{fig:fig_1}, as follows:
   
   \begin{enumerate}
-      \item Figure 1 must include two plots, one of them on the left and another on the right.
+      \item Figure~\ref{fig:fig_1} must include two plots, one of them on the left and another on the right.
       
       \textbf{Hint:} Use \texttt{par(mfrow = c(1, 2), ...)}.
   
@@ -360,7 +360,7 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 \end{kframe}
 \end{knitrout}
       
-      \item Figure 1 must show a single title shared by the two plots. \textbf{Hint:} Use
+      \item Figure~\ref{fig:fig_1} must show a single title shared by the two plots. \textbf{Hint:} Use
   
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -373,11 +373,11 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 \end{kframe}
 \end{knitrout}
 
-      \item Figure 1 must include a detailed caption.
+      \item Figure~\ref{fig:fig_1} must include a detailed caption.
   
   \end{enumerate}
   
-  \textbf{Show your R code here for creating Figure 1.}
+  \textbf{Show your R code here for creating Figure~\ref{fig:fig_1}.}
   
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
@@ -430,7 +430,7 @@ Age & Nonsmokers & Smokers & Nonsmokers & Smokers & Nonsmokers & Smokers & IRR \
 
 \end{knitrout}
 
-  \item According to Figure 1:
+  \item According to Figure~\ref{fig:fig_1}:
   
   
 \begin{knitrout}\footnotesize

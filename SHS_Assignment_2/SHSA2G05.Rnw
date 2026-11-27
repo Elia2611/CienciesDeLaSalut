@@ -109,9 +109,9 @@ load("./breslow.RData")
         \item $\text{IRR}_j = \frac{I_{r_{1j}}}{I_{r_{0j}}}$, the incidence rate ratio for smokers vs.\ nonsmokers in age group $j$ (one column).
     \end{enumerate}
     
-    Print the updated table as Table 2, with a proper caption.
+    Print the updated table as Table~\ref{tab:rates}, with a proper caption.
     
-    \textbf{Show your code here for creating Table 2.}
+    \textbf{Show your code here for creating Table~\ref{tab:rates}.}
     
 <<Ir_and_IRR_data, results='asis'>>=
 # Sample incidence rates (deaths per 1000 person-years)
@@ -276,10 +276,10 @@ res75 <- age_summary("75-84")
     \end{enumerate}
     
 
-  \item Create a graphical visualization, named Figure 1, as follows:
+  \item Create a graphical visualization, named Figure~\ref{fig:fig_1}, as follows:
   
   \begin{enumerate}
-      \item Figure 1 must include two plots, one of them on the left and another on the right.
+      \item Figure~\ref{fig:fig_1} must include two plots, one of them on the left and another on the right.
       
       \textbf{Hint:} Use \texttt{par(mfrow = c(1, 2), ...)}.
   
@@ -298,7 +298,7 @@ res75 <- age_summary("75-84")
   axis(1, at = ..., labels = ...)
 @  
       
-      \item Figure 1 must show a single title shared by the two plots. \textbf{Hint:} Use
+      \item Figure~\ref{fig:fig_1} must show a single title shared by the two plots. \textbf{Hint:} Use
   
 <<code_hint_2, eval=FALSE>>=
   par(mfrow = c(1, 2), oma = c(0, 0, ..., 0))
@@ -307,11 +307,11 @@ res75 <- age_summary("75-84")
   title(..., outer = TRUE, line = ...)
 @
 
-      \item Figure 1 must include a detailed caption.
+      \item Figure~\ref{fig:fig_1} must include a detailed caption.
   
   \end{enumerate}
   
-  \textbf{Show your R code here for creating Figure 1.}
+  \textbf{Show your R code here for creating Figure~\ref{fig:fig_1}.}
   
 <<fig_1, fig.pos='H', fig.align='center', fig.width=10, fig.height=5, out.width='\\textwidth', fig.cap="Incidence rate ratios (IRR) of coronary death for smokers vs.\\ nonsmokers by age group. Left: IRR in the natural scale. Right: the same IRR in logarithmic scale on the vertical axis, with labels shown in the natural scale. Both plots share the same vertical axis values. The dashed horizontal line marks IRR = 1 (no difference between smokers and nonsmokers).">>=
 
@@ -353,7 +353,7 @@ title(main = "Coronary mortality: IRR of smokers vs. nonsmokers by age group",
       outer = TRUE, line = 1)
 @
 
-  \item According to Figure 1:
+  \item According to Figure~\ref{fig:fig_1}:
   
   
 <<answers_5>>=
