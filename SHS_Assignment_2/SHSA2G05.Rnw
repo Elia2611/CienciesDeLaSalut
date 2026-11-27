@@ -644,7 +644,6 @@ $$\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\fr
   \item Now, we fit models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) in R:
 
 
-
 <<code_ex3_5_a, eval=TRUE>>=
 ### model without the term for the interaction between smoking status and
 ### age. Under this model, age is considered as a potential confounder:
@@ -676,42 +675,164 @@ According to the p-value $=0.0164<0.05$, we reject the null hypothesis. Accordin
 
   \item According to the fitted model \texttt{mod2}, complete the following list \textbf{(using \texttt{\textbackslash Sexpr} in your Rnw document)}:
     \begin{itemize}
-        \item $\hat{\alpha} =$ 
-        \item $\hat{\beta}_{1} =$ 
-        \item $\hat{\gamma}_{1} =$ 
-        \item $\hat{\gamma}_{2} =$ 
-        \item $\hat{\gamma}_{3} =$ 
-        \item $\hat{\gamma}_{4} =$ 
-        \item $\hat{\delta}_{1} =$ 
-        \item $\hat{\delta}_{2} =$ 
-        \item $\hat{\delta}_{3} =$ 
-        \item $\hat{\delta}_{4} =$ 
+        \item $\hat{\alpha} = \Sexpr{coef(mod2)["(Intercept)"]}$ 
+        \item $\hat{\beta}_{1} = \Sexpr{coef(mod2)["smokeryes"]}$  
+        \item $\hat{\gamma}_{1} = \Sexpr{coef(mod2)["age45-54"]}$  
+        \item $\hat{\gamma}_{2} = \Sexpr{coef(mod2)["age55-64"]}$   
+        \item $\hat{\gamma}_{3} = \Sexpr{coef(mod2)["age65-74"]}$  
+        \item $\hat{\gamma}_{4} = \Sexpr{coef(mod2)["age75-84"]}$  
+        \item $\hat{\delta}_{1} = \Sexpr{coef(mod2)["smokeryes:age45-54"]}$  
+        \item $\hat{\delta}_{2} = \Sexpr{coef(mod2)["smokeryes:age55-64"]}$ 
+        \item $\hat{\delta}_{3} = \Sexpr{coef(mod2)["smokeryes:age65-74"]}$ 
+        \item $\hat{\delta}_{4} = \Sexpr{coef(mod2)["smokeryes:age75-84"]}$ 
     \end{itemize}
 
+
   \item Use formula (4) and estimates provided by \texttt{summary(mod2)} to complete the following list \textbf{(using \texttt{\textbackslash Sexpr} in your Rnw document)}:
+  
+    
+<<s3_ex7>>=
+
+# Estimated coefficients of model (2)
+coefs_mod2 <- coef(mod2)
+
+# Beta1: main effect of smoking
+beta1 <- coefs_mod2["smokeryes"]
+
+# Deltas: interaction terms between smoking and age
+delta1 <- coefs_mod2[grep("smoker.*:", names(coefs_mod2))]
+
+# IRR in age group j, using formula (4):
+IRR <- function(j){
+  if (j==0) {
+    exp(beta1)
+  } else {
+    exp(beta1 + delta1[j])
+  }
+}
+
+@
+
     \begin{itemize}
-        \item $\widehat{IRR}_{35-44} =$
-        \item $\widehat{IRR}_{45-54} =$
-        \item $\widehat{IRR}_{55-64} =$ 
-        \item $\widehat{IRR}_{65-74} =$ 
-        \item $\widehat{IRR}_{75-84} =$ 
+        \item $\widehat{IRR}_{35-44} = \Sexpr{IRR(0)}$
+        \item $\widehat{IRR}_{45-54} = \Sexpr{IRR(1)}$
+        \item $\widehat{IRR}_{55-64} = \Sexpr{IRR(2)}$ 
+        \item $\widehat{IRR}_{65-74} = \Sexpr{IRR(3)}$ 
+        \item $\widehat{IRR}_{75-84} = \Sexpr{IRR(4)}$
     \end{itemize}
 
 \item Solve again questions 2. and 3. (only (a), (b) and (c)) in Section \ref{sec:section2}, but using now model (\ref{eq:modelinter}), formula \ref{eq:eq4} and coefficients estimates provided by \texttt{summary(mod2)}. Check that you get identical results. What do you think is the reason for this? 
 
+
 \textbf{Show your R code here.}
 
+<<s3_ex8>>=
+
+# Coefficients of model (2) needed to compute the rates
+# (beta1, delta1 and IRR(j) are reused from exercise 7)
+
+alpha <- coefs_mod2["(Intercept)"]
+gamma <- coefs_mod2[grep("^age", names(coefs_mod2))]
 
 
+# Expected incidence rate among nonsmokers (i=0) in age group j, per 1000 person-years. 
+# When i = 0, I_{i=1} = 0, and the terms beta1 and delta disappear:
+
+Ir_ns <- function(j){
+  if (j == 0){
+    exp(alpha) * 1000
+  } else {
+    exp(alpha + gamma[j]) * 1000
+  }
+}
+
+# Expected incidence rate among smokers (i=1) in age group j, per 1000 person-years. 
+# When i = 1, I_{i=1} = 1, so beta1 and delta are included:
+
+Ir_s <- function(j){
+  if (j == 0){
+    exp(alpha + beta1) * 1000
+  } else {
+    exp(alpha + beta1 + gamma[j] + delta1[j]) * 1000
+  }
+}
+
+# Question 2 of section 2: age group 45-54 (j=1):
+Ir_s45 <- Ir_s(1)
+Ir_ns45 <- Ir_ns(1)
+IRR_45 <- IRR(1)
+
+# Question 3 of section 2: age group 75-84 (j=4):
+Ir_s75 <- Ir_s(4)
+Ir_ns75 <- Ir_ns(4)
+IRR_75 <- IRR(4)
+
+@
+
+\textbf{Age group 45-54:}
+
+\begin{enumerate}
+        \item The incidence rate among smokers was \Sexpr{sprintf("%.3f", Ir_s45)} coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was \Sexpr{sprintf("%.3f", Ir_ns45)} coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was \Sexpr{sprintf("%.3f", IRR_45)}.
+        
+\end{enumerate}
+
+        
+\textbf{Age group 75-84:}
+
+\begin{enumerate}
+        \item The incidence rate among smokers was \Sexpr{sprintf("%.3f", Ir_s75)} coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was \Sexpr{sprintf("%.3f", Ir_ns75)} coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was \Sexpr{sprintf("%.3f", IRR_75)}.
+        
 \end{enumerate}
 
 
 
+<<s3_ex8_check>>=
+
+# Comparison of model (2) results with Section 2 results
+comparison <- data.frame(
+  Age = c("45-54", "45-54", "45-54", "75-84", "75-84", "75-84"),
+  Type = c("Rate smokers", "Rate nonsmokers", "IRR",
+           "Rate smokers", "Rate nonsmokers", "IRR"),
+  section2 = c(res45$Ir_S, res45$Ir_NS, res45$IRR,
+               res75$Ir_S, res75$Ir_NS, res75$IRR),
+  mod2 = c(Ir_s45, Ir_ns45, IRR_45,
+           Ir_s75, Ir_ns75, IRR_75))
+  
+comparison
+
+identical_res <- all.equal(comparison$section2, comparison$mod2)
+identical_res
+@
 
 
+<<s3_ex8_text, echo=FALSE>>=
+n_par   <- length(coef(mod2))   # number of parameters of model (2)
+n_obs   <- nrow(breslow)        # number of observations
+df_res  <- df.residual(mod2)    # residual degrees of freedom
+dev_res <- round(deviance(mod2), 3)   # residual deviance 
 
+if (identical_res && n_par == n_obs) {
+  reason <- paste0("The results obtained with model (2) are identical to those ",
+                   "obtained in questions 2 and 3 of Section 2. Model (2) has ",
+                   n_par, " parameters for ", n_obs, " observations, so it has ",
+                   df_res, " residual degrees of freedom and a residual deviance of ",
+                   dev_res, ". Therefore, the model fits the data perfectly.")
+} else {
+  reason <- paste0("The results obtained with model (2) are not identical to those ",
+                   "obtained in questions 2 and 3 of Section 2. Model (2) has ",
+                   n_par, " parameters for ", n_obs, " observations, so it has ",
+                   df_res, " residual degrees of freedom and a residual deviance of ",
+                   dev_res, ". Therefore, the model does not reproduce the data exactly.")
+}
+@
 
+\Sexpr{reason}
 
+\end{enumerate}
 
 
 \section{Discussion}

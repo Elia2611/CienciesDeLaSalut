@@ -209,8 +209,8 @@ The aim of this exercise is to analyse the relationship between incidence of cor
 \hldef{+ }      \hlkwc{hline.after} \hldef{=} \hlkwd{c}\hldef{(}\hlnum{0}\hldef{,} \hlkwd{nrow}\hldef{(Ir_IRR)),} \hlcom{# Rules after the header and at the end}
 \hldef{+ }      \hlkwc{booktabs} \hldef{=} \hlnum{TRUE}\hldef{)}
 \end{alltt}
-\end{kframe}% latex table generated in R 4.6.1 by xtable 1.8-8 package
-% Sun Nov 22 13:23:52 2026
+\end{kframe}% latex table generated in R 4.5.0 by xtable 1.8-8 package
+% Fri Nov 27 11:20:48 2026
 \begin{table}[H]
 \centering
 \begin{tabular}{rrrrrrrr}
@@ -725,7 +725,6 @@ $$\mathbb{E}(I_{r_{ij}})=\mathbb{E}\left(\frac{I_{ij}}{\Delta t_{ij}}\right)=\fr
   \item Now, we fit models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) in R:
 
 
-
 \begin{knitrout}\footnotesize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
@@ -831,42 +830,165 @@ According to the p-value $=0.0164<0.05$, we reject the null hypothesis. Accordin
 
   \item According to the fitted model \texttt{mod2}, complete the following list \textbf{(using \texttt{\textbackslash Sexpr} in your Rnw document)}:
     \begin{itemize}
-        \item $\hat{\alpha} =$ 
-        \item $\hat{\beta}_{1} =$ 
-        \item $\hat{\gamma}_{1} =$ 
-        \item $\hat{\gamma}_{2} =$ 
-        \item $\hat{\gamma}_{3} =$ 
-        \item $\hat{\gamma}_{4} =$ 
-        \item $\hat{\delta}_{1} =$ 
-        \item $\hat{\delta}_{2} =$ 
-        \item $\hat{\delta}_{3} =$ 
-        \item $\hat{\delta}_{4} =$ 
+        \item $\hat{\alpha} = -9.1479329$ 
+        \item $\hat{\beta}_{1} = 1.7468734$  
+        \item $\hat{\gamma}_{1} = 2.3573671$  
+        \item $\hat{\gamma}_{2} = 3.8301631$   
+        \item $\hat{\gamma}_{3} = 4.6226566$  
+        \item $\hat{\gamma}_{4} = 5.2943595$  
+        \item $\hat{\delta}_{1} = -0.9866229$  
+        \item $\hat{\delta}_{2} = -1.3628089$ 
+        \item $\hat{\delta}_{3} = -1.44229$ 
+        \item $\hat{\delta}_{4} = -1.8469916$ 
     \end{itemize}
 
+
   \item Use formula (4) and estimates provided by \texttt{summary(mod2)} to complete the following list \textbf{(using \texttt{\textbackslash Sexpr} in your Rnw document)}:
+  
+    
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Estimated coefficients of model (2)}
+\hldef{> }\hldef{coefs_mod2} \hlkwb{<-} \hlkwd{coef}\hldef{(mod2)}
+\hldef{> }
+\hldef{> }\hlcom{# Beta1: main effect of smoking}
+\hldef{> }\hldef{beta1} \hlkwb{<-} \hldef{coefs_mod2[}\hlsng{"smokeryes"}\hldef{]}
+\hldef{> }
+\hldef{> }\hlcom{# Deltas: interaction terms between smoking and age}
+\hldef{> }\hldef{delta1} \hlkwb{<-} \hldef{coefs_mod2[}\hlkwd{grep}\hldef{(}\hlsng{"smoker.*:"}\hldef{,} \hlkwd{names}\hldef{(coefs_mod2))]}
+\hldef{> }
+\hldef{> }\hlcom{# IRR in age group j, using formula (4):}
+\hldef{> }\hldef{IRR} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{j}\hldef{)\{}
+\hldef{+ }  \hlkwa{if} \hldef{(j}\hlopt{==}\hlnum{0}\hldef{) \{}
+\hldef{+ }    \hlkwd{exp}\hldef{(beta1)}
+\hldef{+ }  \hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }    \hlkwd{exp}\hldef{(beta1} \hlopt{+} \hldef{delta1[j])}
+\hldef{+ }  \hldef{\}}
+\hldef{+ }\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
     \begin{itemize}
-        \item $\widehat{IRR}_{35-44} =$
-        \item $\widehat{IRR}_{45-54} =$
-        \item $\widehat{IRR}_{55-64} =$ 
-        \item $\widehat{IRR}_{65-74} =$ 
-        \item $\widehat{IRR}_{75-84} =$ 
+        \item $\widehat{IRR}_{35-44} = 5.7366382$
+        \item $\widehat{IRR}_{45-54} = 2.1388118$
+        \item $\widehat{IRR}_{55-64} = 1.4682401$ 
+        \item $\widehat{IRR}_{65-74} = 1.3560598$ 
+        \item $\widehat{IRR}_{75-84} = 0.9047304$
     \end{itemize}
 
 \item Solve again questions 2. and 3. (only (a), (b) and (c)) in Section \ref{sec:section2}, but using now model (\ref{eq:modelinter}), formula \ref{eq:eq4} and coefficients estimates provided by \texttt{summary(mod2)}. Check that you get identical results. What do you think is the reason for this? 
 
+
 \textbf{Show your R code here.}
 
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Coefficients of model (2) needed to compute the rates}
+\hldef{> }\hlcom{# (beta1, delta1 and IRR(j) are reused from exercise 7)}
+\hldef{> }
+\hldef{> }\hldef{alpha} \hlkwb{<-} \hldef{coefs_mod2[}\hlsng{"(Intercept)"}\hldef{]}
+\hldef{> }\hldef{gamma} \hlkwb{<-} \hldef{coefs_mod2[}\hlkwd{grep}\hldef{(}\hlsng{"^age"}\hldef{,} \hlkwd{names}\hldef{(coefs_mod2))]}
+\hldef{> }
+\hldef{> }
+\hldef{> }\hlcom{# Expected incidence rate among nonsmokers (i=0) in age group j, per 1000 person-years. }
+\hldef{> }\hlcom{# When i = 0, I_\{i=1\} = 0, and the terms beta1 and delta disappear:}
+\hldef{> }
+\hldef{> }\hldef{Ir_ns} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{j}\hldef{)\{}
+\hldef{+ }  \hlkwa{if} \hldef{(j} \hlopt{==} \hlnum{0}\hldef{)\{}
+\hldef{+ }    \hlkwd{exp}\hldef{(alpha)} \hlopt{*} \hlnum{1000}
+\hldef{+ }  \hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }    \hlkwd{exp}\hldef{(alpha} \hlopt{+} \hldef{gamma[j])} \hlopt{*} \hlnum{1000}
+\hldef{+ }  \hldef{\}}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# Expected incidence rate among smokers (i=1) in age group j, per 1000 person-years. }
+\hldef{> }\hlcom{# When i = 1, I_\{i=1\} = 1, so beta1 and delta are included:}
+\hldef{> }
+\hldef{> }\hldef{Ir_s} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{j}\hldef{)\{}
+\hldef{+ }  \hlkwa{if} \hldef{(j} \hlopt{==} \hlnum{0}\hldef{)\{}
+\hldef{+ }    \hlkwd{exp}\hldef{(alpha} \hlopt{+} \hldef{beta1)} \hlopt{*} \hlnum{1000}
+\hldef{+ }  \hldef{\}} \hlkwa{else} \hldef{\{}
+\hldef{+ }    \hlkwd{exp}\hldef{(alpha} \hlopt{+} \hldef{beta1} \hlopt{+} \hldef{gamma[j]} \hlopt{+} \hldef{delta1[j])} \hlopt{*} \hlnum{1000}
+\hldef{+ }  \hldef{\}}
+\hldef{+ }\hldef{\}}
+\hldef{> }
+\hldef{> }\hlcom{# Question 2 of section 2: age group 45-54 (j=1):}
+\hldef{> }\hldef{Ir_s45} \hlkwb{<-} \hlkwd{Ir_s}\hldef{(}\hlnum{1}\hldef{)}
+\hldef{> }\hldef{Ir_ns45} \hlkwb{<-} \hlkwd{Ir_ns}\hldef{(}\hlnum{1}\hldef{)}
+\hldef{> }\hldef{IRR_45} \hlkwb{<-} \hlkwd{IRR}\hldef{(}\hlnum{1}\hldef{)}
+\hldef{> }
+\hldef{> }\hlcom{# Question 3 of section 2: age group 75-84 (j=4):}
+\hldef{> }\hldef{Ir_s75} \hlkwb{<-} \hlkwd{Ir_s}\hldef{(}\hlnum{4}\hldef{)}
+\hldef{> }\hldef{Ir_ns75} \hlkwb{<-} \hlkwd{Ir_ns}\hldef{(}\hlnum{4}\hldef{)}
+\hldef{> }\hldef{IRR_75} \hlkwb{<-} \hlkwd{IRR}\hldef{(}\hlnum{4}\hldef{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
 
+\textbf{Age group 45-54:}
 
+\begin{enumerate}
+        \item The incidence rate among smokers was 2.405 coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was 1.124 coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was 2.139.
+        
+\end{enumerate}
+
+        
+\textbf{Age group 75-84:}
+
+\begin{enumerate}
+        \item The incidence rate among smokers was 19.184 coronary deaths per 1000 person-years.
+        \item The incidence rate among nonsmokers was 21.204 coronary deaths per 1000 person-years.
+        \item The incidence rate ratio was 0.905.
+        
 \end{enumerate}
 
 
 
+\begin{knitrout}\footnotesize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{> }\hlcom{# Comparison of model (2) results with Section 2 results}
+\hldef{> }\hldef{comparison} \hlkwb{<-} \hlkwd{data.frame}\hldef{(}
+\hldef{+ }  \hlkwc{Age} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"45-54"}\hldef{,} \hlsng{"45-54"}\hldef{,} \hlsng{"45-54"}\hldef{,} \hlsng{"75-84"}\hldef{,} \hlsng{"75-84"}\hldef{,} \hlsng{"75-84"}\hldef{),}
+\hldef{+ }  \hlkwc{Type} \hldef{=} \hlkwd{c}\hldef{(}\hlsng{"Rate smokers"}\hldef{,} \hlsng{"Rate nonsmokers"}\hldef{,} \hlsng{"IRR"}\hldef{,}
+\hldef{+ }           \hlsng{"Rate smokers"}\hldef{,} \hlsng{"Rate nonsmokers"}\hldef{,} \hlsng{"IRR"}\hldef{),}
+\hldef{+ }  \hlkwc{section2} \hldef{=} \hlkwd{c}\hldef{(res45}\hlopt{$}\hldef{Ir_S, res45}\hlopt{$}\hldef{Ir_NS, res45}\hlopt{$}\hldef{IRR,}
+\hldef{+ }               \hldef{res75}\hlopt{$}\hldef{Ir_S, res75}\hlopt{$}\hldef{Ir_NS, res75}\hlopt{$}\hldef{IRR),}
+\hldef{+ }  \hlkwc{mod2} \hldef{=} \hlkwd{c}\hldef{(Ir_s45, Ir_ns45, IRR_45,}
+\hldef{+ }           \hldef{Ir_s75, Ir_ns75, IRR_75))}
+\hldef{> }  
+\hldef{> }\hldef{comparison}
+\end{alltt}
+\begin{verbatim}
+##     Age            Type   section2       mod2
+## 1 45-54    Rate smokers  2.4047355  2.4047355
+## 2 45-54 Rate nonsmokers  1.1243324  1.1243324
+## 3 45-54             IRR  2.1388118  2.1388118
+## 4 75-84    Rate smokers 19.1837502 19.1837502
+## 5 75-84 Rate nonsmokers 21.2038304 21.2038304
+## 6 75-84             IRR  0.9047304  0.9047304
+\end{verbatim}
+\begin{alltt}
+\hldef{> }\hldef{identical_res} \hlkwb{<-} \hlkwd{all.equal}\hldef{(comparison}\hlopt{$}\hldef{section2, comparison}\hlopt{$}\hldef{mod2)}
+\hldef{> }\hldef{identical_res}
+\end{alltt}
+\begin{verbatim}
+## [1] TRUE
+\end{verbatim}
+\end{kframe}
+\end{knitrout}
 
 
 
 
+The results obtained with model (2) are identical to those obtained in questions 2 and 3 of Section 2. Model (2) has 10 parameters for 10 observations, so it has 0 residual degrees of freedom and a residual deviance of 0. Therefore, the model fits the data perfectly.
 
+\end{enumerate}
 
 
 \section{Discussion}
