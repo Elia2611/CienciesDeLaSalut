@@ -627,6 +627,9 @@ Note that, in models (\ref{eq:modelmain}) and (\ref{eq:modelinter})\footnote{You
 \begin{enumerate}
   \item Note that the logarithm function in models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) implies that we are assuming that the incidence rate varies exponentially with age. Is that assumption reasonable based on information provided by Figure \ref{fig:fig_1}? Why?
 
+
+No, it would not be reasonable. Taking into consideration that Figure \ref{fig:fig_1} displays the variation of the incidence rate ratio IRR across age groups rather than each individual incidence rate ($Ir_{ij}$), it does not provide enough information to make this assumption. A ratio only informs us about the relative relationship between the incidence rates of smokers and nonsmokers within each age group, not about how each individual incidence rate behaves as a function of age (for which we would need to plot the separate incidence rates on a logarithmic scale).
+
   \item Prove that, under model (\ref{eq:modelmain}), the age-adjusted expected IRR for smokers vs nonsmokers in group \(j\) does not depend on age and it is:
 
   \begin{equation}
@@ -664,7 +667,7 @@ Furthermore, since $E_1=1$ for smokers and $E_0=0$ for nonsmokers, we obtain
     IRR_{j} = \exp(\beta_{1})
   \end{equation*}
   
-Thus, proving (\ref{eq:eq3}) and that the age-adjusted expected IRR for smokers vs nonsmokers in group j does not depend on age.\\
+Thus, proving (\ref{eq:eq3}) and that the age-adjusted expected IRR for smokers vs nonsmokers in group j does not depend on age.
 
 
 
@@ -738,6 +741,11 @@ Which proves (\ref{eq:eq4}). Therefore, the age-adjusted expected IRR for smoker
 
 
   \item According to Figure \ref{fig:fig_1}, explain what sign (i.e., positive, negative or zero) do you expect for \(\delta_{1j}\) in model (\ref{eq:modelinter}).
+ 
+We expect all interaction parameters $\delta_{1j}$ ($j = 1, 2, 3, 4$) in model~(\ref{eq:modelinter}) to have a negative sign and to become increasingly negative as age increases.
+
+From (\ref{eq:eq4}), we know that $\text{IRR}_0 = \exp(\beta_1)$ for the baseline group ($j=0$) and $\text{IRR}_j = \exp(\beta_1 + \delta_{1j})$ for $j \neq 0$. Since Figure~\ref{fig:fig_1} shows that the incidence rate ratio decreases consistently with age ($\text{IRR}_j < \text{IRR}_0$ for all $j = 1, 2, 3, 4$), we need $\beta_1 + \delta_{1j} < \beta_1$, which implies that $\delta_{1j}$ must be negative and become increasingly negative at every step.
+  
 
   \item Now, we fit models (\ref{eq:modelmain}) and (\ref{eq:modelinter}) in R:
 
